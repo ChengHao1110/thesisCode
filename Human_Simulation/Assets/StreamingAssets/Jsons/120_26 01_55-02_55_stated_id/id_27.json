@@ -1,0 +1,49 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 59,
+      "beforeTrans_pos": [
+        383,
+        415
+      ],
+      "beforeTrans_chestDirection": [
+        322,
+        380
+      ],
+      "pos": [
+        315,
+        556
+      ],
+      "direction": [
+        140,
+        491
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 60,
+      "beforeTrans_pos": [
+        344,
+        432
+      ],
+      "beforeTrans_chestDirection": [
+        276,
+        413
+      ],
+      "pos": [
+        299,
+        584
+      ],
+      "direction": [
+        160,
+        552
+      ],
+      "state": "walkableArea"
+    }
+  ],
+  "feature": {
+    "ageIndex": 0,
+    "genderType": 1,
+    "humanType": "child"
+  }
+}

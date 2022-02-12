@@ -1,0 +1,654 @@
+{
+  "scene": "119",
+  "screenSize": [
+    1920,
+    1080
+  ],
+  "adultPercentage": 0.71,
+  "gatherProbability": {
+    "mean": 0.7,
+    "std": 0.23,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "behaviorProbability": {
+    "join": {
+      "mean": 0.51,
+      "std": 0.14
+    },
+    "keepAlone": {
+      "mean": 0.49,
+      "std": 0.14
+    },
+    "keepGather_sameGroup": {
+      "mean": 0.78,
+      "std": 0.1
+    },
+    "keepGather_difGroup": {
+      "mean": 0.02,
+      "std": 0.02
+    },
+    "leave": {
+      "mean": 0.2,
+      "std": 0.1
+    }
+  },
+  "exhibitionStateMap": {
+    "p1": {
+      "p1": 0.0,
+      "p2": 0.19,
+      "p3": 0.08,
+      "p4": 0.08,
+      "p5": 0.0,
+      "walkableArea": 0.64
+    },
+    "p2": {
+      "p1": 0.12,
+      "p2": 0.02,
+      "p3": 0.0,
+      "p4": 0.02,
+      "p5": 0.06,
+      "walkableArea": 0.78
+    },
+    "p3": {
+      "p1": 0.23,
+      "p2": 0.12,
+      "p3": 0.08,
+      "p4": 0.0,
+      "p5": 0.0,
+      "walkableArea": 0.58
+    },
+    "p4": {
+      "p1": 0.02,
+      "p2": 0.0,
+      "p3": 0.0,
+      "p4": 0.24,
+      "p5": 0.0,
+      "walkableArea": 0.74
+    },
+    "p5": {
+      "p1": 0.0,
+      "p2": 0.0,
+      "p3": 0.0,
+      "p4": 0.0,
+      "p5": 0.0,
+      "walkableArea": 1.0
+    },
+    "walkableArea": {
+      "p1": 0.2,
+      "p2": 0.3,
+      "p3": 0.11,
+      "p4": 0.37,
+      "p5": 0.02,
+      "walkableArea": 0.0
+    }
+  },
+  "exhibitions": [
+    {
+      "name": "p1",
+      "centerPos": [
+        585,
+        624
+      ],
+      "color": [
+        120,
+        0,
+        255
+      ],
+      "capacity_max": 2,
+      "capacity_avg": 0,
+      "capacity_median": 0,
+      "stayTime_min": 1.0,
+      "stayTime_max": 8.0,
+      "stayTime_avg": 3.11,
+      "stayTime_std": 1.76,
+      "bestViewDirection": [
+        6,
+        9,
+        7,
+        8,
+        5,
+        10,
+        4,
+        1,
+        0,
+        2,
+        3,
+        11
+      ],
+      "bestViewDistance": [
+        [
+          540.22,
+          639.17
+        ],
+        [
+          599.82,
+          694.53
+        ],
+        [
+          551.93,
+          655.8
+        ],
+        [
+          571.58,
+          672.42
+        ],
+        [
+          523.55,
+          611.0
+        ],
+        [
+          642.4,
+          694.8
+        ],
+        [
+          510.33,
+          548.0
+        ],
+        [
+          889.5,
+          404.0
+        ],
+        [
+          1323.0,
+          376.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        6
+      ],
+      "chosenProbabilty": 0.09,
+      "repeatChosenProbabilty": 0.0
+    },
+    {
+      "name": "p2",
+      "centerPos": [
+        666,
+        937
+      ],
+      "color": [
+        255,
+        0,
+        255
+      ],
+      "capacity_max": 5,
+      "capacity_avg": 1,
+      "capacity_median": 1,
+      "stayTime_min": 1.0,
+      "stayTime_max": 44.0,
+      "stayTime_avg": 12.4,
+      "stayTime_std": 9.69,
+      "bestViewDirection": [
+        4,
+        1,
+        0,
+        2,
+        3,
+        11,
+        5,
+        10,
+        9,
+        6,
+        7,
+        8
+      ],
+      "bestViewDistance": [
+        [
+          602.81,
+          874.01
+        ],
+        [
+          701.37,
+          898.27
+        ],
+        [
+          731.79,
+          919.21
+        ],
+        [
+          682.58,
+          878.87
+        ],
+        [
+          639.22,
+          854.85
+        ],
+        [
+          729.31,
+          952.19
+        ],
+        [
+          615.59,
+          917.07
+        ],
+        [
+          709.93,
+          985.78
+        ],
+        [
+          689.53,
+          999.89
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        4
+      ],
+      "chosenProbabilty": 0.16,
+      "repeatChosenProbabilty": 0.0
+    },
+    {
+      "name": "p3",
+      "centerPos": [
+        303,
+        307
+      ],
+      "color": [
+        255,
+        0,
+        0
+      ],
+      "capacity_max": 3,
+      "capacity_avg": 0,
+      "capacity_median": 0,
+      "stayTime_min": 1.0,
+      "stayTime_max": 16.0,
+      "stayTime_avg": 4.18,
+      "stayTime_std": 4.37,
+      "bestViewDirection": [
+        10,
+        11,
+        9,
+        0,
+        2,
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "bestViewDistance": [
+        [
+          370.53,
+          379.08
+        ],
+        [
+          360.2,
+          319.3
+        ],
+        [
+          350.09,
+          396.82
+        ],
+        [
+          359.0,
+          291.0
+        ],
+        [
+          312.2,
+          248.6
+        ],
+        [
+          345.6,
+          264.2
+        ],
+        [
+          303.0,
+          232.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        10
+      ],
+      "chosenProbabilty": 0.06,
+      "repeatChosenProbabilty": 0.0
+    },
+    {
+      "name": "p4",
+      "centerPos": [
+        1415,
+        303
+      ],
+      "color": [
+        0,
+        0,
+        255
+      ],
+      "capacity_max": 7,
+      "capacity_avg": 2,
+      "capacity_median": 2,
+      "stayTime_min": 1.0,
+      "stayTime_max": 44.0,
+      "stayTime_avg": 11.93,
+      "stayTime_std": 10.77,
+      "bestViewDirection": [
+        9,
+        4,
+        10,
+        5,
+        8,
+        6,
+        11,
+        3,
+        7,
+        2,
+        0,
+        1
+      ],
+      "bestViewDistance": [
+        [
+          1491.21,
+          548.43
+        ],
+        [
+          1239.68,
+          146.43
+        ],
+        [
+          1564.0,
+          485.14
+        ],
+        [
+          1202.98,
+          228.63
+        ],
+        [
+          1397.1,
+          477.77
+        ],
+        [
+          1218.97,
+          328.74
+        ],
+        [
+          1619.88,
+          394.41
+        ],
+        [
+          1292.87,
+          17.47
+        ],
+        [
+          1332.0,
+          377.29
+        ],
+        [
+          1424.0,
+          -516.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        9
+      ],
+      "chosenProbabilty": 0.35,
+      "repeatChosenProbabilty": 0.04
+    },
+    {
+      "name": "p5",
+      "centerPos": [
+        949,
+        702
+      ],
+      "color": [
+        120,
+        255,
+        0
+      ],
+      "capacity_max": 2,
+      "capacity_avg": 0,
+      "capacity_median": 0,
+      "stayTime_min": 1.0,
+      "stayTime_max": 3.0,
+      "stayTime_avg": 2.0,
+      "stayTime_std": 0.82,
+      "bestViewDirection": [
+        8,
+        0,
+        10,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        11
+      ],
+      "bestViewDistance": [
+        [
+          918.67,
+          828.0
+        ],
+        [
+          1039.5,
+          694.5
+        ],
+        [
+          997.0,
+          765.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        8
+      ],
+      "chosenProbabilty": 0.01,
+      "repeatChosenProbabilty": 0.0
+    },
+    {
+      "name": "walkableArea",
+      "centerPos": [
+        -1530,
+        -1606
+      ],
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "capacity_max": 13,
+      "capacity_avg": 5,
+      "capacity_median": 4,
+      "stayTime_min": 1.0,
+      "stayTime_max": 52.0,
+      "stayTime_avg": 10.5,
+      "stayTime_std": 10.97,
+      "bestViewDirection": [
+        10,
+        11,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "bestViewDistance": [
+        [
+          945.97,
+          656.37
+        ],
+        [
+          1326.33,
+          -51.97
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        10
+      ],
+      "chosenProbabilty": 0.84,
+      "repeatChosenProbabilty": 0.2
+    }
+  ],
+  "humanTypes": [
+    {
+      "type": "adult",
+      "walkSpeed_min": 0.0,
+      "walkSpeed_max": 328.62,
+      "walkSpeed_avg": 53.14,
+      "walkSpeed_median": 50.32,
+      "walkSpeed_std": 40.83,
+      "walkToStopRate": 0.15,
+      "stopToWalkRate": 0.24,
+      "interestForEachExhibition": {
+        "p1": 0.08,
+        "p2": 0.14,
+        "p3": 0.07,
+        "p4": 0.33,
+        "p5": 0.0,
+        "walkableArea": 0.88
+      }
+    },
+    {
+      "type": "child",
+      "walkSpeed_min": 0.0,
+      "walkSpeed_max": 273.1,
+      "walkSpeed_avg": 68.42,
+      "walkSpeed_median": 66.04,
+      "walkSpeed_std": 45.48,
+      "walkToStopRate": 0.14,
+      "stopToWalkRate": 0.2,
+      "interestForEachExhibition": {
+        "p1": 0.12,
+        "p2": 0.21,
+        "p3": 0.07,
+        "p4": 0.4,
+        "p5": 0.03,
+        "walkableArea": 0.79
+      }
+    }
+  ]
+}

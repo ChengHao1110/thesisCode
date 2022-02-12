@@ -1,0 +1,149 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 8,
+      "beforeTrans_pos": [
+        498,
+        354
+      ],
+      "beforeTrans_chestDirection": [
+        547,
+        403
+      ],
+      "pos": [
+        342,
+        440
+      ],
+      "direction": [
+        515,
+        536
+      ],
+      "state": "p8"
+    },
+    {
+      "frameInt": 9,
+      "beforeTrans_pos": [
+        481,
+        360
+      ],
+      "beforeTrans_chestDirection": [
+        530,
+        409
+      ],
+      "pos": [
+        331,
+        453
+      ],
+      "direction": [
+        503,
+        547
+      ],
+      "state": "p8"
+    },
+    {
+      "frameInt": 10,
+      "beforeTrans_pos": [
+        485,
+        358
+      ],
+      "beforeTrans_chestDirection": [
+        534,
+        407
+      ],
+      "pos": [
+        332,
+        449
+      ],
+      "direction": [
+        504,
+        543
+      ],
+      "state": "p8"
+    },
+    {
+      "frameInt": 11,
+      "beforeTrans_pos": [
+        485,
+        364
+      ],
+      "beforeTrans_chestDirection": [
+        534,
+        413
+      ],
+      "pos": [
+        346,
+        461
+      ],
+      "direction": [
+        515,
+        554
+      ],
+      "state": "p8"
+    },
+    {
+      "frameInt": 12,
+      "beforeTrans_pos": [
+        493,
+        363
+      ],
+      "beforeTrans_chestDirection": [
+        553,
+        398
+      ],
+      "pos": [
+        356,
+        459
+      ],
+      "direction": [
+        514,
+        528
+      ],
+      "state": "p8"
+    },
+    {
+      "frameInt": 13,
+      "beforeTrans_pos": [
+        493,
+        364
+      ],
+      "beforeTrans_chestDirection": [
+        553,
+        399
+      ],
+      "pos": [
+        358,
+        461
+      ],
+      "direction": [
+        515,
+        529
+      ],
+      "state": "p8"
+    },
+    {
+      "frameInt": 14,
+      "beforeTrans_pos": [
+        494,
+        347
+      ],
+      "beforeTrans_chestDirection": [
+        554,
+        382
+      ],
+      "pos": [
+        319,
+        425
+      ],
+      "direction": [
+        485,
+        498
+      ],
+      "state": "p8"
+    }
+  ],
+  "feature": {
+    "ageIndex": 0,
+    "genderType": 1,
+    "humanType": "child"
+  }
+}

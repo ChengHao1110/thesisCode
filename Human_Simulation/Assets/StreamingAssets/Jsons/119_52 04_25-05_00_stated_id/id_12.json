@@ -1,0 +1,129 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 18,
+      "beforeTrans_pos": [
+        1267,
+        327
+      ],
+      "beforeTrans_chestDirection": [
+        1316,
+        376
+      ],
+      "pos": [
+        1153,
+        301
+      ],
+      "direction": [
+        1177,
+        423
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 19,
+      "beforeTrans_pos": [
+        1359,
+        348
+      ],
+      "beforeTrans_chestDirection": [
+        1426,
+        366
+      ],
+      "pos": [
+        1234,
+        350
+      ],
+      "direction": [
+        1288,
+        391
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 20,
+      "beforeTrans_pos": [
+        1452,
+        368
+      ],
+      "beforeTrans_chestDirection": [
+        1519,
+        386
+      ],
+      "pos": [
+        1311,
+        394
+      ],
+      "direction": [
+        1361,
+        432
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 21,
+      "beforeTrans_pos": [
+        1512,
+        384
+      ],
+      "beforeTrans_chestDirection": [
+        1572,
+        419
+      ],
+      "pos": [
+        1356,
+        428
+      ],
+      "direction": [
+        1382,
+        500
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 22,
+      "beforeTrans_pos": [
+        1619,
+        428
+      ],
+      "beforeTrans_chestDirection": [
+        1686,
+        446
+      ],
+      "pos": [
+        1416,
+        516
+      ],
+      "direction": [
+        1459,
+        547
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 23,
+      "beforeTrans_pos": [
+        1721,
+        450
+      ],
+      "beforeTrans_chestDirection": [
+        1791,
+        450
+      ],
+      "pos": [
+        1485,
+        553
+      ],
+      "direction": [
+        1547,
+        550
+      ],
+      "state": "p4"
+    }
+  ],
+  "feature": {
+    "ageIndex": 2,
+    "genderType": 0,
+    "humanType": "adult"
+  }
+}

@@ -1,0 +1,369 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 29,
+      "beforeTrans_pos": [
+        713,
+        242
+      ],
+      "beforeTrans_chestDirection": [
+        713,
+        172
+      ],
+      "pos": [
+        420,
+        142
+      ],
+      "direction": [
+        176,
+        -165
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 30,
+      "beforeTrans_pos": [
+        719,
+        238
+      ],
+      "beforeTrans_chestDirection": [
+        700,
+        170
+      ],
+      "pos": [
+        420,
+        129
+      ],
+      "direction": [
+        135,
+        -179
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 31,
+      "beforeTrans_pos": [
+        717,
+        242
+      ],
+      "beforeTrans_chestDirection": [
+        735,
+        174
+      ],
+      "pos": [
+        427,
+        143
+      ],
+      "direction": [
+        238,
+        -150
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 34,
+      "beforeTrans_pos": [
+        722,
+        245
+      ],
+      "beforeTrans_chestDirection": [
+        703,
+        177
+      ],
+      "pos": [
+        445,
+        154
+      ],
+      "direction": [
+        173,
+        -140
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 35,
+      "beforeTrans_pos": [
+        722,
+        241
+      ],
+      "beforeTrans_chestDirection": [
+        703,
+        173
+      ],
+      "pos": [
+        434,
+        140
+      ],
+      "direction": [
+        156,
+        -162
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 36,
+      "beforeTrans_pos": [
+        721,
+        247
+      ],
+      "beforeTrans_chestDirection": [
+        702,
+        179
+      ],
+      "pos": [
+        448,
+        161
+      ],
+      "direction": [
+        179,
+        -130
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 37,
+      "beforeTrans_pos": [
+        726,
+        264
+      ],
+      "beforeTrans_chestDirection": [
+        707,
+        196
+      ],
+      "pos": [
+        501,
+        217
+      ],
+      "direction": [
+        258,
+        -45
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 38,
+      "beforeTrans_pos": [
+        721,
+        253
+      ],
+      "beforeTrans_chestDirection": [
+        702,
+        185
+      ],
+      "pos": [
+        464,
+        181
+      ],
+      "direction": [
+        204,
+        -99
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 39,
+      "beforeTrans_pos": [
+        727,
+        258
+      ],
+      "beforeTrans_chestDirection": [
+        708,
+        190
+      ],
+      "pos": [
+        488,
+        198
+      ],
+      "direction": [
+        238,
+        -73
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 48,
+      "beforeTrans_pos": [
+        720,
+        253
+      ],
+      "beforeTrans_chestDirection": [
+        701,
+        185
+      ],
+      "pos": [
+        462,
+        181
+      ],
+      "direction": [
+        202,
+        -99
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 49,
+      "beforeTrans_pos": [
+        721,
+        247
+      ],
+      "beforeTrans_chestDirection": [
+        702,
+        179
+      ],
+      "pos": [
+        448,
+        161
+      ],
+      "direction": [
+        179,
+        -130
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 50,
+      "beforeTrans_pos": [
+        726,
+        245
+      ],
+      "beforeTrans_chestDirection": [
+        707,
+        177
+      ],
+      "pos": [
+        452,
+        154
+      ],
+      "direction": [
+        183,
+        -139
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 51,
+      "beforeTrans_pos": [
+        724,
+        248
+      ],
+      "beforeTrans_chestDirection": [
+        705,
+        180
+      ],
+      "pos": [
+        457,
+        164
+      ],
+      "direction": [
+        191,
+        -124
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 52,
+      "beforeTrans_pos": [
+        727,
+        245
+      ],
+      "beforeTrans_chestDirection": [
+        708,
+        177
+      ],
+      "pos": [
+        454,
+        154
+      ],
+      "direction": [
+        185,
+        -139
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 53,
+      "beforeTrans_pos": [
+        727,
+        245
+      ],
+      "beforeTrans_chestDirection": [
+        708,
+        177
+      ],
+      "pos": [
+        454,
+        154
+      ],
+      "direction": [
+        185,
+        -139
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 54,
+      "beforeTrans_pos": [
+        728,
+        251
+      ],
+      "beforeTrans_chestDirection": [
+        709,
+        183
+      ],
+      "pos": [
+        472,
+        175
+      ],
+      "direction": [
+        212,
+        -108
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 55,
+      "beforeTrans_pos": [
+        725,
+        249
+      ],
+      "beforeTrans_chestDirection": [
+        706,
+        181
+      ],
+      "pos": [
+        461,
+        168
+      ],
+      "direction": [
+        197,
+        -119
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 56,
+      "beforeTrans_pos": [
+        715,
+        256
+      ],
+      "beforeTrans_chestDirection": [
+        696,
+        188
+      ],
+      "pos": [
+        461,
+        190
+      ],
+      "direction": [
+        202,
+        -85
+      ],
+      "state": "p1"
+    }
+  ],
+  "feature": {
+    "ageIndex": 2,
+    "genderType": 0,
+    "humanType": "adult"
+  }
+}

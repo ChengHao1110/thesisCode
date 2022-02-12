@@ -1,0 +1,89 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 6,
+      "beforeTrans_pos": [
+        1336,
+        275
+      ],
+      "beforeTrans_chestDirection": [
+        1403,
+        293
+      ],
+      "pos": [
+        1261,
+        123
+      ],
+      "direction": [
+        1324,
+        180
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 7,
+      "beforeTrans_pos": [
+        1334,
+        282
+      ],
+      "beforeTrans_chestDirection": [
+        1315,
+        349
+      ],
+      "pos": [
+        1253,
+        149
+      ],
+      "direction": [
+        1190,
+        357
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 8,
+      "beforeTrans_pos": [
+        1318,
+        281
+      ],
+      "beforeTrans_chestDirection": [
+        1250,
+        299
+      ],
+      "pos": [
+        1235,
+        148
+      ],
+      "direction": [
+        1148,
+        218
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 9,
+      "beforeTrans_pos": [
+        1261,
+        278
+      ],
+      "beforeTrans_chestDirection": [
+        1211,
+        327
+      ],
+      "pos": [
+        1171,
+        145
+      ],
+      "direction": [
+        1096,
+        306
+      ],
+      "state": "p4"
+    }
+  ],
+  "feature": {
+    "ageIndex": 0,
+    "genderType": 0,
+    "humanType": "child"
+  }
+}

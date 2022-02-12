@@ -1,0 +1,49 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 25,
+      "beforeTrans_pos": [
+        1346,
+        236
+      ],
+      "beforeTrans_chestDirection": [
+        1278,
+        217
+      ],
+      "pos": [
+        1311,
+        -41
+      ],
+      "direction": [
+        1236,
+        -122
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 26,
+      "beforeTrans_pos": [
+        1320,
+        229
+      ],
+      "beforeTrans_chestDirection": [
+        1252,
+        210
+      ],
+      "pos": [
+        1283,
+        -70
+      ],
+      "direction": [
+        1206,
+        -153
+      ],
+      "state": "p4"
+    }
+  ],
+  "feature": {
+    "ageIndex": 2,
+    "genderType": 0,
+    "humanType": "adult"
+  }
+}

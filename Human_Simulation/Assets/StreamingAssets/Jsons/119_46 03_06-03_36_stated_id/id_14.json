@@ -1,0 +1,129 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 25,
+      "beforeTrans_pos": [
+        1297,
+        221
+      ],
+      "beforeTrans_chestDirection": [
+        1297,
+        291
+      ],
+      "pos": [
+        1259,
+        -105
+      ],
+      "direction": [
+        1204,
+        186
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 26,
+      "beforeTrans_pos": [
+        1304,
+        237
+      ],
+      "beforeTrans_chestDirection": [
+        1304,
+        307
+      ],
+      "pos": [
+        1254,
+        -29
+      ],
+      "direction": [
+        1202,
+        237
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 27,
+      "beforeTrans_pos": [
+        1317,
+        238
+      ],
+      "beforeTrans_chestDirection": [
+        1335,
+        305
+      ],
+      "pos": [
+        1270,
+        -27
+      ],
+      "direction": [
+        1237,
+        228
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 28,
+      "beforeTrans_pos": [
+        1324,
+        257
+      ],
+      "beforeTrans_chestDirection": [
+        1324,
+        327
+      ],
+      "pos": [
+        1262,
+        54
+      ],
+      "direction": [
+        1211,
+        296
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 29,
+      "beforeTrans_pos": [
+        1331,
+        268
+      ],
+      "beforeTrans_chestDirection": [
+        1391,
+        303
+      ],
+      "pos": [
+        1261,
+        97
+      ],
+      "direction": [
+        1301,
+        215
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 30,
+      "beforeTrans_pos": [
+        1329,
+        268
+      ],
+      "beforeTrans_chestDirection": [
+        1389,
+        303
+      ],
+      "pos": [
+        1259,
+        97
+      ],
+      "direction": [
+        1299,
+        215
+      ],
+      "state": "p4"
+    }
+  ],
+  "feature": {
+    "ageIndex": 4,
+    "genderType": 1,
+    "humanType": "adult"
+  }
+}

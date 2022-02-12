@@ -1,0 +1,149 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 49,
+      "beforeTrans_pos": [
+        1326,
+        283
+      ],
+      "beforeTrans_chestDirection": [
+        1326,
+        353
+      ],
+      "pos": [
+        1243,
+        154
+      ],
+      "direction": [
+        1198,
+        366
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 50,
+      "beforeTrans_pos": [
+        1316,
+        284
+      ],
+      "beforeTrans_chestDirection": [
+        1383,
+        302
+      ],
+      "pos": [
+        1231,
+        159
+      ],
+      "direction": [
+        1293,
+        212
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 51,
+      "beforeTrans_pos": [
+        1317,
+        284
+      ],
+      "beforeTrans_chestDirection": [
+        1384,
+        302
+      ],
+      "pos": [
+        1232,
+        159
+      ],
+      "direction": [
+        1294,
+        212
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 52,
+      "beforeTrans_pos": [
+        1316,
+        283
+      ],
+      "beforeTrans_chestDirection": [
+        1376,
+        318
+      ],
+      "pos": [
+        1232,
+        155
+      ],
+      "direction": [
+        1272,
+        264
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 53,
+      "beforeTrans_pos": [
+        1318,
+        280
+      ],
+      "beforeTrans_chestDirection": [
+        1378,
+        315
+      ],
+      "pos": [
+        1236,
+        144
+      ],
+      "direction": [
+        1277,
+        255
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 54,
+      "beforeTrans_pos": [
+        1314,
+        278
+      ],
+      "beforeTrans_chestDirection": [
+        1374,
+        313
+      ],
+      "pos": [
+        1233,
+        137
+      ],
+      "direction": [
+        1274,
+        249
+      ],
+      "state": "p4"
+    },
+    {
+      "frameInt": 55,
+      "beforeTrans_pos": [
+        1319,
+        276
+      ],
+      "beforeTrans_chestDirection": [
+        1379,
+        311
+      ],
+      "pos": [
+        1240,
+        129
+      ],
+      "direction": [
+        1281,
+        242
+      ],
+      "state": "p4"
+    }
+  ],
+  "feature": {
+    "ageIndex": 2,
+    "genderType": 0,
+    "humanType": "adult"
+  }
+}

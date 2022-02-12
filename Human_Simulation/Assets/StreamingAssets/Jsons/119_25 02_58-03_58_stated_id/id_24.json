@@ -1,0 +1,129 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 55,
+      "beforeTrans_pos": [
+        1215,
+        298
+      ],
+      "beforeTrans_chestDirection": [
+        1250,
+        358
+      ],
+      "pos": [
+        1111,
+        219
+      ],
+      "direction": [
+        1123,
+        385
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 56,
+      "beforeTrans_pos": [
+        1280,
+        343
+      ],
+      "beforeTrans_chestDirection": [
+        1315,
+        403
+      ],
+      "pos": [
+        1158,
+        344
+      ],
+      "direction": [
+        1165,
+        482
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 57,
+      "beforeTrans_pos": [
+        1365,
+        377
+      ],
+      "beforeTrans_chestDirection": [
+        1432,
+        395
+      ],
+      "pos": [
+        1222,
+        422
+      ],
+      "direction": [
+        1273,
+        458
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 58,
+      "beforeTrans_pos": [
+        1441,
+        404
+      ],
+      "beforeTrans_chestDirection": [
+        1441,
+        334
+      ],
+      "pos": [
+        1275,
+        477
+      ],
+      "direction": [
+        1328,
+        305
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 59,
+      "beforeTrans_pos": [
+        1475,
+        411
+      ],
+      "beforeTrans_chestDirection": [
+        1542,
+        392
+      ],
+      "pos": [
+        1301,
+        489
+      ],
+      "direction": [
+        1378,
+        444
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 60,
+      "beforeTrans_pos": [
+        1555,
+        438
+      ],
+      "beforeTrans_chestDirection": [
+        1604,
+        487
+      ],
+      "pos": [
+        1352,
+        538
+      ],
+      "direction": [
+        1356,
+        621
+      ],
+      "state": "walkableArea"
+    }
+  ],
+  "feature": {
+    "ageIndex": 2,
+    "genderType": 0,
+    "humanType": "adult"
+  }
+}

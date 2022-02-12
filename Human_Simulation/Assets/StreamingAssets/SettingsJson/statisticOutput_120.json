@@ -1,0 +1,1199 @@
+{
+  "scene": "120",
+  "screenSize": [
+    1920,
+    1080
+  ],
+  "adultPercentage": 0.69,
+  "gatherProbability": {
+    "mean": 0.75,
+    "std": 0.17,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "behaviorProbability": {
+    "join": {
+      "mean": 0.56,
+      "std": 0.13
+    },
+    "keepAlone": {
+      "mean": 0.44,
+      "std": 0.13
+    },
+    "keepGather_sameGroup": {
+      "mean": 0.83,
+      "std": 0.05
+    },
+    "keepGather_difGroup": {
+      "mean": 0.03,
+      "std": 0.02
+    },
+    "leave": {
+      "mean": 0.14,
+      "std": 0.05
+    }
+  },
+  "exhibitionStateMap": {
+    "p1": {
+      "p1": 0.25,
+      "p2": 0.05,
+      "p3": 0.0,
+      "p4": 0.05,
+      "p5": 0.0,
+      "p6": 0.0,
+      "p7": 0.0,
+      "p8": 0.0,
+      "p9": 0.0,
+      "p10": 0.0,
+      "walkableArea": 0.66
+    },
+    "p2": {
+      "p1": 0.04,
+      "p2": 0.14,
+      "p3": 0.0,
+      "p4": 0.12,
+      "p5": 0.02,
+      "p6": 0.02,
+      "p7": 0.0,
+      "p8": 0.02,
+      "p9": 0.0,
+      "p10": 0.0,
+      "walkableArea": 0.65
+    },
+    "p3": {
+      "p1": 0.0,
+      "p2": 0.0,
+      "p3": 0.08,
+      "p4": 0.08,
+      "p5": 0.08,
+      "p6": 0.0,
+      "p7": 0.0,
+      "p8": 0.0,
+      "p9": 0.0,
+      "p10": 0.0,
+      "walkableArea": 0.75
+    },
+    "p4": {
+      "p1": 0.01,
+      "p2": 0.09,
+      "p3": 0.0,
+      "p4": 0.15,
+      "p5": 0.05,
+      "p6": 0.02,
+      "p7": 0.0,
+      "p8": 0.0,
+      "p9": 0.0,
+      "p10": 0.0,
+      "walkableArea": 0.68
+    },
+    "p5": {
+      "p1": 0.01,
+      "p2": 0.08,
+      "p3": 0.01,
+      "p4": 0.05,
+      "p5": 0.08,
+      "p6": 0.05,
+      "p7": 0.0,
+      "p8": 0.0,
+      "p9": 0.0,
+      "p10": 0.0,
+      "walkableArea": 0.7
+    },
+    "p6": {
+      "p1": 0.0,
+      "p2": 0.0,
+      "p3": 0.0,
+      "p4": 0.06,
+      "p5": 0.19,
+      "p6": 0.0,
+      "p7": 0.0,
+      "p8": 0.0,
+      "p9": 0.0,
+      "p10": 0.0,
+      "walkableArea": 0.75
+    },
+    "p7": {
+      "p1": 0.0,
+      "p2": 0.0,
+      "p3": 0.0,
+      "p4": 0.0,
+      "p5": 0.0,
+      "p6": 0.0,
+      "p7": 0.3,
+      "p8": 0.0,
+      "p9": 0.0,
+      "p10": 0.0,
+      "walkableArea": 0.7
+    },
+    "p8": {
+      "p1": 0.0,
+      "p2": 0.0,
+      "p3": 0.0,
+      "p4": 0.0,
+      "p5": 0.0,
+      "p6": 0.0,
+      "p7": 0.0,
+      "p8": 0.07,
+      "p9": 0.0,
+      "p10": 0.13,
+      "walkableArea": 0.8
+    },
+    "p9": {
+      "p1": 0.0,
+      "p2": 0.0,
+      "p3": 0.0,
+      "p4": 0.0,
+      "p5": 0.0,
+      "p6": 0.0,
+      "p7": 0.0,
+      "p8": 0.0,
+      "p9": 0.15,
+      "p10": 0.23,
+      "walkableArea": 0.62
+    },
+    "p10": {
+      "p1": 0.0,
+      "p2": 0.0,
+      "p3": 0.0,
+      "p4": 0.0,
+      "p5": 0.0,
+      "p6": 0.0,
+      "p7": 0.0,
+      "p8": 0.06,
+      "p9": 0.0,
+      "p10": 0.22,
+      "walkableArea": 0.72
+    },
+    "walkableArea": {
+      "p1": 0.1,
+      "p2": 0.14,
+      "p3": 0.05,
+      "p4": 0.25,
+      "p5": 0.21,
+      "p6": 0.04,
+      "p7": 0.04,
+      "p8": 0.04,
+      "p9": 0.03,
+      "p10": 0.08,
+      "walkableArea": 0.02
+    }
+  },
+  "exhibitions": [
+    {
+      "name": "p1",
+      "centerPos": [
+        396,
+        -141
+      ],
+      "color": [
+        0,
+        255,
+        0
+      ],
+      "capacity_max": 4,
+      "capacity_avg": 1,
+      "capacity_median": 0,
+      "stayTime_min": 2.0,
+      "stayTime_max": 30.0,
+      "stayTime_avg": 9.42,
+      "stayTime_std": 8.14,
+      "bestViewDirection": [
+        9,
+        10,
+        1,
+        11,
+        4,
+        2,
+        0,
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "bestViewDistance": [
+        [
+          487.08,
+          162.47
+        ],
+        [
+          569.2,
+          102.51
+        ],
+        [
+          464.2,
+          -230.6
+        ],
+        [
+          500.25,
+          -111.88
+        ],
+        [
+          -51.0,
+          -550.0
+        ],
+        [
+          453.0,
+          -262.0
+        ],
+        [
+          533.0,
+          -205.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        9
+      ],
+      "chosenProbabilty": 0.07,
+      "repeatChosenProbabilty": 0.02
+    },
+    {
+      "name": "p2",
+      "centerPos": [
+        722,
+        490
+      ],
+      "color": [
+        255,
+        0,
+        0
+      ],
+      "capacity_max": 6,
+      "capacity_avg": 1,
+      "capacity_median": 0,
+      "stayTime_min": 1.0,
+      "stayTime_max": 41.0,
+      "stayTime_avg": 10.92,
+      "stayTime_std": 9.76,
+      "bestViewDirection": [
+        11,
+        0,
+        10,
+        1,
+        3,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "bestViewDistance": [
+        [
+          827.72,
+          524.54
+        ],
+        [
+          798.93,
+          472.34
+        ],
+        [
+          833.35,
+          569.81
+        ],
+        [
+          763.31,
+          451.69
+        ],
+        [
+          682.92,
+          389.5
+        ],
+        [
+          734.78,
+          439.72
+        ],
+        [
+          544.0,
+          277.25
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        11
+      ],
+      "chosenProbabilty": 0.1,
+      "repeatChosenProbabilty": 0.01
+    },
+    {
+      "name": "p3",
+      "centerPos": [
+        682,
+        758
+      ],
+      "color": [
+        0,
+        0,
+        255
+      ],
+      "capacity_max": 2,
+      "capacity_avg": 0,
+      "capacity_median": 0,
+      "stayTime_min": 1.0,
+      "stayTime_max": 25.0,
+      "stayTime_avg": 4.86,
+      "stayTime_std": 5.22,
+      "bestViewDirection": [
+        5,
+        0,
+        4,
+        1,
+        3,
+        6,
+        2,
+        11,
+        7,
+        8,
+        9,
+        10
+      ],
+      "bestViewDistance": [
+        [
+          543.42,
+          698.67
+        ],
+        [
+          808.45,
+          743.68
+        ],
+        [
+          599.31,
+          689.38
+        ],
+        [
+          741.33,
+          705.0
+        ],
+        [
+          672.0,
+          692.33
+        ],
+        [
+          667.0,
+          760.0
+        ],
+        [
+          691.0,
+          725.0
+        ],
+        [
+          826.0,
+          761.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        5
+      ],
+      "chosenProbabilty": 0.05,
+      "repeatChosenProbabilty": 0.01
+    },
+    {
+      "name": "p4",
+      "centerPos": [
+        1385,
+        64
+      ],
+      "color": [
+        255,
+        255,
+        0
+      ],
+      "capacity_max": 6,
+      "capacity_avg": 2,
+      "capacity_median": 1,
+      "stayTime_min": 1.0,
+      "stayTime_max": 52.0,
+      "stayTime_avg": 13.21,
+      "stayTime_std": 11.1,
+      "bestViewDirection": [
+        6,
+        9,
+        7,
+        5,
+        8,
+        4,
+        0,
+        1,
+        2,
+        3,
+        10,
+        11
+      ],
+      "bestViewDistance": [
+        [
+          897.17,
+          193.91
+        ],
+        [
+          1443.94,
+          550.72
+        ],
+        [
+          962.46,
+          346.02
+        ],
+        [
+          896.56,
+          28.68
+        ],
+        [
+          1351.84,
+          548.89
+        ],
+        [
+          692.0,
+          -469.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        6
+      ],
+      "chosenProbabilty": 0.2,
+      "repeatChosenProbabilty": 0.05
+    },
+    {
+      "name": "p5",
+      "centerPos": [
+        1374,
+        906
+      ],
+      "color": [
+        255,
+        120,
+        0
+      ],
+      "capacity_max": 4,
+      "capacity_avg": 1,
+      "capacity_median": 1,
+      "stayTime_min": 1.0,
+      "stayTime_max": 60.0,
+      "stayTime_avg": 13.07,
+      "stayTime_std": 13.62,
+      "bestViewDirection": [
+        5,
+        6,
+        4,
+        3,
+        10,
+        2,
+        1,
+        0,
+        11,
+        9,
+        7,
+        8
+      ],
+      "bestViewDistance": [
+        [
+          1277.43,
+          881.62
+        ],
+        [
+          1283.14,
+          920.5
+        ],
+        [
+          1306.07,
+          842.85
+        ],
+        [
+          1353.0,
+          830.63
+        ],
+        [
+          1470.68,
+          979.68
+        ],
+        [
+          1396.08,
+          829.83
+        ],
+        [
+          1445.35,
+          836.55
+        ],
+        [
+          1497.06,
+          875.89
+        ],
+        [
+          1490.88,
+          949.25
+        ],
+        [
+          1424.0,
+          1011.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        5
+      ],
+      "chosenProbabilty": 0.19,
+      "repeatChosenProbabilty": 0.02
+    },
+    {
+      "name": "p6",
+      "centerPos": [
+        1639,
+        740
+      ],
+      "color": [
+        255,
+        0,
+        255
+      ],
+      "capacity_max": 2,
+      "capacity_avg": 0,
+      "capacity_median": 0,
+      "stayTime_min": 2.0,
+      "stayTime_max": 14.0,
+      "stayTime_avg": 5.58,
+      "stayTime_std": 3.86,
+      "bestViewDirection": [
+        4,
+        5,
+        3,
+        2,
+        6,
+        0,
+        1,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "bestViewDistance": [
+        [
+          1597.22,
+          705.15
+        ],
+        [
+          1586.91,
+          717.36
+        ],
+        [
+          1626.4,
+          682.9
+        ],
+        [
+          1672.0,
+          671.0
+        ],
+        [
+          1593.5,
+          748.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        4
+      ],
+      "chosenProbabilty": 0.04,
+      "repeatChosenProbabilty": 0.0
+    },
+    {
+      "name": "p7",
+      "centerPos": [
+        1787,
+        18
+      ],
+      "color": [
+        0,
+        255,
+        255
+      ],
+      "capacity_max": 2,
+      "capacity_avg": 0,
+      "capacity_median": 0,
+      "stayTime_min": 2.0,
+      "stayTime_max": 18.0,
+      "stayTime_avg": 5.86,
+      "stayTime_std": 4.76,
+      "bestViewDirection": [
+        6,
+        3,
+        8,
+        4,
+        7,
+        5,
+        0,
+        1,
+        2,
+        9,
+        10,
+        11
+      ],
+      "bestViewDistance": [
+        [
+          1715.14,
+          41.36
+        ],
+        [
+          1765.05,
+          -57.0
+        ],
+        [
+          1759.87,
+          99.07
+        ],
+        [
+          1742.56,
+          -27.0
+        ],
+        [
+          1727.0,
+          72.25
+        ],
+        [
+          1731.33,
+          -5.33
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        6
+      ],
+      "chosenProbabilty": 0.02,
+      "repeatChosenProbabilty": 0.01
+    },
+    {
+      "name": "p8",
+      "centerPos": [
+        495,
+        562
+      ],
+      "color": [
+        255,
+        0,
+        120
+      ],
+      "capacity_max": 2,
+      "capacity_avg": 0,
+      "capacity_median": 0,
+      "stayTime_min": 1.0,
+      "stayTime_max": 58.0,
+      "stayTime_avg": 12.34,
+      "stayTime_std": 17.36,
+      "bestViewDirection": [
+        5,
+        4,
+        6,
+        7,
+        8,
+        0,
+        1,
+        2,
+        3,
+        9,
+        10,
+        11
+      ],
+      "bestViewDistance": [
+        [
+          405.15,
+          525.1
+        ],
+        [
+          367.39,
+          473.6
+        ],
+        [
+          431.33,
+          567.83
+        ],
+        [
+          463.4,
+          592.2
+        ],
+        [
+          489.0,
+          668.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        5
+      ],
+      "chosenProbabilty": 0.06,
+      "repeatChosenProbabilty": 0.0
+    },
+    {
+      "name": "p9",
+      "centerPos": [
+        72,
+        378
+      ],
+      "color": [
+        120,
+        0,
+        255
+      ],
+      "capacity_max": 1,
+      "capacity_avg": 0,
+      "capacity_median": 0,
+      "stayTime_min": 1.0,
+      "stayTime_max": 34.0,
+      "stayTime_avg": 7.42,
+      "stayTime_std": 9.34,
+      "bestViewDirection": [
+        0,
+        1,
+        11,
+        2,
+        10,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "bestViewDistance": [
+        [
+          163.42,
+          336.89
+        ],
+        [
+          144.29,
+          319.97
+        ],
+        [
+          204.55,
+          415.09
+        ],
+        [
+          104.33,
+          295.0
+        ],
+        [
+          291.0,
+          526.0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        0
+      ],
+      "chosenProbabilty": 0.02,
+      "repeatChosenProbabilty": 0.0
+    },
+    {
+      "name": "p10",
+      "centerPos": [
+        333,
+        686
+      ],
+      "color": [
+        120,
+        0,
+        120
+      ],
+      "capacity_max": 3,
+      "capacity_avg": 0,
+      "capacity_median": 0,
+      "stayTime_min": 1.0,
+      "stayTime_max": 45.0,
+      "stayTime_avg": 9.22,
+      "stayTime_std": 9.73,
+      "bestViewDirection": [
+        3,
+        0,
+        1,
+        4,
+        11,
+        2,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "bestViewDistance": [
+        [
+          299.65,
+          600.02
+        ],
+        [
+          377.79,
+          674.4
+        ],
+        [
+          361.84,
+          656.47
+        ],
+        [
+          251.67,
+          567.97
+        ],
+        [
+          394.75,
+          689.0
+        ],
+        [
+          344.18,
+          638.55
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        3
+      ],
+      "chosenProbabilty": 0.08,
+      "repeatChosenProbabilty": 0.01
+    },
+    {
+      "name": "walkableArea",
+      "centerPos": [
+        -11717,
+        -5394
+      ],
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "capacity_max": 20,
+      "capacity_avg": 8,
+      "capacity_median": 8,
+      "stayTime_min": 1.0,
+      "stayTime_max": 60.0,
+      "stayTime_avg": 11.08,
+      "stayTime_std": 10.4,
+      "bestViewDirection": [
+        11,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "bestViewDistance": [
+        [
+          987.24,
+          497.18
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ],
+      "frontSide": [
+        11
+      ],
+      "chosenProbabilty": 0.91,
+      "repeatChosenProbabilty": 0.29
+    }
+  ],
+  "humanTypes": [
+    {
+      "type": "adult",
+      "walkSpeed_min": 0.0,
+      "walkSpeed_max": 279.1,
+      "walkSpeed_avg": 57.62,
+      "walkSpeed_median": 51.98,
+      "walkSpeed_std": 35.15,
+      "walkToStopRate": 0.17,
+      "stopToWalkRate": 0.27,
+      "interestForEachExhibition": {
+        "p1": 0.06,
+        "p2": 0.08,
+        "p3": 0.06,
+        "p4": 0.17,
+        "p5": 0.14,
+        "p6": 0.02,
+        "p7": 0.02,
+        "p8": 0.06,
+        "p9": 0.03,
+        "p10": 0.07,
+        "walkableArea": 0.93
+      }
+    },
+    {
+      "type": "child",
+      "walkSpeed_min": 0.0,
+      "walkSpeed_max": 241.5,
+      "walkSpeed_avg": 61.33,
+      "walkSpeed_median": 52.03,
+      "walkSpeed_std": 43.95,
+      "walkToStopRate": 0.18,
+      "stopToWalkRate": 0.25,
+      "interestForEachExhibition": {
+        "p1": 0.11,
+        "p2": 0.16,
+        "p3": 0.02,
+        "p4": 0.23,
+        "p5": 0.19,
+        "p6": 0.04,
+        "p7": 0.04,
+        "p8": 0.08,
+        "p9": 0.01,
+        "p10": 0.1,
+        "walkableArea": 0.85
+      }
+    }
+  ]
+}

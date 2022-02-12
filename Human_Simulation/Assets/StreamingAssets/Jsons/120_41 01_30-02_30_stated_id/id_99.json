@@ -1,0 +1,129 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 53,
+      "beforeTrans_pos": [
+        376,
+        482
+      ],
+      "beforeTrans_chestDirection": [
+        411,
+        421
+      ],
+      "pos": [
+        437,
+        658
+      ],
+      "direction": [
+        366,
+        566
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 54,
+      "beforeTrans_pos": [
+        404,
+        464
+      ],
+      "beforeTrans_chestDirection": [
+        453,
+        414
+      ],
+      "pos": [
+        440,
+        633
+      ],
+      "direction": [
+        409,
+        555
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 55,
+      "beforeTrans_pos": [
+        401,
+        431
+      ],
+      "beforeTrans_chestDirection": [
+        436,
+        370
+      ],
+      "pos": [
+        373,
+        583
+      ],
+      "direction": [
+        287,
+        473
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 56,
+      "beforeTrans_pos": [
+        416,
+        379
+      ],
+      "beforeTrans_chestDirection": [
+        451,
+        318
+      ],
+      "pos": [
+        279,
+        490
+      ],
+      "direction": [
+        169,
+        354
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 57,
+      "beforeTrans_pos": [
+        450,
+        336
+      ],
+      "beforeTrans_chestDirection": [
+        499,
+        286
+      ],
+      "pos": [
+        220,
+        398
+      ],
+      "direction": [
+        153,
+        268
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 58,
+      "beforeTrans_pos": [
+        474,
+        297
+      ],
+      "beforeTrans_chestDirection": [
+        523,
+        247
+      ],
+      "pos": [
+        143,
+        298
+      ],
+      "direction": [
+        59,
+        141
+      ],
+      "state": "walkableArea"
+    }
+  ],
+  "feature": {
+    "ageIndex": 2,
+    "genderType": 1,
+    "humanType": "adult"
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 6,
+      "beforeTrans_pos": [
+        1230,
+        366
+      ],
+      "beforeTrans_chestDirection": [
+        1230,
+        436
+      ],
+      "pos": [
+        1102,
+        405
+      ],
+      "direction": [
+        1083,
+        550
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 7,
+      "beforeTrans_pos": [
+        1299,
+        394
+      ],
+      "beforeTrans_chestDirection": [
+        1299,
+        464
+      ],
+      "pos": [
+        1154,
+        464
+      ],
+      "direction": [
+        1130,
+        595
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 8,
+      "beforeTrans_pos": [
+        1343,
+        441
+      ],
+      "beforeTrans_chestDirection": [
+        1324,
+        508
+      ],
+      "pos": [
+        1173,
+        553
+      ],
+      "direction": [
+        1135,
+        661
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 9,
+      "beforeTrans_pos": [
+        1387,
+        478
+      ],
+      "beforeTrans_chestDirection": [
+        1447,
+        513
+      ],
+      "pos": [
+        1192,
+        614
+      ],
+      "direction": [
+        1222,
+        664
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 10,
+      "beforeTrans_pos": [
+        1485,
+        514
+      ],
+      "beforeTrans_chestDirection": [
+        1545,
+        549
+      ],
+      "pos": [
+        1249,
+        665
+      ],
+      "direction": [
+        1275,
+        710
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 11,
+      "beforeTrans_pos": [
+        1595,
+        537
+      ],
+      "beforeTrans_chestDirection": [
+        1644,
+        487
+      ],
+      "pos": [
+        1317,
+        693
+      ],
+      "direction": [
+        1388,
+        619
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 12,
+      "beforeTrans_pos": [
+        1679,
+        533
+      ],
+      "beforeTrans_chestDirection": [
+        1728,
+        483
+      ],
+      "pos": [
+        1381,
+        686
+      ],
+      "direction": [
+        1459,
+        610
+      ],
+      "state": "walkableArea"
+    }
+  ],
+  "feature": {
+    "ageIndex": 2,
+    "genderType": 1,
+    "humanType": "adult"
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 55,
+      "beforeTrans_pos": [
+        1483,
+        247
+      ],
+      "beforeTrans_chestDirection": [
+        1464,
+        179
+      ],
+      "pos": [
+        1671,
+        223
+      ],
+      "direction": [
+        1685,
+        -5
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 56,
+      "beforeTrans_pos": [
+        1495,
+        206
+      ],
+      "beforeTrans_chestDirection": [
+        1476,
+        138
+      ],
+      "pos": [
+        1714,
+        97
+      ],
+      "direction": [
+        1739,
+        -186
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 57,
+      "beforeTrans_pos": [
+        1483,
+        192
+      ],
+      "beforeTrans_chestDirection": [
+        1553,
+        191
+      ],
+      "pos": [
+        1706,
+        46
+      ],
+      "direction": [
+        1815,
+        51
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 58,
+      "beforeTrans_pos": [
+        1514,
+        219
+      ],
+      "beforeTrans_chestDirection": [
+        1453,
+        254
+      ],
+      "pos": [
+        1733,
+        142
+      ],
+      "direction": [
+        1626,
+        240
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 59,
+      "beforeTrans_pos": [
+        1575,
+        307
+      ],
+      "beforeTrans_chestDirection": [
+        1575,
+        377
+      ],
+      "pos": [
+        1751,
+        374
+      ],
+      "direction": [
+        1712,
+        504
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 60,
+      "beforeTrans_pos": [
+        1633,
+        403
+      ],
+      "beforeTrans_chestDirection": [
+        1633,
+        473
+      ],
+      "pos": [
+        1756,
+        544
+      ],
+      "direction": [
+        1723,
+        637
+      ],
+      "state": "walkableArea"
+    }
+  ],
+  "feature": {
+    "ageIndex": 0,
+    "genderType": 1,
+    "humanType": "child"
+  }
+}

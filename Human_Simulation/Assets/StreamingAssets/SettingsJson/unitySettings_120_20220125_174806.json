@@ -1,0 +1,103 @@
+
+{
+    "UI_Global" : {
+        "agentCount" : 15,
+        "adultPercentage" : 0.689999997615814,
+        "addAgentCount"   : 5,
+        "startAddAgentMin" : 10,
+        "startAddAgentMax" : 60,
+        "UpdateRate"       : {
+            "gathers" : 5,
+            "stopWalkStatus" : 2,
+            "influenceMap"   : 5
+        }
+    },
+    "UI_Human"  : {
+        "walkSpeedMin" : 60,
+        "walkSpeedMax" : -1,
+        "freeTimeMin"  : 50,
+        "freeTimeMax"  : 300,
+        "gatherProbability" : {
+            "mean" : 0.75,
+            "std"  : 0.170000001788139,
+            "min"  : 0.0,
+            "max"  : 1.0,
+            "median" : 0.0
+        },
+        "behaviorProbability" : {
+            "join" : {
+                "mean" : 0.560000002384186,
+                "std"  : 0.129999995231628,
+                "min"  : 0.0,
+                "max"  : 0.0,
+                "median" : 0.0
+            },
+            "keepAlone" : {
+                "mean" : 0.439999997615814,
+                "std"  : 0.129999995231628,
+                "min"  : 0.0,
+                "max"  : 0.0,
+                "median" : 0.0
+            },
+            "keepGather_sameGroup" : {
+                "mean" : 0.829999983310699,
+                "std"  : 0.0500000007450581,
+                "min"  : 0.0,
+                "max"  : 0.0,
+                "median" : 0.0
+            },
+            "keepGather_difGroup"  : {
+                "mean" : 0.0299999993294477,
+                "std"  : 0.0199999995529652,
+                "min"  : 0.0,
+                "max"  : 0.0,
+                "median" : 0.0
+            },
+            "leave"                : {
+                "mean" : 0.140000000596046,
+                "std"  : 0.0500000007450581,
+                "min"  : 0.0,
+                "max"  : 0.0,
+                "median" : 0.0
+            }
+        }
+    },
+    "UI_Exhibit" : {
+        "capacityLimitTimes" : 1.20000004768372,
+        "popularThreshold"   : 0.3,
+        "crowdedThreshold"   : 0.5,
+        "crowdedTimeLimit"   : 20
+    },
+    "UI_InfluenceMap" : {
+        "weightHuman" : 0.200000002980232,
+        "weightExhibit" : 1.0,
+        "humanInflence" : {
+            "followDesire" : 0.3,
+            "takeTime"     : 0.3,
+            "gatherDesire" : 0.2,
+            "humanTypeAttraction" : 0.2,
+            "behaviorAttraction"  : 0.0
+        },
+        "exhibitInflence" : {
+            "capactiy" : 0.2,
+            "takeTime" : 0.3,
+            "popularLevel" : 0.15,
+            "humanPreference" : 0.2,
+            "closeToBestViewDirection" : 0.15
+        }
+    },
+    "walkStage"       : {
+        "GoTo" : {
+            "radius" : 0.400000005960464,
+            "speed"  : 1.0
+        },
+        "Close" : {
+            "radius" : 0.349999994039536,
+            "speed"  : 0.699999988079071
+        },
+        "At"    : {
+            "radius" : 0.300000011920929,
+            "speed"  : 0.5
+        }
+    }
+}

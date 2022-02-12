@@ -1,0 +1,129 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 18,
+      "beforeTrans_pos": [
+        445,
+        416
+      ],
+      "beforeTrans_chestDirection": [
+        410,
+        476
+      ],
+      "pos": [
+        402,
+        558
+      ],
+      "direction": [
+        468,
+        649
+      ],
+      "state": "p8"
+    },
+    {
+      "frameInt": 19,
+      "beforeTrans_pos": [
+        402,
+        449
+      ],
+      "beforeTrans_chestDirection": [
+        367,
+        509
+      ],
+      "pos": [
+        410,
+        611
+      ],
+      "direction": [
+        472,
+        692
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 20,
+      "beforeTrans_pos": [
+        380,
+        479
+      ],
+      "beforeTrans_chestDirection": [
+        319,
+        514
+      ],
+      "pos": [
+        437,
+        654
+      ],
+      "direction": [
+        425,
+        699
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 21,
+      "beforeTrans_pos": [
+        360,
+        494
+      ],
+      "beforeTrans_chestDirection": [
+        290,
+        494
+      ],
+      "pos": [
+        439,
+        674
+      ],
+      "direction": [
+        355,
+        674
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 22,
+      "beforeTrans_pos": [
+        360,
+        494
+      ],
+      "beforeTrans_chestDirection": [
+        310,
+        444
+      ],
+      "pos": [
+        439,
+        674
+      ],
+      "direction": [
+        280,
+        603
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 23,
+      "beforeTrans_pos": [
+        358,
+        492
+      ],
+      "beforeTrans_chestDirection": [
+        308,
+        442
+      ],
+      "pos": [
+        433,
+        671
+      ],
+      "direction": [
+        273,
+        600
+      ],
+      "state": "walkableArea"
+    }
+  ],
+  "feature": {
+    "ageIndex": 0,
+    "genderType": 1,
+    "humanType": "child"
+  }
+}

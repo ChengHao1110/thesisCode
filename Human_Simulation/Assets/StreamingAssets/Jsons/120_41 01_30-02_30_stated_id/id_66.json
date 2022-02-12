@@ -1,0 +1,149 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 54,
+      "beforeTrans_pos": [
+        457,
+        309
+      ],
+      "beforeTrans_chestDirection": [
+        396,
+        274
+      ],
+      "pos": [
+        152,
+        330
+      ],
+      "direction": [
+        -88,
+        222
+      ],
+      "state": "p9"
+    },
+    {
+      "frameInt": 55,
+      "beforeTrans_pos": [
+        456,
+        307
+      ],
+      "beforeTrans_chestDirection": [
+        395,
+        272
+      ],
+      "pos": [
+        144,
+        325
+      ],
+      "direction": [
+        -98,
+        216
+      ],
+      "state": "p9"
+    },
+    {
+      "frameInt": 56,
+      "beforeTrans_pos": [
+        456,
+        307
+      ],
+      "beforeTrans_chestDirection": [
+        395,
+        272
+      ],
+      "pos": [
+        144,
+        325
+      ],
+      "direction": [
+        -98,
+        216
+      ],
+      "state": "p9"
+    },
+    {
+      "frameInt": 57,
+      "beforeTrans_pos": [
+        456,
+        307
+      ],
+      "beforeTrans_chestDirection": [
+        395,
+        272
+      ],
+      "pos": [
+        144,
+        325
+      ],
+      "direction": [
+        -98,
+        216
+      ],
+      "state": "p9"
+    },
+    {
+      "frameInt": 58,
+      "beforeTrans_pos": [
+        455,
+        301
+      ],
+      "beforeTrans_chestDirection": [
+        405,
+        251
+      ],
+      "pos": [
+        122,
+        308
+      ],
+      "direction": [
+        -170,
+        143
+      ],
+      "state": "p9"
+    },
+    {
+      "frameInt": 59,
+      "beforeTrans_pos": [
+        451,
+        296
+      ],
+      "beforeTrans_chestDirection": [
+        383,
+        277
+      ],
+      "pos": [
+        98,
+        294
+      ],
+      "direction": [
+        -101,
+        231
+      ],
+      "state": "p9"
+    },
+    {
+      "frameInt": 60,
+      "beforeTrans_pos": [
+        451,
+        298
+      ],
+      "beforeTrans_chestDirection": [
+        383,
+        279
+      ],
+      "pos": [
+        105,
+        300
+      ],
+      "direction": [
+        -93,
+        238
+      ],
+      "state": "p9"
+    }
+  ],
+  "feature": {
+    "ageIndex": 2,
+    "genderType": 1,
+    "humanType": "adult"
+  }
+}

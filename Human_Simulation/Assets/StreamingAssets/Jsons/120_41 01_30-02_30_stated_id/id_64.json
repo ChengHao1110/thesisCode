@@ -1,0 +1,189 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 52,
+      "beforeTrans_pos": [
+        858,
+        154
+      ],
+      "beforeTrans_chestDirection": [
+        790,
+        172
+      ],
+      "pos": [
+        459,
+        -234
+      ],
+      "direction": [
+        360,
+        -149
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 53,
+      "beforeTrans_pos": [
+        858,
+        154
+      ],
+      "beforeTrans_chestDirection": [
+        790,
+        172
+      ],
+      "pos": [
+        459,
+        -234
+      ],
+      "direction": [
+        360,
+        -149
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 54,
+      "beforeTrans_pos": [
+        858,
+        154
+      ],
+      "beforeTrans_chestDirection": [
+        788,
+        154
+      ],
+      "pos": [
+        459,
+        -234
+      ],
+      "direction": [
+        286,
+        -251
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 55,
+      "beforeTrans_pos": [
+        858,
+        154
+      ],
+      "beforeTrans_chestDirection": [
+        808,
+        104
+      ],
+      "pos": [
+        459,
+        -234
+      ],
+      "direction": [
+        99,
+        -608
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 56,
+      "beforeTrans_pos": [
+        858,
+        154
+      ],
+      "beforeTrans_chestDirection": [
+        808,
+        104
+      ],
+      "pos": [
+        459,
+        -234
+      ],
+      "direction": [
+        99,
+        -608
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 57,
+      "beforeTrans_pos": [
+        858,
+        154
+      ],
+      "beforeTrans_chestDirection": [
+        788,
+        154
+      ],
+      "pos": [
+        459,
+        -234
+      ],
+      "direction": [
+        286,
+        -251
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 58,
+      "beforeTrans_pos": [
+        858,
+        154
+      ],
+      "beforeTrans_chestDirection": [
+        790,
+        135
+      ],
+      "pos": [
+        459,
+        -234
+      ],
+      "direction": [
+        208,
+        -373
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 59,
+      "beforeTrans_pos": [
+        858,
+        154
+      ],
+      "beforeTrans_chestDirection": [
+        790,
+        135
+      ],
+      "pos": [
+        459,
+        -234
+      ],
+      "direction": [
+        208,
+        -373
+      ],
+      "state": "p1"
+    },
+    {
+      "frameInt": 60,
+      "beforeTrans_pos": [
+        858,
+        154
+      ],
+      "beforeTrans_chestDirection": [
+        790,
+        135
+      ],
+      "pos": [
+        459,
+        -234
+      ],
+      "direction": [
+        208,
+        -373
+      ],
+      "state": "p1"
+    }
+  ],
+  "feature": {
+    "ageIndex": 0,
+    "genderType": 1,
+    "humanType": "child"
+  }
+}

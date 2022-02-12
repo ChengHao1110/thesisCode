@@ -1,0 +1,129 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 6,
+      "beforeTrans_pos": [
+        307,
+        507
+      ],
+      "beforeTrans_chestDirection": [
+        246,
+        472
+      ],
+      "pos": [
+        399,
+        691
+      ],
+      "direction": [
+        257,
+        645
+      ],
+      "state": "p10"
+    },
+    {
+      "frameInt": 7,
+      "beforeTrans_pos": [
+        331,
+        499
+      ],
+      "beforeTrans_chestDirection": [
+        270,
+        464
+      ],
+      "pos": [
+        413,
+        680
+      ],
+      "direction": [
+        271,
+        633
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 8,
+      "beforeTrans_pos": [
+        338,
+        498
+      ],
+      "beforeTrans_chestDirection": [
+        277,
+        463
+      ],
+      "pos": [
+        420,
+        679
+      ],
+      "direction": [
+        278,
+        632
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 18,
+      "beforeTrans_pos": [
+        332,
+        499
+      ],
+      "beforeTrans_chestDirection": [
+        313,
+        431
+      ],
+      "pos": [
+        414,
+        680
+      ],
+      "direction": [
+        255,
+        583
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 19,
+      "beforeTrans_pos": [
+        335,
+        466
+      ],
+      "beforeTrans_chestDirection": [
+        300,
+        405
+      ],
+      "pos": [
+        357,
+        636
+      ],
+      "direction": [
+        174,
+        538
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 20,
+      "beforeTrans_pos": [
+        336,
+        439
+      ],
+      "beforeTrans_chestDirection": [
+        266,
+        439
+      ],
+      "pos": [
+        304,
+        595
+      ],
+      "direction": [
+        210,
+        596
+      ],
+      "state": "walkableArea"
+    }
+  ],
+  "feature": {
+    "ageIndex": 2,
+    "genderType": 1,
+    "humanType": "adult"
+  }
+}

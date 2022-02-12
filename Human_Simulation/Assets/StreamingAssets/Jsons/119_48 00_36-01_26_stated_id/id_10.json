@@ -1,0 +1,29 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 21,
+      "beforeTrans_pos": [
+        1214,
+        257
+      ],
+      "beforeTrans_chestDirection": [
+        1179,
+        317
+      ],
+      "pos": [
+        1127,
+        71
+      ],
+      "direction": [
+        1067,
+        281
+      ],
+      "state": "p1"
+    }
+  ],
+  "feature": {
+    "ageIndex": 2,
+    "genderType": 0,
+    "humanType": "adult"
+  }
+}

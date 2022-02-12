@@ -1,0 +1,3359 @@
+
+{
+    "popularThreshold" : 0.3,
+    "crowdedThreshold" : 0.5,
+    "rec"              : {
+        "p1" : {
+            "bestViewCount" : {
+                "9" : 1,
+                "10" : 1,
+                "1"  : 0,
+                "11" : 0,
+                "4"  : 0,
+                "2"  : 0
+            },
+            "influences"    : [
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 32.25
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 32.25
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 32.25
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 32.25
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 33.25
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 33.25
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 33.25
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.2500038146973
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.2500038146973
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 65.0500030517578
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 31.350269317627
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.2500038146973
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.2500038146973
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.2500038146973
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.2500038146973
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 65.0500030517578
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 31.1973533630371
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.2500038146973
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.2500038146973
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.2500038146973
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.2500038146973
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.2500038146973
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 65.0500030517578
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 31.1554775238037
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 33.4539108276367
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.2500038146973
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.2500038146973
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.2500038146973
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.2500038146973
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 31.1554584503174
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 33.453929901123
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.2500038146973
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.2500038146973
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.2500038146973
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.2500038146973
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 33.3294448852539
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 33.453929901123
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 56.0500030517578
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.2500038146973
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 32.25
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 33.25
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 29.2251167297363
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 28.4539356231689
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 45.4475250244141
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 32.25
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 32.25
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 33.25
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 29.2538280487061
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 34.8246269226074
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 45.4156875610352
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 32.25
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 32.25
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 33.25
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 24.7516441345215
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 26.6949691772461
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 50.4156875610352
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 34.7151947021484
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 31.092435836792
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 31.106050491333
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 45.4157257080078
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 29.8858642578125
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 40.306282043457
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 31.7412052154541
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 57.0893058776855
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 37.2515182495117
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 37.202995300293
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 30.6736602783203
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 30.7011737823486
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 31.6242599487305
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 25.121862411499
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 35.3164482116699
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 35.32470703125
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 36.6242866516113
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 12.9924354553223
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 24.0757865905762
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 23.7361545562744
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 22.6687469482422
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 19.175464630127
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 49.4647979736328
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 16.1673812866211
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 39.7722396850586
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 17.7027015686035
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                }
+            ],
+            "stayingTime"   : [
+                14.4401512444019,
+                14.4601512551308,
+                14.4801512658596,
+                14.5001512765884,
+                14.5201512873173,
+                14.5401512980461,
+                14.5601513087749,
+                14.5801513195038,
+                14.6001513302326,
+                14.6201513409615,
+                14.6401513516903,
+                14.6601513624191,
+                14.6801513582468,
+                14.7001513540745,
+                14.7201513499022,
+                14.7401513457298,
+                14.7601513415575,
+                14.7801513373852,
+                14.8001513332129,
+                14.8201513290405,
+                14.8401513248682,
+                14.8601513244212,
+                14.8801513239741,
+                14.9001513235271,
+                14.9201513230801,
+                14.940151322633
+            ],
+            "humanCount"    : 2
+        },
+        "p2" : {
+            "bestViewCount" : {
+                "11" : 1,
+                "0"  : 1,
+                "10" : 0
+            },
+            "influences"    : [
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 33.1000022888184
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 33.1000022888184
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.0,
+                    "influence" : 33.1000022888184
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 33.1000022888184
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 34.7000007629395
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 34.7000007629395
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.0,
+                    "influence" : 34.7000007629395
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 40.7666664123535
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 42.3666687011719
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 36.4333343505859
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 54.8333358764648
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 36.4333343505859
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 38.0333366394043
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 59.1666679382324
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 40.7666664123535
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 59.1666679382324
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 40.7666664123535
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 42.3666687011719
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 58.8938446044922
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 40.7666664123535
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 58.4961585998535
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 40.7666664123535
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 42.3666687011719
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 58.8938446044922
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 40.7666664123535
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 58.4962043762207
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 40.7666664123535
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 42.3666687011719
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 33.2677726745605
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 54.00927734375
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 32.7293663024902
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 38.0333366394043
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 33.2072639465332
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 54.0106315612793
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 37.0627136230469
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 38.9097862243652
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 37.5847969055176
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 58.3448715209961
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 37.0627136230469
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 38.9583320617676
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 33.2634201049805
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 53.895450592041
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 32.6093978881836
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 34.6249885559082
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 58.7505149841309
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 33.145191192627
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 22.7920818328857
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 32.8156509399414
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 34.3922958374023
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 32.9869117736816
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 32.1103858947754
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 34.0749053955078
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.13888888336994,
+                    "influence" : 50.2677459716797
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 24.8690128326416
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 33.728458404541
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 37.8253364562988
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 37.5712966918945
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 18.3728923797607
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 15.7599763870239
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 24.6193790435791
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 18.7039337158203
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                }
+            ],
+            "stayingTime"   : [
+                1.61999848484993,
+                1.63999849557877,
+                1.6599985063076,
+                1.67999851703644,
+                1.69999852776527,
+                1.71999853849411,
+                1.73999854922295,
+                1.75999855995178,
+                1.77999857068062,
+                1.79999858140945,
+                1.81999859213829,
+                1.83999860286713,
+                1.85999861359596,
+                1.87999860942364,
+                1.89999860525131,
+                1.91999860107899,
+                1.93999859690666,
+                1.95999859273434,
+                1.97999858856201,
+                1.99999858438969,
+                2.01999858021736,
+                2.03999857604504,
+                2.059998575598,
+                2.07999857515097,
+                2.09999857470393,
+                2.1199985742569,
+                1.95999816060066,
+                1.9799981713295,
+                1.99999818205833,
+                2.01999819278717,
+                2.03999820351601,
+                2.05999821424484,
+                2.07999822497368,
+                2.09999823570251,
+                2.11999824643135,
+                2.13999825716019,
+                2.15999826788902,
+                2.17999827861786,
+                2.19999827444553,
+                2.21999827027321,
+                2.23999826610088,
+                2.25999826192856,
+                2.27999825775623,
+                2.29999825358391,
+                2.31999824941158,
+                2.33999824523926,
+                2.35999824106693,
+                2.37999823689461,
+                2.39999823644757,
+                2.41999823600054,
+                2.4399982355535,
+                2.45999823510647,
+                18.4402427971363,
+                18.4602428078651,
+                18.480242818594,
+                18.5002428293228,
+                18.5202428400517,
+                18.5402428507805,
+                18.5602428615093,
+                18.5802428722382,
+                18.600242882967,
+                18.6202428936958,
+                18.6402429044247,
+                18.6602429151535,
+                18.6802429258823,
+                18.70024292171,
+                18.7202429175377,
+                18.7402429133654,
+                18.760242909193,
+                18.7802429050207,
+                18.8002429008484,
+                18.8202428966761,
+                18.8402428925037,
+                18.8602428883314,
+                18.8802428878844,
+                18.9002428874373,
+                18.9202428869903,
+                18.9402428865433
+            ],
+            "humanCount"    : 3
+        },
+        "p3" : {
+            "bestViewCount" : {
+                "5" : 0,
+                "0" : 0,
+                "4" : 0,
+                "1" : 0,
+                "3" : 0
+            },
+            "influences"    : [
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 31.1500015258789
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.1500015258789
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.9500007629395
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 31.1500015258789
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 31.1500015258789
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 31.1500015258789
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 50.75
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 28.2310199737549
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.9500007629395
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 50.75
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 28.2309951782227
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 50.75
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 28.2309989929199
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 31.9500026702881
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 50.75
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 38.5286750793457
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 56.9162368774414
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 26.9320964813232
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 26.314172744751
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 48.8242492675781
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 26.815580368042
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 26.5276374816895
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 48.8243255615234
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 26.674783706665
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 41.8087310791016
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 64.8243103027344
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 45.7633972167969
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 26.4404850006104
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 57.8952331542969
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 26.8506603240967
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                }
+            ],
+            "stayingTime"   : [
+            ],
+            "humanCount"    : 0
+        },
+        "p4" : {
+            "bestViewCount" : {
+                "6" : 3,
+                "9" : 1,
+                "7" : 1
+            },
+            "influences"    : [
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.0,
+                    "influence" : 36.4000015258789
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 36.4000015258789
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.0,
+                    "influence" : 36.4000015258789
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.0,
+                    "influence" : 32.4301910400391
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 32.5359916687012
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 27.5165977478027
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 36.4000015258789
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 36.4000015258789
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.0,
+                    "influence" : 37.5999984741211
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 33.249340057373
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 37.5999984741211
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.0,
+                    "influence" : 32.3416633605957
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.6666679382324
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.6666679382324
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 38.9996604919434
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 41.2803688049316
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.6666679382324
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 38.4905319213867
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.4097557067871
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.6666679382324
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.6666679382324
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.6666679382324
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.6666679382324
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.0991134643555
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 38.8276443481445
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 57.2510261535645
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 40.9235534667969
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 41.7835578918457
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.6666679382324
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 39.5652389526367
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 69.0
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 69.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 69.0
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 65.2509918212891
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.5203094482422
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.1054382324219
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 65.2909088134766
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 49.256893157959
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 49.9604835510254
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 69.0
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.8985748291016
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.3514709472656
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 69.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.6496124267578
+                },
+                {
+                    "mainHuman" : "id_3",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 65.2509918212891
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.424430847168
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.1054267883301
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 64.9781646728516
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 49.2569122314453
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 49.9604835510254
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 67.8021469116211
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.8986206054688
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 55.0179862976074
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 54.9001159667969
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 55.4022445678711
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.5584106445313
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 66.0670318603516
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 65.0795135498047
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 49.2569122314453
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 66.4531021118164
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 67.8692169189453
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 65.0795288085938
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.7450294494629
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.351318359375
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.3341064453125
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.7355651855469
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.5587768554688
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 67.4335403442383
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.3288459777832
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 49.2569236755371
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 67.9593734741211
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 67.8997650146484
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.7463798522949
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.3513336181641
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.401496887207
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 55.4413146972656
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 52.2930755615234
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 43.3803215026855
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 44.8545227050781
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 35.7793960571289
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 29.4545230865479
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 54.6332702636719
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 54.5434150695801
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 37.099666595459
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.3513336181641
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.374267578125
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 52.6742172241211
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 50.8461990356445
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.7686462402344
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 32.7425155639648
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 34.216682434082
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 50.3295211791992
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 35.4166793823242
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 67.9665985107422
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 35.0333862304688
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 67.8720245361328
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 43.0618209838867
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.3189697265625
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.3742828369141
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 46.6527557373047
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 55.4347953796387
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 26.5736236572266
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 25.3715114593506
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 26.8456783294678
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 41.5875205993652
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 52.2907104492188
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 51.936897277832
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.0935974121094
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.1252517700195
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.6650543212891
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 60.4343338012695
+                },
+                {
+                    "mainHuman" : "id_4",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 34.2163429260254
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 29.5196781158447
+                },
+                {
+                    "mainHuman" : "id_1",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.5679321289063
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.2901992797852
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.7322463989258
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 56.8326377868652
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 40.1147003173828
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 13.5120086669922
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 43.3528747558594
+                },
+                {
+                    "mainHuman" : "id_11",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 55.3989028930664
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 19.4102249145508
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.55555553347976,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 34.8084449768066
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 32.6855812072754
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 25.3430728912354
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 39.1242370605469
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.27777776673988,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_2",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                }
+            ],
+            "stayingTime"   : [
+                12.9801178276539,
+                13.0001178383827,
+                13.0201178491116,
+                13.0401178598404,
+                13.0601178705692,
+                13.0801178812981,
+                13.1001178920269,
+                13.1201179027557,
+                13.1401179134846,
+                13.1601179242134,
+                13.1801179349422,
+                13.2001179456711,
+                13.2201179563999,
+                13.2401179522276,
+                13.2601179480553,
+                13.2801179438829,
+                13.3001179397106,
+                13.3201179355383,
+                13.340117931366,
+                13.3601179271936,
+                13.3801179230213,
+                13.400117918849,
+                13.420117918402,
+                13.4401179179549,
+                13.4601179175079,
+                13.4801179170609,
+                19.860275298357,
+                19.8802753090858,
+                19.9002753198147,
+                19.9202753305435,
+                19.9402753412724,
+                19.9602753520012,
+                19.98027536273,
+                20.0002753734589,
+                20.0202753841877,
+                20.0402753949165,
+                20.0602754056454,
+                20.0802754163742,
+                20.1002754122019,
+                20.1202754080296,
+                20.1402754038572,
+                20.1602753996849,
+                20.1802753955126,
+                20.2002753913403,
+                20.2202753871679,
+                20.2402753829956,
+                20.2602753788233,
+                20.280275374651,
+                20.3002753742039,
+                20.3202753737569,
+                20.3402753733099,
+                20.3602753728628,
+                9.56003955006599,
+                9.58003956079483,
+                9.60003957152367,
+                9.6200395822525,
+                9.64003959298134,
+                9.66003960371017,
+                9.68003961443901,
+                9.70003962516785,
+                9.72003963589668,
+                9.74003964662552,
+                9.76003965735435,
+                9.78003966808319,
+                9.80003966391087,
+                9.82003965973854,
+                9.84003965556622,
+                9.86003965139389,
+                9.88003964722157,
+                9.90003964304924,
+                9.92003963887692,
+                9.94003963470459,
+                9.96003963053226,
+                9.98003962635994,
+                10.0000396259129,
+                10.0200396254659,
+                10.0400396250188,
+                10.0600396245718,
+                21.5803146660328,
+                21.6003146767616,
+                21.6203146874905,
+                21.6403146982193,
+                21.6603147089481,
+                21.680314719677,
+                21.7003147304058,
+                21.7203147411346,
+                21.7403147518635,
+                21.7603147625923,
+                21.7803147733212,
+                21.80031478405,
+                21.8203147798777,
+                21.8403147757053,
+                21.860314771533,
+                21.8803147673607,
+                21.9003147631884,
+                21.920314759016,
+                21.9403147548437,
+                21.9603147506714,
+                21.9803147464991,
+                22.0003147423267,
+                22.0203147418797,
+                22.0403147414327,
+                22.0603147409856,
+                22.0803147405386,
+                12.060096770525,
+                12.0800967812538,
+                12.1000967919827,
+                12.1200968027115,
+                12.1400968134403,
+                12.1600968241692,
+                12.180096834898,
+                12.2000968456268,
+                12.2200968563557,
+                12.2400968670845,
+                12.2600968778133,
+                12.2800968885422,
+                12.300096899271,
+                12.3200968950987,
+                12.3400968909264,
+                12.360096886754,
+                12.3800968825817,
+                12.4000968784094,
+                12.4200968742371,
+                12.4400968700647,
+                12.4600968658924,
+                12.4800968617201,
+                12.5000968612731,
+                12.520096860826,
+                12.540096860379,
+                12.5600968599319
+            ],
+            "humanCount"    : 6
+        },
+        "p5" : {
+            "bestViewCount" : {
+                "5" : 1,
+                "6" : 0,
+                "4" : 0,
+                "3" : 1
+            },
+            "influences"    : [
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 33.5491905212402
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 32.9931831359863
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 33.7420349121094
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 36.6500015258789
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.0,
+                    "influence" : 29.8830604553223
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 57.3613548278809
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 54.9880065917969
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 57.5157089233398
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.5446586608887
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 56.3171119689941
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 57.1044998168945
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 37.999340057373
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.5818786621094
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 48.2291145324707
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 67.3171081542969
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.3376312255859
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 49.2987060546875
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.5818634033203
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.9258422851563
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 67.3170928955078
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 68.3660583496094
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 49.298713684082
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 36.7580642700195
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 56.3170928955078
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.20833332505491,
+                    "influence" : 38.184700012207
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 31.7580451965332
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 30.0701484680176
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 51.3171005249023
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.0,
+                    "influence" : 32.1869468688965
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 31.6221408843994
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 31.7051429748535
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 42.2604141235352
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.0,
+                    "influence" : 32.1763496398926
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 32.1419906616211
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 34.8037414550781
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.0,
+                    "influence" : 27.551549911499
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 18.2160053253174
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 26.8795032501221
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 25.0600757598877
+                },
+                {
+                    "mainHuman" : "id_12",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.0,
+                    "influence" : 20.0948715209961
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.0,
+                    "influence" : 19.7369518280029
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 17.603401184082
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_15",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                }
+            ],
+            "stayingTime"   : [
+                20.9803009331226,
+                21.0003009438515,
+                21.0203009545803,
+                21.0403009653091,
+                21.060300976038,
+                21.0803009867668,
+                21.1003009974957,
+                21.1203010082245,
+                21.1403010189533,
+                21.1603010296822,
+                21.180301040411,
+                21.2003010511398,
+                21.2203010469675,
+                21.2403010427952,
+                21.2603010386229,
+                21.2803010344505,
+                21.3003010302782,
+                21.3203010261059,
+                21.3403010219336,
+                21.3603010177612,
+                21.3803010135889,
+                21.4003010131419,
+                21.4203010126948,
+                21.4403010122478,
+                21.4603010118008,
+                21.4803010113537,
+                2.1599979698658,
+                2.17999798059464,
+                2.19999799132347,
+                2.21999800205231,
+                2.23999801278114,
+                2.25999802350998,
+                2.27999803423882,
+                2.29999804496765,
+                2.31999805569649,
+                2.33999806642532,
+                2.35999807715416,
+                2.379998087883,
+                2.39999808371067,
+                2.41999807953835,
+                2.43999807536602,
+                2.4599980711937,
+                2.47999806702137,
+                2.49999806284904,
+                2.51999805867672,
+                2.53999805450439,
+                2.55999805033207,
+                2.57999804988503,
+                2.599998049438,
+                2.61999804899096,
+                2.63999804854393,
+                2.6599980480969
+            ],
+            "humanCount"    : 2
+        },
+        "p6" : {
+            "bestViewCount" : {
+                "4" : 0,
+                "5" : 0,
+                "3" : 0
+            },
+            "influences"    : [
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 31.0000019073486
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.4000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 31.0000019073486
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.4000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 31.0000019073486
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.4000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 31.0000019073486
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.4000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 31.0000019073486
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.4000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 31.0000019073486
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.4000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 31.0000019073486
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.4000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 31.0000019073486
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.4000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.9873371124268
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 24.7930736541748
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.9882926940918
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 61.8202629089355
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 61.4180183410645
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                }
+            ],
+            "stayingTime"   : [
+            ],
+            "humanCount"    : 0
+        },
+        "p7" : {
+            "bestViewCount" : {
+                "6" : 0,
+                "3" : 0,
+                "8" : 0
+            },
+            "influences"    : [
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 30.7000007629395
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.1000003814697
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 46.7000007629395
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.0999984741211
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 46.7000007629395
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.0999984741211
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.83333330021964,
+                    "influence" : 30.7000007629395
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.83333330021964,
+                    "influence" : 31.1000003814697
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 46.7000007629395
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 47.0999984741211
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 30.7000007629395
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.1000003814697
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 30.7000007629395
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 31.1000003814697
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 30.7000007629395
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 24.0691547393799
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 26.1414413452148
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 24.0691089630127
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 26.1413421630859
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 57.1084365844727
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 56.7353668212891
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_13",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                }
+            ],
+            "stayingTime"   : [
+            ],
+            "humanCount"    : 0
+        },
+        "p8" : {
+            "bestViewCount" : {
+                "5" : 0,
+                "4" : 0,
+                "6" : 0
+            },
+            "influences"    : [
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 28.6734046936035
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 32.1000022888184
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 23.5478172302246
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 28.7163219451904
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 26.9557075500488
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 26.4207229614258
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 26.012321472168
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 26.9196357727051
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 48.5138740539551
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 44.4944725036621
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 26.0123653411865
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 26.93115234375
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 48.5242309570313
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 44.3977661132813
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.9103240966797
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 26.9311256408691
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 48.5740928649902
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 44.4095687866211
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.8103675842285
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 27.3076419830322
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 48.5740661621094
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 44.4223175048828
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.8103580474854
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 30.6966323852539
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 48.5740814208984
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 44.3511238098145
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.7473907470703
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 22.7599430084229
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 48.574104309082
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 46.3217391967773
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 16.8232955932617
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.7590274810791
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 48.6422805786133
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 38.3850479125977
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 37.0471458435059
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 49.6159477233887
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.41666665010982,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 29.1104564666748
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 50.2101516723633
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 50.0514183044434
+                },
+                {
+                    "mainHuman" : "id_14",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_9",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_5",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                }
+            ],
+            "stayingTime"   : [
+            ],
+            "humanCount"    : 0
+        },
+        "p9" : {
+            "bestViewCount" : {
+                "0" : 0,
+                "1" : 0,
+                "11" : 0
+            },
+            "influences"    : [
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 30.9000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 30.9000015258789
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 30.9000015258789
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 30.9000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 30.9000015258789
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 30.9000015258789
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 30.9000015258789
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 30.9000015258789
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 26.4201889038086
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 23.0184726715088
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 30.9000015258789
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 45.8265113830566
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 22.5943202972412
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 24.9355373382568
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 46.1153678894043
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 22.5937023162842
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 22.5936985015869
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 24.9355239868164
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 49.4615783691406
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 21.320915222168
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 49.8358154296875
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 24.9073295593262
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 30.4227199554443
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 66.3274002075195
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 65.4301834106445
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 24.9125633239746
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 27.9640274047852
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 45.2288093566895
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 24.9130249023438
+                },
+                {
+                    "mainHuman" : "id_6",
+                    "occupancy" : 0.0,
+                    "influence" : 37.3361434936523
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 48.6100463867188
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_10",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                }
+            ],
+            "stayingTime"   : [
+            ],
+            "humanCount"    : 1
+        },
+        "p10" : {
+            "bestViewCount" : {
+                "3" : 0,
+                "0" : 0,
+                "1" : 0
+            },
+            "influences"    : [
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 32.6000022888184
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 32.6000022888184
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 32.6000022888184
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.9740924835205
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 30.1922378540039
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.9741325378418
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 30.1922359466553
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.8720932006836
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 30.1922225952148
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.7721347808838
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 30.3773002624512
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.7721271514893
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 30.3599090576172
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.7091579437256
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 30.3467082977295
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 25.720796585083
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 30.4945430755615
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 50.8117561340332
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 28.6048622131348
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 22.3419456481934
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 39.8626022338867
+                },
+                {
+                    "mainHuman" : "id_7",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                },
+                {
+                    "mainHuman" : "id_8",
+                    "occupancy" : 0.0,
+                    "influence" : 0.0
+                }
+            ],
+            "stayingTime"   : [
+            ],
+            "humanCount"    : 0
+        }
+    }
+}

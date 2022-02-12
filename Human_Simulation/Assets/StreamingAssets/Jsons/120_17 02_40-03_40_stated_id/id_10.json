@@ -1,0 +1,89 @@
+{
+  "tracjectory": [
+    {
+      "frameInt": 3,
+      "beforeTrans_pos": [
+        369,
+        451
+      ],
+      "beforeTrans_chestDirection": [
+        387,
+        383
+      ],
+      "pos": [
+        371,
+        614
+      ],
+      "direction": [
+        246,
+        498
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 4,
+      "beforeTrans_pos": [
+        410,
+        401
+      ],
+      "beforeTrans_chestDirection": [
+        428,
+        333
+      ],
+      "pos": [
+        322,
+        532
+      ],
+      "direction": [
+        175,
+        390
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 5,
+      "beforeTrans_pos": [
+        431,
+        353
+      ],
+      "beforeTrans_chestDirection": [
+        449,
+        285
+      ],
+      "pos": [
+        236,
+        436
+      ],
+      "direction": [
+        56,
+        261
+      ],
+      "state": "walkableArea"
+    },
+    {
+      "frameInt": 6,
+      "beforeTrans_pos": [
+        486,
+        298
+      ],
+      "beforeTrans_chestDirection": [
+        486,
+        228
+      ],
+      "pos": [
+        168,
+        302
+      ],
+      "direction": [
+        -100,
+        62
+      ],
+      "state": "walkableArea"
+    }
+  ],
+  "feature": {
+    "ageIndex": 1,
+    "genderType": 1,
+    "humanType": "adult"
+  }
+}
