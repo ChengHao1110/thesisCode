@@ -64,13 +64,10 @@ public class exhibition_single  // List<exhibition_single> exhibition_many
     //add by ChengHao
     public void CalculateRealtimeHumanCount()
     {
-        if(this.timeCounter >= 1.0f)
+        if(dynamicSystem.instance.deltaTimeCounter - this.timeCounter >= 1.0f)
         {
             realtimeHumanCount.Add(this.capacity_cur);
-        }
-        else
-        {
-            this.timeCounter += Time.fixedDeltaTime;
+            this.timeCounter = dynamicSystem.instance.deltaTimeCounter;
         }
     }
 }

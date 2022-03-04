@@ -30,7 +30,7 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
             else OnToggleValueChangeFalse();
         });
         InitialRotateSlider();
-        rotateSpeedSlider.onValueChanged.AddListener( (float value) => OnSliderValueChange(value)); ;
+        rotateSpeedSlider.onValueChanged.AddListener((float value) => OnSliderValueChange(value));
     }
 
     // Update is called once per frame

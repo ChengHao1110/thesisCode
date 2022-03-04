@@ -139,8 +139,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     string directory;
 
     /*visitors initial setting */
-    public bool saveVIS = false, loadVIS = false;
-    public Button saveVISBtn, loadVISBtn;
+    public bool saveVIS = false, loadVIS = false, randomVIS = false;
+    public Button saveVISBtn, loadVISBtn, randomVISBtn;
     string saveVISFilename = "", loadVISFilename = "";
 
     /* update information */
@@ -193,6 +193,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             RecordExhibitionRealtimeHumanCount();
             RecordVisitingTimeInEachExhibition();
             RecordSocialDistance();
+            RecordVisitorStatusTime();
+            Debug.Log("analyze finish");
 
             //average speed
             /*
@@ -287,7 +289,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 else
                 {
                     person.Value.modelVisible(true);
-                    
+                    /*record the status time*/
+                    if (person.Value.status == "close") person.Value.statusTime[1] += Time.fixedDeltaTime;
+                    else if (person.Value.status == "at") person.Value.statusTime[2] += Time.fixedDeltaTime;
+                    else person.Value.statusTime[0] += Time.fixedDeltaTime;
+
+
                     /* gather state machine */
                     if (deltaTimeCounter - person.Value.lastTimeStamp_recomputeGathers > currentSceneSettings.customUI.UI_Global.UpdateRate["gathers"])
                     {
@@ -346,8 +353,9 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
 
                         person.Value.freeTime_stayInNextExhibit -= Time.fixedDeltaTime;
-                        if (person.Value.freeTime_stayInNextExhibit <= 0.5 || person.Value.freeTime_totalLeft <= personNeededTimeToExit)
+                        if (person.Value.freeTime_stayInNextExhibit <= 0.5f || person.Value.freeTime_totalLeft <= personNeededTimeToExit)
                         {
+                            
                             person.Value.wanderAroundExhibit = false;
                             /* Use new influenceMap to check target 
                             * deal with suddenly appear target and normally arrive and go next */
@@ -853,6 +861,18 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     /* Generation and Initialization*/
     public void generateScene()
     {
+        //load tmpUIsetting to allscene
+        UIController.instance.LoadTmpSettingToCurrentSceneSettings();
+
+        //check whether ui setting have error
+        string error = UIController.instance.checkSettings();
+        if (error != "") 
+        {
+            UIController.instance.ShowMsgPanel("Warning", error);
+            return;
+        }
+        
+
         // clean every thing
         cleanPeopleBeforeGenerate();
 
@@ -954,7 +974,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     //person.Value.preTarget_pos = generateNewVector3();
                     person.Value.preTarget_pos = exits[person.Value.exitName].enterPosition;
                     person.Value.model.transform.position = person.Value.preTarget_pos;
-                    //person.Value.modelVisible(false);
+                    person.Value.modelVisible(false);
                     person.Value.modelVisible(true);
                 }
             }
@@ -1069,7 +1089,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     newPerson.age = random.Next(1, 5);
                     newPerson.humanType = "adult";
 
-                    if (specificList_adult.Count <= 0) { newPerson.desireExhibitionList = generateDesireExhibitionList(newPerson.humanType); }
+                    if (specificList_adult.Count <= 0 || randomVIS) { newPerson.desireExhibitionList = generateDesireExhibitionList(newPerson.humanType); }
                     else
                     {
                         newPerson.desireExhibitionList = specificList_adult[0];
@@ -1080,7 +1100,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 {
                     newPerson.age = random.Next(1);
                     newPerson.humanType = "child";
-                    if (specificList_child.Count <= 0) { newPerson.desireExhibitionList = generateDesireExhibitionList(newPerson.humanType); }
+                    if (specificList_child.Count <= 0 || randomVIS) { newPerson.desireExhibitionList = generateDesireExhibitionList(newPerson.humanType); }
                     else
                     {
                         newPerson.desireExhibitionList = specificList_child[0];
@@ -1139,6 +1159,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             newPerson.freeTime_totalLeft = newPerson.freeTime_total;            
             newPerson.exitName = newPerson.desireExhibitionList.Where(r => r.StartsWith("exit")).FirstOrDefault();
             newPerson.desireExhibitionList_copy.Remove(newPerson.exitName);
+
+            newPerson.trajectoryOrder.Add(newPerson.exitName);
 
             //add by ChengHao
             newPerson.visitingTimeInEachEx = new float[currentSceneSettings.Exhibitions.Count - 1]; // -1 remove walkable
@@ -2020,11 +2042,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             foreach (exhibition_single exhibit in exhibitions.Values)
             {
                 //calculate exhibition realtime human count
-                if (deltaTimeCounter - updateExhibitionRealtimeHumanCount > 1)
-                {
-                    exhibit.realtimeHumanCount.Add(exhibit.capacity_cur);
-                    updateExhibitionRealtimeHumanCount = deltaTimeCounter;
-                }
+                exhibit.CalculateRealtimeHumanCount();
+
                 //calculate exhibition crowded time
                 if (exhibit.capacity_cur >= exhibit.capacity_max)
                 {
@@ -2222,6 +2241,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public void SaveVISBtn()
     {
         saveVIS = !saveVIS;
+        string msg = "";
         if (saveVIS)
         {
             string defaultFolder = "", defaultFileName = "";
@@ -2237,22 +2257,40 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             {
                 saveVISFilename = path;
                 saveVISBtn.GetComponent<Image>().color = Color.gray;
+
+                string[] filename = path.Split('/');
+                msg += "Save visitor initial setting!\n" +
+                       "Click \'Generate\' button to save data to the file\n" +
+                       "filename: " + filename[filename.Length - 1] + "\n";
+
+                if (loadVIS)
+                {
+                    loadVIS = false;
+                    loadVISBtn.GetComponent<Image>().color = Color.white;
+                    loadVISFilename = "";
+                    msg += "Loading visitor initial setting is canceled.\n";
+                }
+                
+                UIController.instance.ShowMsgPanel("Success", msg);
             }
             else
             {
                 saveVIS = false;
+                //UIController.instance.ShowMsgPanel("Warning", "Visitor initial setting is not saved.");
             }
         }
         else
         {
             saveVISBtn.GetComponent<Image>().color = Color.white;
-            if (saveVISFilename != "") saveVISFilename = "";
+            if (saveVISFilename != "")  saveVISFilename = "";
+            UIController.instance.ShowMsgPanel("Warning", "Saving visitor initial setting is canceled.\n");
         }
     }
 
     public void LoadVISBtn()
     {
         loadVIS = !loadVIS;
+        string msg = "";
         if (loadVIS)
         {
             string defaultFolder = Application.streamingAssetsPath + "/VisitorSetting";
@@ -2261,21 +2299,179 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                                                    "json");
             if(path.Length != 0)
             {
+                if (!CheckVIS(path)) 
+                {
+                    loadVIS = false;
+                    return;
+                }
+                
                 loadVISFilename = path;
                 loadVISBtn.GetComponent<Image>().color = Color.gray;
+
+                string[] filename = path.Split('/');
+                msg += "Load visitor initial setting!\n" +
+                       "filename: " + filename[filename.Length - 1] + "\n";
+
+                if (saveVIS)
+                {
+                    saveVIS = false;
+                    saveVISBtn.GetComponent<Image>().color = Color.white;
+                    saveVISFilename = "";
+                    msg += "Saving visitor initial setting is canceled.\n";
+                }
+                if (randomVIS) 
+                {
+                    randomVIS = false;
+                    randomVISBtn.GetComponent<Image>().color = Color.white;
+                    msg += "Deactivate random desired list.\n";
+                }
+
+                UIController.instance.ShowMsgPanel("Success", msg);
             }
             else
             {
                 loadVIS = false;
+                //UIController.instance.ShowMsgPanel("Warning", "Visitor initial setting is not loaded.");
             }
         }
         else
         {
             loadVISBtn.GetComponent<Image>().color = Color.white;
             if (loadVISFilename != "") loadVISFilename = "";
+            UIController.instance.ShowMsgPanel("Warning", "Loading visitor initial setting is canceled.\n");
         }
     }
 
+    public void RandomVISBtn()
+    {
+        randomVIS = !randomVIS;
+        string msg = "";
+        if (randomVIS)
+        {
+            randomVISBtn.GetComponent<Image>().color = Color.gray;
+            msg += "Activate random desired list!\n";
+            if (loadVIS)
+            {
+                loadVIS = false;
+                loadVISBtn.GetComponent<Image>().color = Color.white;
+                loadVISFilename = "";
+                msg += "Loading visitor initial setting is canceled.\n";
+            }
+
+            UIController.instance.ShowMsgPanel("Success", msg);
+        }
+        else
+        {
+            randomVISBtn.GetComponent<Image>().color = Color.white;
+            UIController.instance.ShowMsgPanel("Warning", "Deactivate random desired list!\n\n");
+        }
+    }
+
+    bool CheckVIS(string file)
+    {
+        List<humanInfo> humansInfo = new List<humanInfo>();
+        string visJsonDataStr = File.ReadAllText(file);
+        humansInfo = JsonMapper.ToObject<List<humanInfo>>(visJsonDataStr);
+
+        string errorMsg = "";
+        int visitorsCount = humansInfo.Count;
+        
+        if (UIController.instance.tmpSaveUISettings.UI_Global.agentCount != visitorsCount) 
+        {
+            errorMsg += "agentCount in UI is wrong.\n";
+            UIController.instance.ShowMsgPanel("Warning", errorMsg);
+            return false;
+        }
+
+        int addVisitorsCount = 0, adultCount = 0;
+        List<string> walkspeedErrorId = new List<string>();
+        List<string> freetimeTotalErrorId = new List<string>();
+        List<string> startSimulationTimeErrorId = new List<string>();
+        for (int i = 0; i < humansInfo.Count; i++)
+        {
+            //check addVisitorCount
+            if (humansInfo[i].startSimulateTime > 0) 
+            {
+                addVisitorsCount++;
+                //check startSimulationTime
+                if (humansInfo[i].startSimulateTime > UIController.instance.tmpSaveUISettings.UI_Global.startAddAgentMax ||
+                   humansInfo[i].startSimulateTime < UIController.instance.tmpSaveUISettings.UI_Global.startAddAgentMin)
+                {
+                    startSimulationTimeErrorId.Add(humansInfo[i].name);
+                }
+            } 
+            //check freetimeTotal
+            if(humansInfo[i].freeTime_total > UIController.instance.tmpSaveUISettings.UI_Human.freeTimeMax ||
+               humansInfo[i].freeTime_total < UIController.instance.tmpSaveUISettings.UI_Human.freeTimeMin)
+            {
+                freetimeTotalErrorId.Add(humansInfo[i].name);
+            }
+            //check walkSpeed
+            float maxSpeed = UIController.instance.tmpSaveUISettings.UI_Human.walkSpeedMax;
+            if(UIController.instance.tmpSaveUISettings.UI_Human.walkSpeedMax == -1) maxSpeed = (float)currentSceneSettings.humanTypes[humansInfo[i].humanType].walkSpeed.max;
+            if (humansInfo[i].walkSpeed > maxSpeed || humansInfo[i].walkSpeed < UIController.instance.tmpSaveUISettings.UI_Human.walkSpeedMin)
+            {
+                walkspeedErrorId.Add(humansInfo[i].name);
+            }
+            //check adultCount
+            if (humansInfo[i].humanType == "adult") adultCount++;
+        }
+
+        if (adultCount != (int)Math.Round(UIController.instance.tmpSaveUISettings.UI_Global.agentCount * UIController.instance.tmpSaveUISettings.UI_Global.adultPercentage))
+        {
+            print("adultCount: " + adultCount);
+            print(UIController.instance.tmpSaveUISettings.UI_Global.agentCount);
+            print(UIController.instance.tmpSaveUISettings.UI_Global.adultPercentage);
+            print((int)Math.Round(UIController.instance.tmpSaveUISettings.UI_Global.agentCount * UIController.instance.tmpSaveUISettings.UI_Global.adultPercentage));
+            errorMsg += "adultPercentage in UI is wrong.\n";
+        }
+
+        if (UIController.instance.tmpSaveUISettings.UI_Global.addAgentCount != addVisitorsCount)
+        {
+            errorMsg += "addAgentCount in UI is wrong.\n";
+        }
+
+        if (startSimulationTimeErrorId.Count > 0)
+        {
+            errorMsg += "startSimulateTime error: ";
+            for (int i = 0; i < startSimulationTimeErrorId.Count; i++)
+            {
+                if (i < startSimulationTimeErrorId.Count - 1) errorMsg += startSimulationTimeErrorId[i] + ", ";
+                else errorMsg += startSimulationTimeErrorId[i] + "\n";
+            }
+        }
+
+        if (freetimeTotalErrorId.Count > 0)
+        {
+            errorMsg += "freeTimeTotal error: ";
+            for(int i = 0; i < freetimeTotalErrorId.Count; i++)
+            {
+                if (i < freetimeTotalErrorId.Count - 1) errorMsg += freetimeTotalErrorId[i] + ", ";
+                else errorMsg += freetimeTotalErrorId[i] + "\n";
+            }
+        }
+
+        if (walkspeedErrorId.Count > 0)
+        {
+            errorMsg += "walkSpeed error: ";
+            for (int i = 0; i < walkspeedErrorId.Count; i++)
+            {
+                if (i < walkspeedErrorId.Count - 1) errorMsg += walkspeedErrorId[i] + ", ";
+                else errorMsg += walkspeedErrorId[i] + "\n";
+            }
+        }
+
+        if(errorMsg == "")
+        {
+            return true;
+        }
+        else
+        {
+            UIController.instance.ShowMsgPanel("Warning", errorMsg);
+            return false;
+        }
+
+    }
     /*****data analysis method*****/
     //trajectory to heatmap 
     //have little problem: wrong index 
@@ -2512,7 +2708,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     //exhibitions transform
     void ExhibitionsTransform()
     {
-        bool calculateExit = false;
+        bool calculateExit = true;
 
         if (!calculateExit)
         {
@@ -2554,7 +2750,53 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
         else
         {
-            
+            int exhibitionCount = currentSceneSettings.Exhibitions.Count - 1; // -1 remove walkable area 
+            int[,] exMatrix = new int[exhibitionCount + 2, exhibitionCount + 2]; // +2 exits count
+            for (int i = 0; i < exhibitionCount; i++) for (int j = 0; j < exhibitionCount; j++) exMatrix[i, j] = 0;
+
+            foreach (KeyValuePair<string, human_single> person in people)
+            {
+                for (int i = 0; i < person.Value.trajectoryOrder.Count - 1; i++)
+                {
+                    string firstExhibition = person.Value.trajectoryOrder[i];
+                    string secondExhibition = person.Value.trajectoryOrder[i + 1];
+
+                    int firstId, secondId;
+                    //get exhibitions id
+                    if (firstExhibition.StartsWith("p"))
+                    {
+                        firstId = firstExhibition[1] - '0' - 1;
+                    }
+                    else
+                    {
+                        firstId = exhibitionCount + (firstExhibition[4] - '0' - 1);
+                    }
+
+                    if (secondExhibition.StartsWith("p"))
+                    {
+                        secondId = secondExhibition[1] - '0' - 1;
+                    }
+                    else
+                    {
+                        secondId = exhibitionCount + (secondExhibition[4] - '0' - 1);
+                    }
+                    exMatrix[firstId, secondId]++;
+                }
+            }
+
+            //write file
+            FileStream fs = new FileStream(directory + "ex_trans.txt", FileMode.OpenOrCreate);
+            StreamWriter sw = new StreamWriter(fs);
+            for (int i = 0; i < exhibitionCount + 2; i++)
+            {
+                for (int j = 0; j < exhibitionCount + 2; j++)
+                {
+                    sw.Write(exMatrix[i, j] + " ");
+                }
+                sw.Write("\n");
+            }
+            sw.Flush();
+            sw.Close();
         }
         Debug.Log("Exhibition Transform complete");
     }
@@ -2632,12 +2874,29 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             {
                 sw.Write(person.Value.visitingTimeInEachEx[i] + " ");
             }
-            sw.Write(person.Value.name + "\n");
+            sw.Write(person.Value.name + " " + person.Value.humanType + "\n");
         }
         sw.Flush();
         sw.Close();
         Debug.Log("Visiting Time complete");
     }
 
+    //status time
+    void RecordVisitorStatusTime()
+    {
+        //write file
+        FileStream fs = new FileStream(directory + "status_time.txt", FileMode.OpenOrCreate);
+        StreamWriter sw = new StreamWriter(fs);
+        foreach (KeyValuePair<string, human_single> person in people)
+        {
+            for (int i = 0; i < person.Value.statusTime.Length; i++)
+            {
+                sw.Write(person.Value.statusTime[i] + " ");
+            }
+        }
+        sw.Flush();
+        sw.Close();
+        Debug.Log("Status Time complete");
+    }
 
 }

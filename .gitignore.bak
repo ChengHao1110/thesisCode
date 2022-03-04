@@ -70,3 +70,11 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Iris
+Human_Simulation/exe/*
+Human_Simulation/Library/*
+Human_Simulation/Temp/UnityLockfile
+
+#ChengHao
+Human_Simulation/Assets/StreamingAssets/*

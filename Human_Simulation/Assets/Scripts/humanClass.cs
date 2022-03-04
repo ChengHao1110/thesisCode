@@ -126,6 +126,7 @@ public class human_single  // List<human_single> humanCrowd;
             /* Arrive, update DesireList */
             if (this.nextTarget_name.StartsWith("p"))
             {
+                Debug.Log("change desireList");
                 updateDesireList(this.nextTarget_name); 
             }            
 
@@ -242,7 +243,8 @@ public class human_single  // List<human_single> humanCrowd;
     void updateDesireList(string chosenTarget)
     {
         /* Update desire list*/
-        System.Random random = new System.Random(this.randomSeed);
+        //System.Random random = new System.Random(this.randomSeed);
+        System.Random random = new System.Random();
         float randomNum = (float)random.Next(101);
         //float randomNum = dynamicSystem.instance.random.Next(101);
         randomNum /= 100f;
@@ -254,6 +256,7 @@ public class human_single  // List<human_single> humanCrowd;
         {
             if (randomNum < dynamicSystem.instance.currentSceneSettings.Exhibitions[chosenTarget].repeatChosenProbabilty)
             {
+                Debug.Log("Add Repeat List");
                 /* add to last if it will repeat chosen later */
                 this.desireExhibitionList.Add(chosenTarget);
                 this.influenceMap.Add(chosenTarget, 1);

@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using LitJson;
 using UnityEditor;
+using TMPro;
 
 public class cameraPerScene
 {
@@ -46,6 +47,10 @@ public class exhibitionsInScene
 
 public partial class UIController : PersistentSingleton<UIController>
 {
+    /*Message Panel*/
+    public GameObject msgPanel;
+    public TextMeshProUGUI msgType, msgContent;
+
     /* top left dashBoard */
     public GameObject EnvironmentsRoot;
     public GameObject realDataModeUI, simulationModeUI;  // for switching mode
@@ -132,7 +137,7 @@ public partial class UIController : PersistentSingleton<UIController>
         }
         else
         {
-            successLog.text = "";
+            //successLog.text = "";
         }
     }
 
@@ -142,6 +147,11 @@ public partial class UIController : PersistentSingleton<UIController>
     /*main camera and mini camera swap*/
     public void ModifySceneButton()
     {
+        if (!curOption.Contains("A") && !curOption.Contains("B"))
+        {
+            ShowMsgPanel("Warning", "Please choose A or B option of the scene.");
+            return;
+        }
         modifyScene = !modifyScene;
         if (modifyScene)
         {
@@ -373,7 +383,7 @@ public partial class UIController : PersistentSingleton<UIController>
         string error = checkSettings();
         if(error == "")
         {
-            successLog.text = "Saved!";
+            //successLog.text = "Saved!";
             countDownTime = 5;
             allSceneSettings[currentScene].customUI = tmpSaveUISettings.copy();
 
@@ -398,7 +408,7 @@ public partial class UIController : PersistentSingleton<UIController>
         }
         else
         {
-            successLog.text = "";
+            //successLog.text = "";
         }
     }
 
@@ -407,6 +417,7 @@ public partial class UIController : PersistentSingleton<UIController>
         tmpSaveUISettings = allSceneSettings[currentScene].oriJson.copy();
         loadSettingToUI(tmpSaveUISettings);
         allSceneSettings[currentScene].customUI = tmpSaveUISettings.copy();
+        ShowMsgPanel("Success", "UI setting is reset.");
     }
 
     void loadSettingToUI(UISettings inputSetting) // show setting data on UI
@@ -595,7 +606,7 @@ public partial class UIController : PersistentSingleton<UIController>
         allSceneSettings.Add(scene, newSceneSetting);  // save
     }
     
-    string checkSettings()
+    public string checkSettings()
     {
         string errorMessage = "";
         /** Global **/
@@ -650,7 +661,7 @@ public partial class UIController : PersistentSingleton<UIController>
             errorMessage = "Fix these errors first: \n" + errorMessage;
         }
 
-        errorDebuger.text = errorMessage;
+        //errorDebuger.text = errorMessage;
         return errorMessage;
     }
       
@@ -675,13 +686,13 @@ public partial class UIController : PersistentSingleton<UIController>
         }
     }
 
-    //UISetting Save
+    #region UISetting save/load
     public void SaveUISettings()
     {
         string error = checkSettings();
         if (error == "")
         {
-            successLog.text = "Saved!";
+            //successLog.text = "Saved!";
             countDownTime = 5;
             allSceneSettings[currentScene].customUI = tmpSaveUISettings.copy();
 
@@ -705,11 +716,19 @@ public partial class UIController : PersistentSingleton<UIController>
                 // Debug.Log(outputJsonStr);
                 System.IO.File.WriteAllText(path, outputJsonStr);
                 dynamicSystem.instance.currentSceneSettings = allSceneSettings[currentScene];
-            }           
+                string[] filename = path.Split('/');
+                ShowMsgPanel("Success", "Save current simulation UI setting.\n" + 
+                                        "filename: " + filename[filename.Length - 1]);
+            }
+            else
+            {
+                //ShowMsgPanel("Warning", "Current simulation UI setting is not saved.");
+            }
         }
         else
         {
-            successLog.text = "";
+            //successLog.text = "";
+            ShowMsgPanel("Warning", error);
         }
     }
 
@@ -729,9 +748,17 @@ public partial class UIController : PersistentSingleton<UIController>
             tmpSaveUISettings = uiSettings;
             allSceneSettings[currentScene].customUI = tmpSaveUISettings.copy();
             dynamicSystem.instance.currentSceneSettings = allSceneSettings[currentScene];
+            string[] filename = path.Split('/');
+            ShowMsgPanel("Success", filename[filename.Length - 1] + " is loaded.");
+            ShowMsgPanel("Success", "Load UI setting.\n" +
+                        "filename: " + filename[filename.Length - 1]);
         }
-
+        else
+        {
+            //ShowMsgPanel("Warning", "UI setting is not loaded.");
+        }
     }
+    #endregion
 
     #region exhibition save/load
     public void SaveExhibitionInfo()
@@ -781,6 +808,13 @@ public partial class UIController : PersistentSingleton<UIController>
             string outputJsonStr = sb.ToString();
             System.IO.File.WriteAllText(path, outputJsonStr);
             Debug.Log("Save!");
+            string[] filename = path.Split('/');
+            ShowMsgPanel("Success", "Save exhibition setting in current scene option (" + curOption + ")\n" + 
+                                    "filename: " + filename[filename.Length - 1]);
+        }
+        else
+        {
+            //ShowMsgPanel("Warning", "Exhibition setting is not saved.");
         }
         
     }
@@ -807,6 +841,15 @@ public partial class UIController : PersistentSingleton<UIController>
                 Vector3 scl = new Vector3((float)exInfo.sclX, (float)exInfo.sclY, (float)exInfo.sclZ);
                 ex.transform.localScale = scl;
             }
+            string[] filename = path.Split('/');
+            string msg = "Load exhibition setting to the scene option (" + exhibitionsInScene.sceneName + ")\n" + 
+                         "filename: " + filename[filename.Length - 1];
+            if(curOption != exhibitionsInScene.sceneName)
+            {
+                msg += "\nPlease choose the coresponding scene option.";
+            }
+            ShowMsgPanel("Success", msg);
+
             /*
             // have some error
             setScene(exhibitionsInScene.sceneName.Substring(0, 3));
@@ -815,6 +858,10 @@ public partial class UIController : PersistentSingleton<UIController>
             if (exhibitionsInScene.sceneName.Contains("B")) idx = 2;
             changeOption(idx);
             */
+        }
+        else
+        {
+            ShowMsgPanel("Warning", "Exhibition setting is not saved.");
         }
     }
 
@@ -839,25 +886,42 @@ public partial class UIController : PersistentSingleton<UIController>
                 ex.transform.localScale = scl;
             }
         }
+        ShowMsgPanel("Success", "Exhibition layouts in all scene options are changed to default.");
     }
     #endregion
+
+    public void ShowMsgPanel(string type, string content)
+    {
+        msgType.text = type;
+        if (type == "Warning") msgType.color = Color.red;
+        else if (type == "Success") msgType.color = Color.green;
+        
+        msgContent.text = content;
+        msgPanel.SetActive(true);
+    }
+
+    public void CloseMsgPanel()
+    {
+        msgPanel.SetActive(false);
+    }
 }
 
 public partial class UIController : PersistentSingleton<UIController>  // seperate for combining lines
 {
     /* simulation mode UI */
-    UISettings tmpSaveUISettings = new UISettings();
+    public UISettings tmpSaveUISettings = new UISettings();
     public Dictionary<string, settingsClass> allSceneSettings = new Dictionary<string, settingsClass>();
     // public Dictionary<string, settingsClass> allSceneSettings_Custom = new Dictionary<string, settingsClass>();
     // public Dictionary<string, settingsClass> allSceneSettings_Json = new Dictionary<string, settingsClass>(); // backUp original settings
-    public Text errorDebuger, successLog;
+    //public Text errorDebuger, successLog;
     public float countDownTime;
     /* Global */
     public Text agentCountText, adultPercentText, addAgentCountText;
     public Slider agentCountSlider, adultPercentSlider, addAgentCountSlider;
     public InputField startAddAgentMinInput, startAddAgentMaxInput;
     public Text updateRateGatherText, updateRateStatusText, updateRateMapText;
-    public Slider updateRateGatherSlider, updateRateStatusSlider, updateRateMapSlider;
+    public Slider updateRateGatherSlider, updateRateStatusSlider, updateRateMapSlider, timeScaleSlider;
+    public TextMeshProUGUI timeScaleText;
     /* Human */
     public InputField walkSpeedMinInput, walkSpeedMaxInput, freeTimeMinInput, freeTimeMaxInput;
     public Slider gatherProbabilityMeanSlider, gatherProbabilityStdSlider;
@@ -886,7 +950,6 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         tmpSaveUISettings.UI_Global.agentCount = value;
         addAgentCountSlider.maxValue = value;
         changeAddAgentCount();
-        //allSceneSettings[currentScene].customUI = tmpSaveUISettings.copy();
     }
 
     public void changeAdultPercent()
@@ -935,6 +998,13 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         int value = (int)updateRateMapSlider.value;
         updateRateMapText.text = (value).ToString() + "s";
         tmpSaveUISettings.UI_Global.UpdateRate["influenceMap"] = value;
+    }
+
+    public void changeTimescale()
+    {
+        int value = (int)timeScaleSlider.value;
+        timeScaleText.text = value.ToString();
+        Time.timeScale = value;
     }
 
     /* Human */
@@ -1151,5 +1221,10 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)StageSpeedAtSlider.value;
         StageSpeedAtText.text = "x " + (value).ToString();
         tmpSaveUISettings.walkStage["At"].speed = value;
+    }
+
+    public void LoadTmpSettingToCurrentSceneSettings(){
+        allSceneSettings[currentScene].customUI = tmpSaveUISettings.copy();
+        dynamicSystem.instance.currentSceneSettings = allSceneSettings[currentScene];
     }
 }

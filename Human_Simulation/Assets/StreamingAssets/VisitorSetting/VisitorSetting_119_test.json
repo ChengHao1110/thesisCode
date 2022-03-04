@@ -2,168 +2,171 @@
 [
     {
         "name" : "id_1",
-        "age"  : 4,
-        "gender" : 1,
-        "humanType" : "adult",
-        "freeTime_total" : 49.0,
-        "desireExhibitionList" : [
-            "p1",
-            "p2",
-            "p3",
-            "exit2"
-        ],
-        "walkSpeed"            : 90.7816009521484,
-        "gatherDesire"         : 0.657000005245209,
-        "startSimulateTime"    : 58.0,
-        "randomSeed"           : -2093089836
-    },
-    {
-        "name" : "id_2",
-        "age"  : 4,
-        "gender" : 0,
-        "humanType" : "adult",
-        "freeTime_total" : 82.0,
-        "desireExhibitionList" : [
-            "p2",
-            "p4",
-            "exit1"
-        ],
-        "walkSpeed"            : 64.2116012573242,
-        "gatherDesire"         : 0.33500000834465,
-        "startSimulateTime"    : 0.0,
-        "randomSeed"           : -2048580096
-    },
-    {
-        "name" : "id_3",
         "age"  : 1,
         "gender" : 1,
         "humanType" : "adult",
-        "freeTime_total" : 61.0,
+        "freeTime_total" : 225.0,
         "desireExhibitionList" : [
-            "p1",
+            "p2",
             "p4",
-            "p5",
+            "p3",
+            "p1",
             "exit1"
         ],
-        "walkSpeed"            : 88.6559982299805,
-        "gatherDesire"         : 0.817999958992004,
-        "startSimulateTime"    : 52.0,
-        "randomSeed"           : 2025586924
+        "walkSpeed"            : 67.4000015258789,
+        "gatherDesire"         : 0.118000008165836,
+        "startSimulateTime"    : 34.0,
+        "randomSeed"           : 1959790334
+    },
+    {
+        "name" : "id_2",
+        "age"  : 1,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 238.0,
+        "desireExhibitionList" : [
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 81.2164001464844,
+        "gatherDesire"         : 0.00600001309067011,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 893383514
+    },
+    {
+        "name" : "id_3",
+        "age"  : 2,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 280.0,
+        "desireExhibitionList" : [
+            "p2",
+            "p4",
+            "p1",
+            "exit1"
+        ],
+        "walkSpeed"            : 84.4048004150391,
+        "gatherDesire"         : 0.083000011742115,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 963653910
     },
     {
         "name" : "id_4",
         "age"  : 1,
-        "gender" : 0,
+        "gender" : 1,
         "humanType" : "adult",
-        "freeTime_total" : 41.0,
+        "freeTime_total" : 155.0,
         "desireExhibitionList" : [
-            "p1",
+            "p3",
+            "p2",
             "p4",
             "exit2"
         ],
-        "walkSpeed"            : 63.6802024841309,
-        "gatherDesire"         : 0.754999995231628,
-        "startSimulateTime"    : 56.0,
-        "randomSeed"           : 205100590
+        "walkSpeed"            : 64.2116012573242,
+        "gatherDesire"         : 0.251000016927719,
+        "startSimulateTime"    : 52.0,
+        "randomSeed"           : 1246741730
     },
     {
         "name" : "id_5",
-        "age"  : 4,
+        "age"  : 2,
         "gender" : 0,
         "humanType" : "adult",
-        "freeTime_total" : 80.0,
+        "freeTime_total" : 153.0,
         "desireExhibitionList" : [
             "p3",
             "p4",
+            "p2",
             "exit1"
         ],
-        "walkSpeed"            : 88.1246032714844,
-        "gatherDesire"         : 0.909000039100647,
-        "startSimulateTime"    : 0.0,
-        "randomSeed"           : 1542530136
+        "walkSpeed"            : 85.9990005493164,
+        "gatherDesire"         : 0.832000017166138,
+        "startSimulateTime"    : 24.0,
+        "randomSeed"           : 1551956682
     },
     {
         "name" : "id_6",
-        "age"  : 3,
-        "gender" : 0,
+        "age"  : 2,
+        "gender" : 1,
         "humanType" : "adult",
-        "freeTime_total" : 93.0,
+        "freeTime_total" : 226.0,
         "desireExhibitionList" : [
-            "p2",
+            "p3",
             "p4",
-            "p5",
             "exit2"
         ],
-        "walkSpeed"            : 87.0617980957031,
-        "gatherDesire"         : 0.559000015258789,
+        "walkSpeed"            : 89.7188034057617,
+        "gatherDesire"         : 0.160000011324883,
         "startSimulateTime"    : 0.0,
-        "randomSeed"           : 1272774019
+        "randomSeed"           : 2128854142
     },
     {
         "name" : "id_7",
-        "age"  : 3,
+        "age"  : 4,
         "gender" : 1,
         "humanType" : "adult",
-        "freeTime_total" : 41.0,
+        "freeTime_total" : 183.0,
         "desireExhibitionList" : [
             "p4",
-            "exit1"
+            "p2",
+            "p1",
+            "exit2"
         ],
-        "walkSpeed"            : 66.8685989379883,
-        "gatherDesire"         : 0.852999985218048,
-        "startSimulateTime"    : 0.0,
-        "randomSeed"           : -2014775578
+        "walkSpeed"            : 85.4675979614258,
+        "gatherDesire"         : 0.0130000058561563,
+        "startSimulateTime"    : 36.0,
+        "randomSeed"           : -1886652236
     },
     {
         "name" : "id_8",
         "age"  : 0,
         "gender" : 0,
         "humanType" : "child",
-        "freeTime_total" : 39.0,
+        "freeTime_total" : 212.0,
         "desireExhibitionList" : [
-            "p1",
             "p2",
+            "p1",
+            "p4",
             "exit1"
         ],
-        "walkSpeed"            : 73.5321960449219,
-        "gatherDesire"         : 0.104000002145767,
-        "startSimulateTime"    : 42.0,
-        "randomSeed"           : -950548798
+        "walkSpeed"            : 74.2164001464844,
+        "gatherDesire"         : 0.293000012636185,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 640137887
     },
     {
         "name" : "id_9",
         "age"  : 0,
-        "gender" : 1,
+        "gender" : 0,
         "humanType" : "child",
-        "freeTime_total" : 84.0,
+        "freeTime_total" : 297.0,
         "desireExhibitionList" : [
             "p1",
-            "p3",
+            "p2",
             "p4",
-            "p5",
             "exit1"
         ],
-        "walkSpeed"            : 103.637001037598,
-        "gatherDesire"         : 0.83899998664856,
-        "startSimulateTime"    : 31.0,
-        "randomSeed"           : -772094078
+        "walkSpeed"            : 94.7424011230469,
+        "gatherDesire"         : 0.0760000050067902,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -1291759577
     },
     {
         "name" : "id_10",
         "age"  : 0,
-        "gender" : 0,
+        "gender" : 1,
         "humanType" : "child",
-        "freeTime_total" : 52.0,
+        "freeTime_total" : 262.0,
         "desireExhibitionList" : [
-            "p1",
             "p2",
-            "p3",
             "p4",
+            "p3",
+            "p5",
             "exit2"
         ],
-        "walkSpeed"            : 85.8477935791016,
-        "gatherDesire"         : 0.125,
-        "startSimulateTime"    : 0.0,
-        "randomSeed"           : -1216740852
+        "walkSpeed"            : 89.268798828125,
+        "gatherDesire"         : 0.573000013828278,
+        "startSimulateTime"    : 35.0,
+        "randomSeed"           : 1355927202
     }
 ]
