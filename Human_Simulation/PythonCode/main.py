@@ -30,13 +30,24 @@ if __name__ == '__main__':
             folderName = input('No.' + str(i) + ' folder name: ')
             md.folderList.append(folderName)
     
+    
+    #md.Usage('space_usage.txt', 'int')
     '''
-    md.Usage('space_usage.txt', 'int')
     md.Usage('time_usage.txt', 'float')
-    md.ExhibitionRealtimeHumanCount('ex_realtime_human_count.txt')
-    md.SocialDistance('social_distance.txt')
-    md.EachVisitorExhibitionVisitingTime('visiting_time.txt')
+    '''
+    #md.ExhibitionRealtimeHumanCount('ex_realtime_human_count.txt')
+    
+    
+    #md.SocialDistance('social_distance.txt')
+    #md.EachVisitorExhibitionVisitingTime('visiting_time.txt')
     md.ExhibitionTransformOpportunity('ex_trans.txt')
+    
     '''
     md.VisitorStatusime('status_time.txt')
     md.EachVisitorExhibitionVisitingTime('visiting_time.txt')
+    
+    
+    md.StatusTime('status_time.txt')
+    md.StatusTimeBoxPlot('status_time.txt')
+    md.EachVisitorExhibitionVisitingTimeBoxPlot('visiting_time.txt')
+    '''

@@ -41,12 +41,38 @@ def Usage(filename, dtype):
             file = path + folderList[i] + '/' + filename;
             data.append(np.loadtxt(file, dtype))
 
+
+
+    
     # plot
     for i in range(compareResultCount):
         maxData = np.max(data[i])
         data[i] = data[i] / maxData
+        
         axes[0, i].set_title(folderList[i])
-        sns.heatmap(data[i], ax = axes[0, i], square = True, cmap = 'Reds', cbar_kws={"shrink": .5}, 
+        
+
+    #test annot
+        file = path + folderList[i] + '/' + 'exhibition_record_usage.txt'
+        df = pd.read_csv(file, sep = ' ', header = None)
+        #print(df)
+        #print(len(df))
+        
+        t = []
+        #print(len(data[i]))
+        [t.append("") for j in range(data[i].size)]
+        text = np.array(t)
+        text = text.reshape(len(data[i]), len(data[i]))
+        text = text.tolist()
+        
+        for j in range(len(df)):
+            row = df[0][j]
+            col = df[1][j]
+            text[row][col] = text[row][col].join('p' + str(j+1))
+        
+        print(text)
+
+        sns.heatmap(data[i], ax = axes[0, i], square = True, cmap = 'Reds', cbar_kws={"shrink": .5}, annot = text, fmt = '', 
                                 linewidths = 1, xticklabels = [], yticklabels = [])
     
     fig.tight_layout()
@@ -83,6 +109,8 @@ def ExhibitionRealtimeHumanCount(filename):
         for j in range(totalExhibibiton):
             axes[i, 0].plot(timeline, data[i][j, :], label = 'p' + str(j+1))
         axes[i, 0].set_yticks(np.arange(0, np.max(data[i]) + 1))
+        axes[i, 0].set_xlabel("time")
+        axes[i, 0].set_ylabel("human count")
         axes[i, 0].legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
             
     fig.tight_layout()
@@ -208,7 +236,7 @@ def ExhibitionTransformOpportunity(filename):
     data = []
     for i in range(compareResultCount):
         file = path + folderList[i] + '/' + filename
-        data.append(np.loadtxt(file, 'int'))
+        data.append(np.loadtxt(file, 'float'))
     
     #grads = (True, False, False, True)                # gradient
     #gaps  = (0.03, 0, 0.03, 0)                        # gap value
@@ -221,14 +249,27 @@ def ExhibitionTransformOpportunity(filename):
     # plot
     for i in range(compareResultCount):
         #fig, axes = plt.subplots(1, 1, figsize = (15, 15))
+        # modify 0 value
+        print(data[i].shape[0])
         
+        for j in range(data[i].shape[0]):
+            for k in range(data[i].shape[0]):
+                if(j != k):
+                    #print(data[i][j][k])
+                    if( data[i][j, k] + data[i][k, j] != 0 ):
+                        #print("j: " + str(j) + " k: " + str(k))
+                        if(data[i][j, k] == 0): data[i][j, k] = 0.3
+                        if(data[i][k, j] == 0): data[i][k, j] = 0.3
+        
+        
+        print(data[i])
         names = []
         for j in range(data[i].shape[0] - 2):
             names.append('p' + str(j + 1))
         names.append('exit1')
         names.append('exit2')
         
-        chord_diagram(data[i], names, gap = 0.03, use_gradient = False, sort = 'size',
+        chord_diagram(data[i], names, gap = 0.03, use_gradient = False, sort = 'distance',
               cmap = None, chord_colors = None, rotate_names = False, fontcolor = 'grey')
         plt.title(folderList[i] + ' exhibition transform opportunity', y = 1.05)
         plt.tight_layout()
@@ -258,7 +299,7 @@ def ExhibitionTransformOpportunity(filename):
 
 
 # visitor status time
-def VisitorStatusime(filename):
+def VisitorStatusTime(filename):
     fig, axes = plt.subplots(1, compareResultCount, squeeze = False)
     fig.set_facecolor('xkcd:steel')
     
@@ -295,12 +336,112 @@ def VisitorStatusime(filename):
         plt.savefig(savePath + '/Compare ' + filename.replace('.txt', ''), dpi=600, bbox_inches='tight', pad_inches=0.02)
     '''
 
+# visitor status time
+def StatusTime(filename):
+    #read data
+    data = []
+    # single
+    if(compareResultCount == 1):
+        file = path + folderList[0] + '/' + filename
+        data.append(np.loadtxt(file, 'float'))
+    # multiple
+    else:
+        for i in range(compareResultCount):
+            file = path + folderList[i] + '/' + filename;
+            data.append(np.loadtxt(file, 'float'))
+    
+    # plot
+    for i in range(compareResultCount):
+        arr = np.array(data[i])
+        print(arr.shape)
+        averageData = np.mean(arr, axis = 0)
+        averageData = averageData / sum(averageData) 
+        averageData = averageData * 100
+        columnNames = ['folderName', 'go', 'close', 'at']
+        df = pd.DataFrame(columns = columnNames)
+        df = df.append({'folderName' : folderList[i], 'go': averageData[0], 'close' : averageData[1], 'at' : averageData[2]}, ignore_index = True )
+        print(df)
+        df.set_index('folderName').plot(kind='bar', stacked=True, color=['green', 'orange', 'red'])
+        
+        plt.title('visitor status time', fontsize=16)
 
+        #add axis titles
+        plt.xlabel('Folder Name')
+        plt.ylabel('Percentage')
+        
+        #rotate x-axis labels
+        plt.xticks(rotation=0)
+    
 
+# visitor status time
+def StatusTimeBoxPlot(filename):
+    fig, axes = plt.subplots(1, compareResultCount, squeeze = False)
+    fig.set_facecolor('xkcd:steel')
+    
+    #read data
+    data = []
+    # single
+    if(compareResultCount == 1):
+        fig.suptitle('Status Time Box Plot')
+        file = path + folderList[0] + '/' + filename
+        data.append(np.loadtxt(file, 'float'))
+    # multiple
+    else:
+        fig.suptitle('Compare Status Time Box Plot')
+        for i in range(compareResultCount):
+            file = path + folderList[i] + '/' + filename;
+            data.append(np.loadtxt(file, 'float'))
+    
+    # plot
+    for i in range(compareResultCount):
+        columnNames = ['status', 'time']
+        df = pd.DataFrame(columns = columnNames)
+        
+        for j in range(data[i].shape[0]):
+            df = df.append({'status' : 'go', 'time': data[i][j][0]}, ignore_index = True)
+            df = df.append({'status' : 'close', 'time': data[i][j][1]}, ignore_index = True)
+            df = df.append({'status' : 'at', 'time': data[i][j][2]}, ignore_index = True)
+        
+        print(df)
+        axes[0, i] = sns.boxplot(x="status", y="time", data=df)
+        axes[0, i] = sns.swarmplot(x="status", y="time", data=df, color=".25")
+        
+    fig.tight_layout()
+    plt.savefig(savePath + '/statusTime', dpi=600, bbox_inches='tight', pad_inches=0.02)
 
+#EachVisitorExhibitionVisitingTimeBoxPlot
+def EachVisitorExhibitionVisitingTimeBoxPlot(filename):
+    # read data
+    dfList = []
+    for i in range(compareResultCount):
+        file = path + folderList[i] + '/' + filename
+        df = pd.read_csv(file, sep = ' ', header = None)
+        columnNames = []
+        [columnNames.append('p' + str(j + 1)) for j in range(len(df.columns) - 2)]
+        columnNames.append('id')
+        columnNames.append('humantype')
+        df.columns = columnNames
+        
+        #handle data
+        colNames = ['exhibition', 'time', 'id', 'humantype']
+        new_df = pd.DataFrame(columns = colNames)
+        print(len(df.index))
+        for j in range(len(df.index)):
+            for k in range(len(df.columns) - 2):
+                exhibitionName = 'p' + str(k+1)
+                new_df = new_df.append({'exhibition': exhibitionName, 'time': df.loc[j, exhibitionName], 
+                                        'id': df.loc[j, 'id'], 'humantype': df.loc[j, 'humantype']}, ignore_index = True)
+        
+        #print(new_df)
+        
+        dfList.append(new_df)
+    
 
-
-
+    
+    #plot
+    for i in range(compareResultCount):
+        ax = sns.boxplot(x="exhibition", y="time", hue = "humantype", data = dfList[i], palette="Set3")
+        
 
 
 

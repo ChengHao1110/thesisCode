@@ -314,6 +314,27 @@ public partial class UIController : PersistentSingleton<UIController>
             miniCameraPos.Add(tmpPos2);
         }
 
+        //set realtime heatmap
+        switch (sceneName)
+        {
+            case "119":
+                dynamicSystem.instance.matrixSize = 400;
+                dynamicSystem.instance.gaussianFilterSize = 10;
+                dynamicSystem.instance.sceneSize = 22;
+                break;
+            case "120":
+                dynamicSystem.instance.matrixSize = 400;
+                dynamicSystem.instance.gaussianFilterSize = 10;
+                dynamicSystem.instance.sceneSize = 22;
+                break;
+            case "225":
+                dynamicSystem.instance.matrixSize = 400;
+                dynamicSystem.instance.gaussianFilterSize = 10;
+                dynamicSystem.instance.sceneSize = 20;
+                break;
+        }
+        
+
         changeOption(0);
     }
 

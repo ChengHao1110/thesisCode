@@ -63,7 +63,7 @@ public class gatheringEvent
     public string curState;
 }
 
-//visitior initial setting
+// visitior initial setting
 public class humanInfo 
 {
     public string name;
@@ -76,6 +76,23 @@ public class humanInfo
     public double gatherDesire;
     public double startSimulateTime;
     public int randomSeed;
+}
+
+// record simulation
+public class RecordSimulation 
+{
+    public string sceneOption;
+    public string exhibitionLayoutFilename;
+}
+
+public class RecordSimulationVisitor 
+{
+    public string id;
+    public string modelName;
+    public double startSimulateTime;
+    public double endSimulateTime;
+    public List<double> posX, posY, posZ;
+    public List<double> rotX, rotY, rotZ;
 }
 
 
@@ -91,7 +108,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public GameObject informationBoardPrefab, informationBoardPrefab_exhibit;
     public GameObject markerPrefab_human, markerPrefab_exhibit, markersParent, ballMarker;
     public GameObject cylinderCollider;
-    public Toggle humanBoardToggle, exhibitToggle, targetSignToggle, colliderShapeToggle, exhibitRangeToggle;
+    public Toggle humanBoardToggle, exhibitToggle, targetSignToggle, colliderShapeToggle, exhibitRangeToggle, heatmapToggle;
 
 
     /* can set by others */
@@ -143,6 +160,18 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public Button saveVISBtn, loadVISBtn, randomVISBtn;
     string saveVISFilename = "", loadVISFilename = "";
 
+    /*realtime heatmap*/
+    public float updateHeatmapTime = 0;
+    public HeatMap_Float heatMap_Float;
+    public float[,] matrix, rotMatrix;
+    public float[,] staticMatrix;
+    public int matrixSize = 500, gaussianFilterSize = 10, sceneSize = 22;
+    public bool useGaussian = false;
+    public GameObject Heatmap;
+    public int gaussian_rate = 4;
+    float[] gaussianValue;
+    public string heatmapMode = "static";
+
     /* update information */
     void updatePeople()
     {
@@ -180,11 +209,25 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             //change scene & radius for different scene
             if (UIController.instance.curOption.Contains("119") || UIController.instance.curOption.Contains("225"))
             {
-                TrajectoryToHeatmap(20, 10);
+                //TrajectoryToHeatmap(100, 20);
+                //TrajectoryToHeatmapWithGaussian(40, 20, 10, 2); // test15
+                //TrajectoryToHeatmapWithGaussian(60, 30, 10, 2); // test 16
+                //TrajectoryToHeatmapWithGaussian(60, 30, 10, 3); // test17
+                //TrajectoryToHeatmapWithGaussian(100, 50, 10, 5); // test18 //test19 0.5sec
+                //TrajectoryToHeatmapWithGaussian(240, 120, 12, 5); //test22
+                //TrajectoryToHeatmapWithGaussian(200, 100, 10, 5);25
+                //TrajectoryToHeatmapWithGaussian(100, 50, 10, 2); //test24
+                //TrajectoryToHeatmapWithGaussian(110, 55, 11, 3);
+                //TrajectoryToHeatmapWithGaussian(150, 75, 11, 7);
+                //TrajectoryToHeatmapWithGaussian(1000, 500, 11, 50);
+                //TrajectoryToHeatmapWithGaussian(1000, 11, 4);
+                TrajectoryToHeatmapWithGaussian(500, 11, 4);
+
             }
             if (UIController.instance.curOption.Contains("120"))
             {
-                TrajectoryToHeatmap(24, 12);
+                //TrajectoryToHeatmap(24, 12);
+                TrajectoryToHeatmapWithGaussian(500, 11, 4);
             }
 
             //exhibition transform
@@ -452,8 +495,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 }
 
                 /* Store trajectory */
-                if (deltaTimeCounter - person.Value.lastTimeStamp_storeTrajectory > 1)
+                if (deltaTimeCounter - person.Value.lastTimeStamp_storeTrajectory > 0.033f && person.Value.model.activeSelf == true)
                 {
+                    //Debug.Log("x: " + scalePosBackTo2D(person.Value.currentPosition)[0]);
+                    //Debug.Log("z: " + scalePosBackTo2D(person.Value.currentPosition)[1]);
                     person.Value.fullTrajectory.Add(scalePosBackTo2D(person.Value.currentPosition));
                     person.Value.velocity_Trajectory.Add(person.Value.agent.velocity.magnitude);
                     person.Value.lastTimeStamp_storeTrajectory = deltaTimeCounter;
@@ -527,9 +572,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         {
             // Debug.Log("rotate");
             Quaternion OriginalRot = person.model.transform.rotation;
+
             person.model.transform.LookAt(lookAtPos);
             Quaternion NewRot = person.model.transform.rotation;
-            person.model.transform.rotation = Quaternion.Lerp(OriginalRot, NewRot, (deltaTimeCounter - person.lastTimeStamp_rotate) / 30);
+            //Quaternion NewRot = Quaternion.LookRotation(lookAtPos - person.currentPosition);
+            person.model.transform.rotation = Quaternion.Slerp(OriginalRot, NewRot, (deltaTimeCounter - person.lastTimeStamp_rotate) / 30);
             if (deltaTimeCounter - person.lastTimeStamp_rotate > 1)
             {
                 person.lastTimeStamp_rotate = -1;
@@ -543,7 +590,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 fixedNorm.y = 0;
                 Quaternion OriginalRot = person.model.transform.rotation;
                 Quaternion NewRot = Quaternion.LookRotation(fixedNorm);
-                person.model.transform.rotation = Quaternion.Lerp(OriginalRot, NewRot, (deltaTimeCounter - person.lastTimeStamp_rotate) / 30); ;
+                person.model.transform.rotation = Quaternion.Slerp(OriginalRot, NewRot, (deltaTimeCounter - person.lastTimeStamp_rotate) / 30); ;
             }
         }
     }
@@ -1229,11 +1276,14 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 {
                     newExhibit.bestViewDirection = new List<int>(exhibit.Value.bestViewDirection);                    
                     newExhibit.frontSide = exhibit.Value.frontSide;
+                    for(int i = 0; i < newExhibit.frontSide.Count; i++)
+                        Debug.Log(newExhibit.name + " " + newExhibit.frontSide[i]);
                     newExhibit.centerPosition = newExhibit.model.transform.position;
                     newExhibit.centerPosition.y = 0;
                     newExhibit.range.Add(GameObject.Find(modelInScene_range));
                     GameObject range1 = GameObject.Find(modelInScene_range + "1");
                     if (range1 != null) newExhibit.range.Add(range1);
+
 
                     // generateBestViewPos(newExhibit, exhibit.Key);
                     generateBestViewByStatisticDistance(newExhibit, exhibit.Key); // just test
@@ -1399,6 +1449,40 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         {
             planeCenter.x += 2;
         }
+        
+        GameObject rangeCopy = ex.range[0];
+        float rate = 0.85f;
+        rangeCopy.transform.localScale *= rate;
+        Mesh meshCopy = rangeCopy.GetComponent<MeshFilter>().mesh;
+        Vector3[] verticesCopy = meshCopy.vertices;
+        List<Vector3> useVerticesCopy = new List<Vector3>();
+        for (var i = 0; i < verticesCopy.Length; i++)
+        {
+            Vector3 pos = rangeCopy.transform.TransformPoint(verticesCopy[i]);
+            pos.y = 0;
+            
+            //GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            //sphere.transform.position = pos;
+            //sphere.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            
+            if (!useVerticesCopy.Contains(pos)) useVerticesCopy.Add(pos);
+        }
+
+        /*
+        for(int i = 0; i < 4; i++)
+        {
+            Debug.Log(i + ": " + useVerticesCopy[i]);
+        }
+        */
+        //Color c = UnityEngine.Random.ColorHSV();
+
+        Vector3 lineStart = new Vector3(center.x, 0, center.z);
+        Quaternion rot = ex.model.transform.parent.transform.rotation;
+        Vector3 lineEnd = lineStart + rot * Vector3.forward * 5;
+        //lineEnd = lineStart + rot * Vector3.left * 5;
+        lineEnd = lineStart + Vector3.left * 3;
+        Debug.DrawLine(lineStart, lineEnd, Color.red, 200);
+
 
         foreach (int direction in ex.bestViewDirection)
         {
@@ -1407,11 +1491,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 exhibitRec[exName].bestViewCount.Add(direction.ToString(), 0);
                 float _x = (float)(currentSceneSettings.Exhibitions[exName].bestViewDistance[index][0]);
                 float _z = (float)(currentSceneSettings.Exhibitions[exName].bestViewDistance[index][1]);
+                
                 Vector3 _direct = scalePosTo3D(new Vector2(_x, _z)) + positionDif - ex.centerPosition;
                 _direct = Quaternion.Euler(0, rotateYdif, 0) * _direct;
                 _direct += ex.centerPosition;
 
-                /* check if touchable by the agents*/
+                //check if touchable by the agents
                 Vector3 _direct_onNavMesh = _direct;
                 NavMeshPath path = new NavMeshPath();
                 NavMesh.CalculatePath(planeCenter, _direct, walkableMask, path);
@@ -1434,17 +1519,146 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         }
                     }
                 }
-                ex.bestViewDirection_vector3.Add(_direct_onNavMesh);
+                //ex.bestViewDirection_vector3.Add(_direct_onNavMesh);
                                
                 GameObject sign_test = Instantiate(signPrefab2, _direct, Quaternion.identity);
                 sign_test.transform.Find("Text").GetComponent<TextMesh>().text = direction.ToString();
                 sign_test.name = exName + " " + direction;
                 sign_test.transform.parent = ex.model.transform;
+                //ex.bestViewSign.Add(sign_test);
+                /*
+                GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                sphere.transform.position = sign_test.transform.position;
+                sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+                var sphereRenderer = sphere.GetComponent<Renderer>();
+                sphereRenderer.material.SetColor("_Color", c);
+                */
+                
+                float minDistance = float.PositiveInfinity;
+                Vector3 finalPoint = Vector3.zero;
+                Vector3 signPos = sign_test.transform.position;
+                for (int i = 0; i < 4; i++)
+                {
+                    // Get 2 Line for cross point
+                    float a1, a2, b1, b2, c1, c2;
+                    // first line : 2 points -> center to (_x, 0, _z)
+                    //according to the origin point
+                    /*
+                    a1 = center.z - signPos.z;
+                    b1 = signPos.x - center.x;
+                    c1 = center.x * signPos.z - signPos.x * center.z;
+                    */
+
+                    //according to the degree
+                    Vector3 afterRot = Quaternion.AngleAxis(-15 - direction * 30, Vector3.up) * Quaternion.Euler(0, rotateYdif, 0) * Vector3.left;
+                    //Debug.Log(exName + " " + direction + " " + afterRot);
+                    Debug.DrawLine(center, center + afterRot * 2, Color.green, 200);
+                    //Vector3 afterRot = Quaternion.AngleAxis(-15 - direction * 30, Vector3.up) * Vector3.right;
+                    a1 = -afterRot.z;
+                    b1 = afterRot.x;
+                    c1 = center.x * (center.z + afterRot.z) - (center.x + afterRot.x) * center.z;
+                    
+                    // second line : 2 points -> useVerticesCopy[i] to useVerticesCopy[i + 1] 
+                    int next = 0;
+                    switch (i) {
+                        case 0:
+                            next = 1;
+                            break;
+                        case 1:
+                            next = 3;
+                            break;
+                        case 2:
+                            next = 0;
+                            break;
+                        case 3:
+                            next = 2;
+                            break;
+                    }
+
+
+                    a2 = useVerticesCopy[i].z - useVerticesCopy[next].z;
+                    b2 = useVerticesCopy[next].x - useVerticesCopy[i].x;
+                    c2 = useVerticesCopy[i].x * useVerticesCopy[next].z - useVerticesCopy[next].x * useVerticesCopy[i].z;
+
+                    // Get the cross point
+                    float d = a1 * b2 - a2 * b1;
+                    if (d == 0) continue;
+                    float crossX, crossY;
+                    crossX = (b1 * c2 - b2 * c1) / d;
+                    crossY = (a2 * c1 - a1 * c2) / d;
+
+
+
+                    //check cross point is reasonable
+
+                    //in line 
+                    if ( (crossX - useVerticesCopy[i].x) * (useVerticesCopy[next].z - useVerticesCopy[i].z) - (useVerticesCopy[next].x - useVerticesCopy[i].x) * (crossY - useVerticesCopy[i].z) < 0.01f &&
+                         Math.Min(useVerticesCopy[i].x, useVerticesCopy[next].x) <= crossX && crossX <= Math.Max(useVerticesCopy[i].x, useVerticesCopy[next].x) &&
+                         Math.Min(useVerticesCopy[i].z, useVerticesCopy[next].z) <= crossY && crossY <= Math.Max(useVerticesCopy[i].z, useVerticesCopy[next].z))
+                    {
+                        Vector2 v1 = new Vector2(crossX - center.x, crossY - center.z);
+                        Vector2 v2 = new Vector2(afterRot.x, afterRot.z);
+                        if ( Math.Abs(Vector2.Dot(v1, v2) / (v1.magnitude * v2.magnitude) - 1) < 0.0001f)
+                        {
+                            finalPoint.x = crossX;
+                            finalPoint.z = crossY;
+                        }
+   
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    /*
+                    Vector3 dist = new Vector3(crossX - signPos.x, 0, crossY - signPos.z);
+                    Vector2 v1 = new Vector2(crossX - center.x, crossY - center.z);
+                    Vector2 v2 = new Vector2(signPos.x - center.x, signPos.z - center.z);
+                    //Debug.Log(Vector2.Dot(v1, v2) / (v1.magnitude * v2.magnitude));
+                    if ( Vector2.Dot(v1, v2) / (v1.magnitude * v2.magnitude) - 1 < 0.0001f && dist.magnitude <= minDistance)
+                    {
+                        minDistance = dist.magnitude;
+                        finalPoint.x = crossX;
+                        finalPoint.z = crossY;
+                    }
+                    */
+                }
+
+                //check if touchable by the agents
+                _direct_onNavMesh = finalPoint;
+                path = new NavMeshPath();
+                NavMesh.CalculatePath(planeCenter, finalPoint, walkableMask, path);
+                if (path.status != NavMeshPathStatus.PathComplete)
+                {
+                    //Debug.Log(exName + " " + direction + " " + walkableMask);
+                    // GameObject st_ = Instantiate(signPrefab, planeCenter, Quaternion.identity);
+
+                    NavMeshHit myNavHit;
+                    Vector3 _direct_touch = new Vector3();
+                    if (NavMesh.SamplePosition(finalPoint, out myNavHit, 5.0f, walkableMask))
+                    {
+                        _direct_touch = myNavHit.position;
+                        NavMesh.CalculatePath(planeCenter, _direct_touch, walkableMask, path);
+                        if (path.status == NavMeshPathStatus.PathComplete)
+                        {
+                            _direct_onNavMesh = _direct_touch;
+                            // GameObject st = Instantiate(signPrefab, _direct_touch, Quaternion.identity);
+                            // st.transform.Find("Text").GetComponent<TextMesh>().text = direction.ToString();
+                        }
+                    }
+                }
+                //sign_test.transform.position = finalPoint;
+                sign_test.transform.position = _direct_onNavMesh;
                 ex.bestViewSign.Add(sign_test);
+                //ex.bestViewDirection_vector3.Add(sign_test.transform.position);
+                ex.bestViewDirection_vector3.Add(_direct_onNavMesh);
+                
             }
 
             index++;
         }
+        rangeCopy.transform.localScale /= rate;
+
     }
     
     Vector3 generateNewVector3()
@@ -2022,12 +2236,20 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     void Start()
     {
         path = new NavMeshPath();
+        matrixSize = 500;
+        sceneSize = 22;
+        matrix = new float[matrixSize, matrixSize];
+        for (int i = 0; i < matrixSize; i++) for (int j = 0; j < matrixSize; j++) matrix[i, j] = 0;
+        gaussianValue = new float[gaussian_rate];
+        for (int i = 0; i < gaussian_rate; i++)
+        {
+            gaussianValue[i] = (float)Math.Exp(-(i * i) / 2 * (gaussian_rate * gaussian_rate));
+        }
 
     }
 
     void FixedUpdate()
     {
-        //Time.timeScale = 3.0f;
         if (Run == true)
         {
             deltaTimeCounter += Time.fixedDeltaTime;
@@ -2064,6 +2286,64 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 updateSocialDistance = deltaTimeCounter;
             }
 
+            //heatmap update
+            //calculate
+            foreach (KeyValuePair<string, human_single> person in people)
+            {
+                int radius = matrixSize / 2;
+                int gaussian_distance = (radius / sceneSize) / 2;
+                int gaussian_total_distance = gaussian_distance * gaussian_rate;
+                int scene_half_size = sceneSize / 2;
+                //calculate move and stay
+                //if (person.Value.fullTrajectory.Count() > 0)
+                //{
+                /*
+                int last = person.Value.fullTrajectory.Count() - 1;
+                int sx = (int)Math.Floor((1 + (person.Value.fullTrajectory[last][0] / scene_half_size)) * radius); //col
+                int sy = (int)Math.Floor((1 - (person.Value.fullTrajectory[last][1] / scene_half_size)) * radius); //row
+                sx = CheckValidValue(sx, matrixSize);
+                sy = CheckValidValue(sy, matrixSize);
+                */
+                if (person.Value.model.activeSelf)
+                {
+                    
+                    List<double> pos = scalePosBackTo2D(person.Value.currentPosition);
+
+                    int sx = (int)Math.Floor((1 + (pos[0] / scene_half_size)) * radius); //col
+                    int sy = (int)Math.Floor((1 - (pos[1] / scene_half_size)) * radius); //row
+                    sx = CheckValidValue(sx, matrixSize);
+                    sy = CheckValidValue(sy, matrixSize);
+                    //gaussian
+                    int rowBegin = sy - gaussian_total_distance;
+                    int rowEnd = sy + gaussian_total_distance;
+                    int colBegin = sx - gaussian_total_distance;
+                    int colEnd = sx + gaussian_total_distance;
+
+                    rowBegin = CheckValidValue(rowBegin, matrixSize);
+                    rowEnd = CheckValidValue(rowEnd, matrixSize);
+                    colBegin = CheckValidValue(colBegin, matrixSize);
+                    colEnd = CheckValidValue(colEnd, matrixSize);
+
+                    for (int j = rowBegin; j <= rowEnd; j++)
+                    {
+                        for (int k = colBegin; k <= colEnd; k++)
+                        {
+                            Vector2 diff = new Vector2(j - sy, k - sx);
+
+                            int level = (int)Math.Floor(diff.magnitude / gaussian_distance);
+
+                            if (level < gaussian_rate)
+                            {
+                                matrix[j, k] += gaussianValue[level];
+                            }
+                        }
+                    }
+                }
+                    
+
+                //}
+            }
+
 
             // show fps
             fps_deltaTime += (Time.unscaledDeltaTime - fps_deltaTime) * 0.1f;
@@ -2071,6 +2351,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             float msec = fps_deltaTime * 1000.0f;
             fpsText.text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
             fpsList.Add(fps);
+            
         }
     }
 
@@ -2231,6 +2512,21 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             }
         }
     }
+
+    public void setHeatmap()
+    {
+        Debug.Log(heatmapToggle.isOn);
+        if (heatmapToggle.isOn)
+        {
+            heatmapMode = "realtime";
+            Heatmap.SetActive(heatmapToggle.isOn);
+        }
+        else 
+        {
+            Heatmap.SetActive(heatmapToggle.isOn);
+        }
+    }
+
 
     void NavMeshBake()
     {
@@ -2682,6 +2978,26 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         sw.Flush();
         sw.Close();
 
+
+        
+
+        //record exhibition position in usage analysis
+        fs = new FileStream(directory + "exhibition_record_usage.txt", FileMode.OpenOrCreate);
+        sw = new StreamWriter(fs);
+        GameObject scene = GameObject.Find("/[EnvironmentsOfEachScene]/" + UIController.instance.curOption);
+        string sceneNum = UIController.instance.curOption.Substring(0, 3);
+        foreach (Transform child in scene.transform)
+        {
+            if (child.name.Contains(sceneNum) && !child.name.Contains("ExitDoor") && !child.name.Contains("x"))
+            {
+                int sx = (int)Math.Floor(mag * (scalePosBackTo2D(child.position)[0] + radius)); //col
+                int sy = (int)Math.Floor(mag * (radius - scalePosBackTo2D(child.position)[1])); //row
+
+                sw.Write(sy + " " + sx + "\n");
+            }
+        }
+        sw.Flush();
+        sw.Close();
         Debug.Log("data analysis: heatmap complete");
 
     }
@@ -2690,7 +3006,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     int CheckValidValue(int val, int size)
     {
         int modifyValue = val;
-        if (val < 0 && val < size) return modifyValue;
+        if (val >= 0 && val < size) return modifyValue;
         else
         {
             if (val < 0)
@@ -2704,6 +3020,165 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             return modifyValue;
         }
     }
+
+    void TrajectoryToHeatmapWithGaussian(int size, int scene_half_size, int gaussian_rate)
+    {
+        float[,] space_usage = new float[size, size];
+        float[,] time_usage = new float[size, size];
+        int radius = size / 2;
+        int gaussian_distance = (radius / scene_half_size) / 2;
+        int gaussian_total_distance = gaussian_distance * gaussian_rate;
+
+        //initial gaussian value
+        int sigma = gaussian_rate;
+
+        float[] gaussianValue = new float[gaussian_rate];
+
+        for(int i = 0; i < gaussian_rate; i++)
+        {
+            gaussianValue[i] = (float)Math.Exp( - (i * i) / 2 * (sigma * sigma));
+        }
+
+
+        //initial array
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                space_usage[i, j] = 0;
+                time_usage[i, j] = 0;
+            }
+        }
+
+        //calculate
+        foreach (KeyValuePair<string, human_single> person in people)
+        {
+            /*
+            //record the initial pos
+            int sx = (int)Math.Floor( (1 + (person.Value.fullTrajectory[0][0] / scene_half_size)) * radius); //col
+            int sy = (int)Math.Floor( (1 - (person.Value.fullTrajectory[0][1] / scene_half_size)) * radius); //row
+            sx = CheckValidValue(sx, size);
+            sy = CheckValidValue(sy, size);
+
+            //gaussian
+            int rowBegin = sy - gaussian_distance, rowEnd = sy + gaussian_distance;
+            int colBegin = sx - gaussian_distance, colEnd = sx + gaussian_distance;
+
+            rowBegin = CheckValidValue(rowBegin, size);
+            rowEnd = CheckValidValue(rowEnd, size);
+            colBegin = CheckValidValue(colBegin, size);
+            colEnd = CheckValidValue(colEnd, size);
+
+            for (int j = rowBegin; j <= rowEnd; j++)
+            {
+                for (int k = colBegin; k <= colEnd; k++)
+                {
+                    Vector2 diff = new Vector2(j - sy, k - sx);
+                    if (diff.magnitude <= gaussian_distance)
+                    {
+                        space_usage[j, k]++;
+                    }
+                }
+            }
+            */
+
+
+
+            for (int i = 0; i < person.Value.fullTrajectory.Count() - 1; i++)
+            {
+                int sx = (int)Math.Floor( (1 + (person.Value.fullTrajectory[i][0] / scene_half_size)) * radius); //col
+                int sy = (int)Math.Floor( (1 - (person.Value.fullTrajectory[i][1] / scene_half_size)) * radius); //row
+                int dx = (int)Math.Floor( (1 + (person.Value.fullTrajectory[i + 1][0] / scene_half_size)) * radius); //col
+                int dy = (int)Math.Floor( (1 - (person.Value.fullTrajectory[i + 1][1] / scene_half_size)) * radius); //row
+
+                sx = CheckValidValue(sx, size);
+                sy = CheckValidValue(sy, size);
+                dx = CheckValidValue(dx, size);
+                dy = CheckValidValue(dy, size);
+
+                Vector2 source = new Vector2((float)sy, (float)sx);
+                Vector2 destination = new Vector2((float)dy, (float)dx);
+                float distance = Vector2.Distance(source, destination);
+                if (distance >= 0.0f)
+                {
+                    //gaussian
+                    int rowBegin = dy - gaussian_total_distance;
+                    int rowEnd = dy + gaussian_total_distance;
+                    int colBegin = dx - gaussian_total_distance;
+                    int colEnd = dx + gaussian_total_distance;
+
+                    rowBegin = CheckValidValue(rowBegin, size);
+                    rowEnd = CheckValidValue(rowEnd, size);
+                    colBegin = CheckValidValue(colBegin, size);
+                    colEnd = CheckValidValue(colEnd, size);
+
+                    for (int j = rowBegin; j <= rowEnd; j++)
+                    {
+                        for (int k = colBegin; k <= colEnd; k++)
+                        {
+                            Vector2 diff = new Vector2(j - dy, k - dx);
+
+                            int level = (int) Math.Floor(diff.magnitude / gaussian_distance);
+
+                            if ( level < gaussian_rate)
+                            {
+                                //space_usage[j, k]++;
+                                space_usage[j, k] += gaussianValue[level];
+                                //time_usage[j, k] += 1.0f / distance;
+                                //time_usage[j, k] += distance / 0.5f;
+                            }
+                        }
+                    }
+                }
+            }
+            /*
+            for (int j = 0; j < size; j++)
+            {
+                for (int k = 0; k < size; k++)
+                {
+                    if(space_usage[j, k] != 0) time_usage[j, k] = time_usage[j, k] / space_usage[j, k];
+                }
+            }
+            */
+        }
+
+        //set to Heatmap script
+        staticMatrix = space_usage;
+        heatmapMode = "static";
+        Heatmap.SetActive(true);
+
+        //write file
+        //space usage file
+        FileStream fs = new FileStream(directory + "space_usage.txt", FileMode.OpenOrCreate);
+        StreamWriter sw = new StreamWriter(fs);
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                sw.Write(space_usage[i, j] + " ");
+            }
+            sw.Write("\n");
+        }
+        sw.Flush();
+        sw.Close();
+        /*
+        //timee usage file
+        fs = new FileStream(directory + "time_usage.txt", FileMode.OpenOrCreate);
+        sw = new StreamWriter(fs);
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                sw.Write(time_usage[i, j] + " ");
+            }
+            sw.Write("\n");
+        }
+        sw.Flush();
+        sw.Close();
+        */
+    }
+
+
 
     //exhibitions transform
     void ExhibitionsTransform()
