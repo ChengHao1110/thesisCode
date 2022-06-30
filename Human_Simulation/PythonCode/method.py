@@ -34,6 +34,7 @@ def Usage(filename, dtype):
         fig.suptitle(filename.replace('.txt', ''))
         file = path + folderList[0] + '/' + filename
         data.append(np.loadtxt(file, dtype))
+        print(np.max(data[0]))
     # multiple
     else:
         fig.suptitle('Compare ' + filename.replace('.txt', ''), y = .9)

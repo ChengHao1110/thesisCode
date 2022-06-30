@@ -36,6 +36,9 @@ public class exhibitionInfo
     public double posX, posY, posZ;
     public double rotX, rotY, rotZ;
     public double sclX, sclY, sclZ;
+    public double capacityMax, capacityMean, capacityMedian;
+    public double stayTimeMax, stayTimeMin, stayTimeMean, stayTimeStd;
+    public double chooseProbability, repeatChooseProbability;
 }
 
 public class exhibitionsInScene 
@@ -64,8 +67,11 @@ public partial class UIController : PersistentSingleton<UIController>
     public GameObject settingUIBoard;
     public GameObject modifyController;
     public GameObject saveLoadPanel;
+    public GameObject heatmapSettingPanel;
     bool openSaveLoadPanel;
     public bool modifyScene;
+    bool openHeatmapSettingPanel;
+    public bool isOriginalScene;
 
     public List<string> allScene;
     public Dictionary<string, cameraPerScene> cameras;
@@ -92,6 +98,7 @@ public partial class UIController : PersistentSingleton<UIController>
         //ui setting
         openSaveLoadPanel = false;
         modifyScene = false;
+        openHeatmapSettingPanel = false;
 
         //camera setting
         cameras = new Dictionary<string, cameraPerScene>
@@ -147,16 +154,24 @@ public partial class UIController : PersistentSingleton<UIController>
     /*main camera and mini camera swap*/
     public void ModifySceneButton()
     {
-        if (!curOption.Contains("A") && !curOption.Contains("B"))
-        {
-            ShowMsgPanel("Warning", "Please choose A or B option of the scene.");
-            return;
-        }
         modifyScene = !modifyScene;
         if (modifyScene)
         {
+            if (!curOption.Contains("A") && !curOption.Contains("B"))
+            {
+                isOriginalScene = true;
+                ShowMsgPanel("Notice", "You cannot edit the exhibitions in the original scene, but you can edit the information of the exhibitions.");
+                //ShowMsgPanel("Warning", "Please choose A or B option of the scene.");
+                //return;
+            }
+            else
+            {
+                isOriginalScene = false;
+            }
             int childCount = simulationModeUI.transform.childCount;
             modifyController.transform.SetSiblingIndex(childCount - 1);
+            openSaveLoadPanel = false;
+            openHeatmapSettingPanel = false;
         }
         else
         {
@@ -164,37 +179,7 @@ public partial class UIController : PersistentSingleton<UIController>
             settingUIBoard.transform.SetSiblingIndex(childCount - 1);
         }
 
-        string sceneHeadName = "119"; //default 119
-        int idx = 0;
-        for(int i = 0; i < allScene.Count; i++)
-        {
-            if (curOption.Contains(allScene[i]))
-            {
-                sceneHeadName = allScene[i];
-            }
-            if (curOption.Contains("A")) idx = 1;
-            if (curOption.Contains("B")) idx = 2;
-        }
-
-        switch (sceneHeadName) {
-            case "119":
-                {
-                    Swap(sceneHeadName, idx, new Vector3(-0.4f, 15, -0.2f), 7.71f, 70);
-                }
-                break;
-            case "120":
-                {
-                    Swap(sceneHeadName, idx, new Vector3(50.89f, 15, -0.3f), 10.5f, 85);
-                }
-                break;
-            case "225":
-                {
-                    Swap(sceneHeadName, idx, new Vector3(101.7f, 15, 3.56f), 8.5f, 80);
-                }
-                break;
-        }
-
-
+        ModifySceneCameraSwap();
     }
 
     void Swap(string sceneHeadName, int idx, Vector3 minimapCameraPos, float miniCameraSize, float mainCameraFOV)
@@ -205,7 +190,7 @@ public partial class UIController : PersistentSingleton<UIController>
         Vector3 zOffset = new Vector3(0, 0, 50 * idx);
         mainCamera = cameras[sceneHeadName].mainCamera.GetComponent<Camera>();
         minimapCamera = cameras[sceneHeadName].minimapCamera.GetComponent<Camera>();
-
+        Debug.Log(idx);
         if (modifyScene)
         {
             DashBoard.SetActive(false);
@@ -214,6 +199,8 @@ public partial class UIController : PersistentSingleton<UIController>
             mainCamera.targetTexture = minimapRT;
             minimapCamera.targetTexture = null;
             //change minimap camera
+            Debug.Log(minimapCameraPos);
+            Debug.Log(zOffset);
             cameras[sceneHeadName].minimapCamera.transform.position = minimapCameraPos + zOffset;
             minimapCamera.orthographicSize = miniCameraSize;
             cameras[sceneHeadName].minimapCamera.GetComponent<minimapCameraController>().Initial();
@@ -247,17 +234,79 @@ public partial class UIController : PersistentSingleton<UIController>
         mainCamera.rect = miniVPRect;
         mainCamera.depth = miniDepth;
     }
+
+    void ModifySceneCameraSwap()
+    {
+        string sceneHeadName = "119"; //default 119
+        int idx = 0;
+        for (int i = 0; i < allScene.Count; i++)
+        {
+            if (curOption.Contains(allScene[i]))
+            {
+                sceneHeadName = allScene[i];
+            }
+            if (curOption.Contains("A")) idx = 1;
+            if (curOption.Contains("B")) idx = 2;
+        }
+
+        switch (sceneHeadName)
+        {
+            case "119":
+                {
+                    Swap(sceneHeadName, idx, new Vector3(-0.4f, 15, -0.2f), 7.71f, 70);
+                }
+                break;
+            case "120":
+                {
+                    Swap(sceneHeadName, idx, new Vector3(50.89f, 15, -0.3f), 10.5f, 85);
+                }
+                break;
+            case "225":
+                {
+                    Swap(sceneHeadName, idx, new Vector3(101.7f, 15, 3.56f), 8.5f, 80);
+                }
+                break;
+        }
+    }
     #endregion
 
     //Save/Load Button Functions
     public void SaveLoadButton()
     {
         openSaveLoadPanel = !openSaveLoadPanel;
-        if(modifyScene) ModifySceneButton();
         if (openSaveLoadPanel)
         {
             int childCount = simulationModeUI.transform.childCount;
             saveLoadPanel.transform.SetSiblingIndex(childCount - 1);
+            if (modifyScene)
+            {
+                modifyScene = false;
+                ModifySceneCameraSwap();  
+            }
+            
+            openHeatmapSettingPanel = false;
+        }
+        else
+        {
+            int childCount = simulationModeUI.transform.childCount;
+            settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+        }
+    }
+
+    //Heatmap Setting Panel
+    public void HeatmapSettningPanel()
+    {
+        openHeatmapSettingPanel = !openHeatmapSettingPanel;
+        if (openHeatmapSettingPanel)
+        {
+            int childCount = simulationModeUI.transform.childCount;
+            heatmapSettingPanel.transform.SetSiblingIndex(childCount - 1);
+            if (modifyScene)
+            {
+                modifyScene = false;
+                ModifySceneCameraSwap();
+            }
+            openSaveLoadPanel = false;
         }
         else
         {
@@ -539,6 +588,9 @@ public partial class UIController : PersistentSingleton<UIController>
         changeStageRadius_At();
         StageSpeedAtSlider.value = (float)inputSetting.walkStage["At"].speed;
         changeStageSpeed_At();
+
+        //heatmap.maxLimit = (tmpSaveUISettings.UI_Global.agentCount * tmpSaveUISettings.UI_Human.freeTimeMax) / dynamicSystem.instance.trajectoryRecordTime;
+        //heatmapMaxValueInput.text = heatmap.maxLimit.ToString();
     }
 
     void loadSettingsFromJson(string scene)  // only do at start, load local file
@@ -816,6 +868,33 @@ public partial class UIController : PersistentSingleton<UIController>
                     exInfo.sclX = child.transform.localScale.x;
                     exInfo.sclY = child.transform.localScale.y;
                     exInfo.sclZ = child.transform.localScale.z;
+
+                    string key = child.name.Replace(UIController.instance.currentScene + "_", "p");
+                    if (dynamicSystem.instance.currentSceneSettings.Exhibitions.ContainsKey(key))
+                    {
+                        settings_exhibition info = dynamicSystem.instance.currentSceneSettings.Exhibitions[key];
+                        exInfo.capacityMax = info.capacity.max;
+                        exInfo.capacityMean = info.capacity.mean;
+                        exInfo.capacityMedian = info.capacity.median;
+                        exInfo.stayTimeMax = info.stayTime.max;
+                        exInfo.stayTimeMin = info.stayTime.min;
+                        exInfo.stayTimeMean = info.stayTime.mean;
+                        exInfo.stayTimeStd = info.stayTime.std;
+                        exInfo.chooseProbability = info.chosenProbabilty;
+                        exInfo.repeatChooseProbability = info.repeatChosenProbabilty;
+                    }
+                    else
+                    {
+                        exInfo.capacityMax = 0;
+                        exInfo.capacityMean = 0;
+                        exInfo.capacityMedian = 0;
+                        exInfo.stayTimeMax = 0;
+                        exInfo.stayTimeMin = 0;
+                        exInfo.stayTimeMean = 0;
+                        exInfo.stayTimeStd = 0;
+                        exInfo.chooseProbability = 0;
+                        exInfo.repeatChooseProbability = 0;
+                    }
                     exhibitionsInfo.Add(exInfo);
                 }
             }
@@ -861,6 +940,20 @@ public partial class UIController : PersistentSingleton<UIController>
                 ex.transform.rotation = Quaternion.Euler((float)exInfo.rotX, (float)exInfo.rotY, (float)exInfo.rotZ);
                 Vector3 scl = new Vector3((float)exInfo.sclX, (float)exInfo.sclY, (float)exInfo.sclZ);
                 ex.transform.localScale = scl;
+
+                string key = exInfo.name.Replace(UIController.instance.currentScene + "_", "p");
+                if (dynamicSystem.instance.currentSceneSettings.Exhibitions.ContainsKey(key))
+                {
+                    dynamicSystem.instance.currentSceneSettings.Exhibitions[key].capacity.max = exInfo.capacityMax;
+                    dynamicSystem.instance.currentSceneSettings.Exhibitions[key].capacity.mean = exInfo.capacityMean;
+                    dynamicSystem.instance.currentSceneSettings.Exhibitions[key].capacity.median = exInfo.capacityMedian;
+                    dynamicSystem.instance.currentSceneSettings.Exhibitions[key].stayTime.max = exInfo.stayTimeMax;
+                    dynamicSystem.instance.currentSceneSettings.Exhibitions[key].stayTime.min = exInfo.stayTimeMin;
+                    dynamicSystem.instance.currentSceneSettings.Exhibitions[key].stayTime.mean = exInfo.stayTimeMean;
+                    dynamicSystem.instance.currentSceneSettings.Exhibitions[key].stayTime.std = exInfo.stayTimeStd;
+                    dynamicSystem.instance.currentSceneSettings.Exhibitions[key].chosenProbabilty = exInfo.chooseProbability;
+                    dynamicSystem.instance.currentSceneSettings.Exhibitions[key].repeatChosenProbabilty = exInfo.repeatChooseProbability;
+                }
             }
             string[] filename = path.Split('/');
             string msg = "Load exhibition setting to the scene option (" + exhibitionsInScene.sceneName + ")\n" + 
@@ -915,6 +1008,7 @@ public partial class UIController : PersistentSingleton<UIController>
     {
         msgType.text = type;
         if (type == "Warning") msgType.color = Color.red;
+        else if(type == "Notice") msgType.color = new Color(1.0f, 0.64f, 0.0f); //orange
         else if (type == "Success") msgType.color = Color.green;
         
         msgContent.text = content;
@@ -962,14 +1056,21 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
     public Slider StageRadiusGoToSlider, StageRadiusCloseSlider, StageRadiusAtSlider;
     public Text StageSpeedGoToText, StageSpeedCloseText, StageSpeedAtText;
     public Slider StageSpeedGoToSlider, StageSpeedCloseSlider, StageSpeedAtSlider;
+    /*Heatmap*/
+    public TMP_InputField heatmapMaxValueInput;
+    public HeatMap_Float heatmap;
+
     /* Update UI*/
     /* Global */
+    #region Global UI
     public void changeChosenAgentCount()
     {
         int value = (int)agentCountSlider.value;
         agentCountText.text = (value).ToString();
         tmpSaveUISettings.UI_Global.agentCount = value;
         addAgentCountSlider.maxValue = value;
+        //heatmap.maxLimit = (value * tmpSaveUISettings.UI_Human.freeTimeMax) / dynamicSystem.instance.trajectoryRecordTime;
+        //heatmapMaxValueInput.text = heatmap.maxLimit.ToString();
         changeAddAgentCount();
     }
 
@@ -1027,8 +1128,9 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         timeScaleText.text = value.ToString();
         Time.timeScale = value;
     }
-
+    #endregion
     /* Human */
+    #region Human UI
     public void changeWalkSpeedMin()
     {
         int value = int.Parse(walkSpeedMinInput.text);
@@ -1051,6 +1153,8 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
     {
         int value = int.Parse(freeTimeMaxInput.text);
         tmpSaveUISettings.UI_Human.freeTimeMax = value;
+        //heatmap.maxLimit = (value * tmpSaveUISettings.UI_Human.freeTimeMax) / dynamicSystem.instance.trajectoryRecordTime;
+        //heatmapMaxValueInput.text = heatmap.maxLimit.ToString();
     }
 
     public void changeGatherMeanProbability()
@@ -1101,8 +1205,9 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         leaveProbabilityText.text = (value).ToString("F2");
         tmpSaveUISettings.UI_Human.behaviorProbability["leave"].mean = value;
     }
-
+    #endregion
     /* Exhibit */
+    #region Exhibit UI
     public void changeCapacityLimitTime()
     {
         float value = (float)capacityTimesSlider.value;
@@ -1130,8 +1235,9 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         crowdedTimeLimitText.text = (value).ToString() + "s";
         tmpSaveUISettings.UI_Exhibit.crowdedTimeLimit = value;
     }
-
+    #endregion
     /* Influence Map */
+    #region Influence Map UI
     public void changeHumanInfluenceWeight()
     {
         float value = (float)weightHumanSlider.value;
@@ -1205,8 +1311,9 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         int value = int.Parse(exhibitCloseBestInput.text);
         tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["closeToBestViewDirection"] = value / 100f;
     }
-
+    #endregion
     /* Immediate change variables */
+    #region Immediate change variables UI
     public void changeStageRadius_GoTo()
     {
         float value = (float)StageRadiusGoToSlider.value;
@@ -1248,4 +1355,13 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         allSceneSettings[currentScene].customUI = tmpSaveUISettings.copy();
         dynamicSystem.instance.currentSceneSettings = allSceneSettings[currentScene];
     }
+    #endregion
+    /* Heatmap*/
+    #region Heatmap UI
+    public void changeHeatmapMaxValue()
+    {
+        int value = int.Parse(heatmapMaxValueInput.text);
+        //heatmap.maxLimit = value;
+    }
+    #endregion
 }

@@ -14,15 +14,10 @@ public class HeatMap_Float : MonoBehaviour
     [SerializeField] private GameObject heatmapCamera;
 
     static int defaultSize = 100;
-    public bool needInit = true;
-    float maxLimit = 4000;
-    public bool useGaussianFilter = false;
-    public int gaussianFilterSize = 10;
-
     
     void OnEnable()
     {
-        if(dynamicSystem.instance.heatmapMode == "realtime")
+        if (dynamicSystem.instance.heatmapMode == "realtime")
         {
             Init();
         }
@@ -424,6 +419,7 @@ public class HeatMap_Float : MonoBehaviour
 
         int size = dynamicSystem.instance.staticMatrix.GetLength(0);
         float sceneSize = dynamicSystem.instance.sceneSize;
+        int maxLimit = dynamicSystem.instance.maxLimit;
         //string input = File.ReadAllText(@"E:\ChengHao\Lab707\thesisCode\ChengHao\thesisCode\Human_Simulation\Assets\StreamingAssets\Simulation_Result\test37\space_usage.txt");
 
         //float[,] matrix = new float[size, size];
@@ -465,73 +461,79 @@ public class HeatMap_Float : MonoBehaviour
 
         //gaussian filter
         //int gaussian_filter_size = 10;
+        bool use_Gaussian_filter = dynamicSystem.instance.useGaussian;
         int gaussian_filter_size = dynamicSystem.instance.gaussianFilterSize;
-        float[,] gaussian_matrix = new float[gaussian_filter_size, gaussian_filter_size];
-        float sum_gaussian_matrix = 0;
-
-        int half_gaussian_filter_size = gaussian_filter_size / 2;
-        int x, y;
-        for (i = 0; i < gaussian_filter_size; i++)
+        if (use_Gaussian_filter)
         {
-            for (j = 0; j < gaussian_filter_size; j++)
+            float[,] gaussian_matrix = new float[gaussian_filter_size, gaussian_filter_size];
+            float sum_gaussian_matrix = 0;
+
+            int half_gaussian_filter_size = gaussian_filter_size / 2;
+            int x, y;
+            for (i = 0; i < gaussian_filter_size; i++)
             {
-                x = i - half_gaussian_filter_size;
-                y = j - half_gaussian_filter_size;
-                gaussian_matrix[i, j] = Mathf.Exp(-(x * x + y * y));
-                sum_gaussian_matrix += gaussian_matrix[i, j];
-            }
-        }
-
-        for (i = 0; i < gaussian_filter_size; i++) for (j = 0; j < gaussian_filter_size; j++) gaussian_matrix[i, j] /= sum_gaussian_matrix;
-
-
-        for (i = 0; i < size; i++)
-        {
-
-            for (j = 0; j < size; j++)
-            {
-                float tmpValue = 0;
-                sum_gaussian_matrix = 0;
-                for (int k = 0; k < gaussian_filter_size; k++)
+                for (j = 0; j < gaussian_filter_size; j++)
                 {
-                    for (int l = 0; l < gaussian_filter_size; l++)
-                    {
-                        x = k - half_gaussian_filter_size;
-                        y = l - half_gaussian_filter_size;
-                        if (x < 0 && i + x < 0) continue;
-                        if (x > 0 && i + x >= size) continue;
-                        if (y < 0 && j + y < 0) continue;
-                        if (y > 0 && j + y >= size) continue;
-                        tmpValue += matrixAfterRotation[i + x, j + y] * gaussian_matrix[k, l];
-                        sum_gaussian_matrix += gaussian_matrix[k, l];
-                    }
+                    x = i - half_gaussian_filter_size;
+                    y = j - half_gaussian_filter_size;
+                    gaussian_matrix[i, j] = Mathf.Exp(-(x * x + y * y));
+                    sum_gaussian_matrix += gaussian_matrix[i, j];
                 }
-                matrix[i, j] = tmpValue / sum_gaussian_matrix;
             }
-        }
-        
-        max = -1;
-        for (i = 0; i < size; i++)
-        {
-            for (j = 0; j < size; j++)
+
+            for (i = 0; i < gaussian_filter_size; i++) for (j = 0; j < gaussian_filter_size; j++) gaussian_matrix[i, j] /= sum_gaussian_matrix;
+
+
+            for (i = 0; i < size; i++)
             {
-                if (matrix[i, j] > max) max = matrix[i, j];
+
+                for (j = 0; j < size; j++)
+                {
+                    float tmpValue = 0;
+                    sum_gaussian_matrix = 0;
+                    for (int k = 0; k < gaussian_filter_size; k++)
+                    {
+                        for (int l = 0; l < gaussian_filter_size; l++)
+                        {
+                            x = k - half_gaussian_filter_size;
+                            y = l - half_gaussian_filter_size;
+                            if (x < 0 && i + x < 0) continue;
+                            if (x > 0 && i + x >= size) continue;
+                            if (y < 0 && j + y < 0) continue;
+                            if (y > 0 && j + y >= size) continue;
+                            tmpValue += matrixAfterRotation[i + x, j + y] * gaussian_matrix[k, l];
+                            sum_gaussian_matrix += gaussian_matrix[k, l];
+                        }
+                    }
+                    matrix[i, j] = tmpValue / sum_gaussian_matrix;
+                }
             }
         }
-        
+        /*
+       max = -1;
+       for (i = 0; i < size; i++)
+       {
+           for (j = 0; j < size; j++)
+           {
+               if (matrix[i, j] > max) max = matrix[i, j];
+           }
+       }
+       */
         max = -1;
         for (i = 0; i < size; i++)
         {
             for (j = 0; j < size; j++)
             {
                 if (matrix[i, j] > max && matrix[i, j] <= maxLimit) max = matrix[i, j];
-                if( matrix[i, j] > maxLimit)
+                if (matrix[i, j] > maxLimit)
                 {
                     max = maxLimit;
                     matrix[i, j] = maxLimit;
                 }
             }
         }
+
+        HeatmapSetting.instance.maxValueInput.text = max.ToString();
 
         //set grid
         int edgeMeshCount = size / defaultSize;
@@ -569,7 +571,7 @@ public class HeatMap_Float : MonoBehaviour
             offset += new Vector3(0, 0, 0);
         }
 
-
+        Debug.Log("Max: " + max);
         for (i = 0; i < edgeMeshCount; i++)
         {
             for (j = 0; j < edgeMeshCount; j++)
@@ -595,8 +597,8 @@ public class HeatMap_Float : MonoBehaviour
                 {
                     for (int l = 0; l < defaultSize; l++)
                     {
-                        //partArray[k, l] = matrixAfterRotation[startRow + k, startCol + l];
-                        partArray[k, l] = matrix[startRow + k, startCol + l];
+                        partArray[k, l] = matrixAfterRotation[startRow + k, startCol + l];
+                        //partArray[k, l] = matrix[startRow + k, startCol + l];
                     }
                 }
 
@@ -629,4 +631,6 @@ public class HeatMap_Float : MonoBehaviour
         TakeScreenShot();
         
     }
+
+
 }

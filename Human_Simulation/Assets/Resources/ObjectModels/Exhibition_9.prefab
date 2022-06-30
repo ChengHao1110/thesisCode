@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSelected: 0
+  rotateSpeedTime: 1
 --- !u!65 &1386686249940161791
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -494,8 +495,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4793124416005694563}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.33, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 0.049999997, z: 2}
+  m_LocalPosition: {x: 0.33, y: 0, z: 0.08}
+  m_LocalScale: {x: 2.5, y: 0.049999997, z: 2.54}
   m_Children: []
   m_Father: {fileID: 2451964502741209260}
   m_RootOrder: 6

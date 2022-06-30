@@ -43,10 +43,14 @@ public class minimapCameraController : MonoBehaviour
 
     public void Initial()
     {
+        if (UIController.instance.curOption.Contains("119")) center.x = 0;
         if (UIController.instance.curOption.Contains("120")) center.x = 50;
         if (UIController.instance.curOption.Contains("225")) center.x = 100;
+
         if (UIController.instance.curOption.Contains("A")) center.z = 50;
-        if (UIController.instance.curOption.Contains("B")) center.z = 100;
+        else if (UIController.instance.curOption.Contains("B")) center.z = 100;
+        else center.z = 0;
+
         startPos = transform.position;
         startSize = transform.GetComponent<Camera>().orthographicSize;
     }

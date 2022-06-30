@@ -31,7 +31,7 @@ if __name__ == '__main__':
             md.folderList.append(folderName)
     
     
-    #md.Usage('space_usage.txt', 'int')
+    md.Usage('space_usage.txt', 'int')
     '''
     md.Usage('time_usage.txt', 'float')
     '''
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     
     #md.SocialDistance('social_distance.txt')
     #md.EachVisitorExhibitionVisitingTime('visiting_time.txt')
-    md.ExhibitionTransformOpportunity('ex_trans.txt')
+    #md.ExhibitionTransformOpportunity('ex_trans.txt')
     
     '''
     md.VisitorStatusime('status_time.txt')

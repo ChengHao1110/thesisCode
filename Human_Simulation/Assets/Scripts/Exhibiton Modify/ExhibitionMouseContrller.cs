@@ -7,9 +7,9 @@ using TMPro;
 public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContrller>
 {
     //select object
-    GameObject selectedExhibition;
+    public GameObject selectedExhibition;
     GameObject boundingBox;
-    bool hasSelecetedExhibition;
+    public bool hasSelecetedExhibition;
     List<GameObject> allBoundingBox = new List<GameObject>();
 
     // Modify Controller UI
@@ -65,6 +65,7 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
                         selectedExhibition = hitInfo.transform.gameObject;
                         selectedExhibition.GetComponent<ModifyExhibition>().isSelected = true;
                         boundingBox = selectedExhibition.transform.Find("BoundingBoxCube").gameObject;
+                        SetInfo();
                     }
                     //change another exhibition from the exhibition has been selected
                     else if (hitInfo.transform.gameObject.tag == "Exhibition" && hasSelecetedExhibition)
@@ -76,6 +77,7 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
                         selectedExhibition = hitInfo.transform.gameObject;
                         selectedExhibition.GetComponent<ModifyExhibition>().isSelected = true;
                         boundingBox = selectedExhibition.transform.Find("BoundingBoxCube").gameObject;
+                        SetInfo();
                     }
                     else
                     {
@@ -86,6 +88,7 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
                             boundingBox.GetComponent<DrawBoundingBox>().DeleteBoundingBox();
                             selectedExhibition.GetComponent<ModifyExhibition>().isSelected = false;
                             hasSelecetedExhibition = false;
+                            SetInfoToNULL("Not an exhibition");
                         }
                     }
                 }
@@ -99,6 +102,7 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
                 selectedExhibition.GetComponent<ModifyExhibition>().isSelected = false;
                 hasSelecetedExhibition = false;
                 selectedExhibition = null;
+                SetInfoToNULL("Not an exhibition");
             }
         }
         
@@ -154,5 +158,42 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
         float realValue = (rotateSpeedSlider.value + 1) / 2;
         rotateValueText.text = realValue.ToString();
         rotateSpeedTime = realValue;
+    }
+
+    public void SetInfoToNULL(string name)
+    {
+        ExhibitionInfo.instance.Name.text = "Name: " + name;
+        ExhibitionInfo.instance.capacityMaxInput.text = "0";
+        ExhibitionInfo.instance.capacityMeanInput.text = "0";
+        ExhibitionInfo.instance.capacityMedianInput.text = "0";
+        ExhibitionInfo.instance.stayTimeMaxInput.text = "0";
+        ExhibitionInfo.instance.stayTimeMinInput.text = "0";
+        ExhibitionInfo.instance.stayTimeMeanInput.text = "0";
+        ExhibitionInfo.instance.stayTimeStdInput.text = "0";
+        ExhibitionInfo.instance.chooseInput.text = "0";
+        ExhibitionInfo.instance.reChooseInput.text = "0";
+    }
+
+    void SetInfo()
+    {
+        string key = selectedExhibition.name.Replace(UIController.instance.currentScene + "_", "p");
+        if (dynamicSystem.instance.currentSceneSettings.Exhibitions.ContainsKey(key))
+        {
+            settings_exhibition info = dynamicSystem.instance.currentSceneSettings.Exhibitions[key];
+            ExhibitionInfo.instance.Name.text = "Name: " + key;
+            ExhibitionInfo.instance.capacityMaxInput.text = info.capacity.max.ToString();
+            ExhibitionInfo.instance.capacityMeanInput.text = info.capacity.mean.ToString();
+            ExhibitionInfo.instance.capacityMedianInput.text = info.capacity.median.ToString();
+            ExhibitionInfo.instance.stayTimeMaxInput.text = info.stayTime.max.ToString("f2");
+            ExhibitionInfo.instance.stayTimeMinInput.text = info.stayTime.min.ToString("f2");
+            ExhibitionInfo.instance.stayTimeMeanInput.text = info.stayTime.mean.ToString("f2");
+            ExhibitionInfo.instance.stayTimeStdInput.text = info.stayTime.std.ToString("f2");
+            ExhibitionInfo.instance.chooseInput.text = info.chosenProbabilty.ToString("f2");
+            ExhibitionInfo.instance.reChooseInput.text = info.repeatChosenProbabilty.ToString("f2");
+        }
+        else
+        {
+            SetInfoToNULL("Can't Modify");
+        }
     }
 }

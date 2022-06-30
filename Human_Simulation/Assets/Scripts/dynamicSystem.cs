@@ -79,22 +79,21 @@ public class humanInfo
 }
 
 // record simulation
-public class RecordSimulation 
+public class SimulationReplayData 
 {
     public string sceneOption;
     public string exhibitionLayoutFilename;
+    public List<VisitorReplayData> visitorsReplayData = new List<VisitorReplayData>();
 }
 
-public class RecordSimulationVisitor 
+public class VisitorReplayData
 {
-    public string id;
+    public string name;
+    public int age;
+    public int gender;
     public string modelName;
-    public double startSimulateTime;
-    public double endSimulateTime;
-    public List<double> posX, posY, posZ;
-    public List<double> rotX, rotY, rotZ;
+    public List<FrameData> replayData = new List<FrameData>();
 }
-
 
 public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 {
@@ -131,6 +130,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public bool showInfoBoard_human = true;
     int gatherCounter = 0;
     public float updateVisBoard = 0;
+    
 
     /* fixed parameters */
     //public System.Random random = new System.Random();  // public for humanClass
@@ -152,7 +152,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     /*realtime ex human count*/
     float updateExhibitionRealtimeHumanCount = 0;
 
-    /*data analysis store directory*/
+    /*store trajectory time*/
+    public float trajectoryRecordTime = 0.1f; //influence heatmap maxValue in UIController
+
+    /*directory where data analysis store in*/
     string directory;
 
     /*visitors initial setting */
@@ -166,11 +169,15 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public float[,] matrix, rotMatrix;
     public float[,] staticMatrix;
     public int matrixSize = 500, gaussianFilterSize = 10, sceneSize = 22;
+    public int maxLimit = 5000;
     public bool useGaussian = false;
     public GameObject Heatmap;
     public int gaussian_rate = 4;
     float[] gaussianValue;
     public string heatmapMode = "static";
+
+    //replay mode
+    public Dictionary<string, string> modelName = new Dictionary<string, string>();
 
     /* update information */
     void updatePeople()
@@ -206,29 +213,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             }
 
             /*heatmap*/
-            //change scene & radius for different scene
-            if (UIController.instance.curOption.Contains("119") || UIController.instance.curOption.Contains("225"))
-            {
-                //TrajectoryToHeatmap(100, 20);
-                //TrajectoryToHeatmapWithGaussian(40, 20, 10, 2); // test15
-                //TrajectoryToHeatmapWithGaussian(60, 30, 10, 2); // test 16
-                //TrajectoryToHeatmapWithGaussian(60, 30, 10, 3); // test17
-                //TrajectoryToHeatmapWithGaussian(100, 50, 10, 5); // test18 //test19 0.5sec
-                //TrajectoryToHeatmapWithGaussian(240, 120, 12, 5); //test22
-                //TrajectoryToHeatmapWithGaussian(200, 100, 10, 5);25
-                //TrajectoryToHeatmapWithGaussian(100, 50, 10, 2); //test24
-                //TrajectoryToHeatmapWithGaussian(110, 55, 11, 3);
-                //TrajectoryToHeatmapWithGaussian(150, 75, 11, 7);
-                //TrajectoryToHeatmapWithGaussian(1000, 500, 11, 50);
-                //TrajectoryToHeatmapWithGaussian(1000, 11, 4);
-                TrajectoryToHeatmapWithGaussian(500, 11, 4);
-
-            }
-            if (UIController.instance.curOption.Contains("120"))
-            {
-                //TrajectoryToHeatmap(24, 12);
-                TrajectoryToHeatmapWithGaussian(500, 11, 4);
-            }
+            TrajectoryToHeatmapWithGaussian(matrixSize, sceneSize / 2, gaussian_rate, true);
 
             //exhibition transform
             ExhibitionsTransform();
@@ -239,6 +224,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             RecordVisitorStatusTime();
             Debug.Log("analyze finish");
 
+            SaveReplayDataToLocal();
+            Debug.Log("replay save");
             //average speed
             /*
             string person_velocity_filename;
@@ -495,7 +482,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 }
 
                 /* Store trajectory */
-                if (deltaTimeCounter - person.Value.lastTimeStamp_storeTrajectory > 0.033f && person.Value.model.activeSelf == true)
+                if (deltaTimeCounter - person.Value.lastTimeStamp_storeTrajectory > trajectoryRecordTime && person.Value.model.activeSelf == true)
                 {
                     //Debug.Log("x: " + scalePosBackTo2D(person.Value.currentPosition)[0]);
                     //Debug.Log("z: " + scalePosBackTo2D(person.Value.currentPosition)[1]);
@@ -508,11 +495,15 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 updatePosition_endTime = Time.realtimeSinceStartup;
                 float dif = (updatePosition_endTime - updatePosition_startTime) * 1000f;
                 analysis_updatePosition.Add(dif);
+
+
+                //store replay data
+                person.Value.SaveReplayFrameData(); 
             }   
         }        
     }    
     
-    bool allPeopleFinish()
+    public bool allPeopleFinish()
     {
         foreach (KeyValuePair<string, human_single> person in people)
         {
@@ -1162,6 +1153,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             newPerson.preTarget_name = "init";            
             newPerson.nextTarget_name = "";            
             newPerson.model = loadAllCharacterModels.instance.randomCreatePrefab(newPerson.gender, newPerson.age);
+
+            //save model name for replay mode
+            newPerson.modelName = newPerson.model.name.Replace("(Clone)", "");
+            newPerson.visitorFrameData = new List<FrameData>();
+            
             newPerson.model.AddComponent<CapsuleCollider>();
             CapsuleCollider capCol = newPerson.model.GetComponent<CapsuleCollider>();
             capCol.radius = 0.2f;
@@ -1177,6 +1173,9 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             rig.isKinematic = false;
             rig.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePosition;
             rig.interpolation = RigidbodyInterpolation.Interpolate;
+
+            
+
 
             /* set human feature */
             if (loadVIS)
@@ -1276,8 +1275,9 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 {
                     newExhibit.bestViewDirection = new List<int>(exhibit.Value.bestViewDirection);                    
                     newExhibit.frontSide = exhibit.Value.frontSide;
-                    for(int i = 0; i < newExhibit.frontSide.Count; i++)
-                        Debug.Log(newExhibit.name + " " + newExhibit.frontSide[i]);
+
+                    //for(int i = 0; i < newExhibit.frontSide.Count; i++) Debug.Log(newExhibit.name + " " + newExhibit.frontSide[i]);
+
                     newExhibit.centerPosition = newExhibit.model.transform.position;
                     newExhibit.centerPosition.y = 0;
                     newExhibit.range.Add(GameObject.Find(modelInScene_range));
@@ -1323,7 +1323,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     influenceMapVisualize.instance.markers.Add(exhibit.Key, marker);
                     newExhibit.currentHumanInside.Clear();
                     newExhibit.capacity_cur = 0;  // clean capacity in range
-
+                    //Debug.Log(exhibit.Key);
                     exhibitions.Add(exhibit.Key, newExhibit);
                 }            
             }
@@ -1543,21 +1543,24 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     float a1, a2, b1, b2, c1, c2;
                     // first line : 2 points -> center to (_x, 0, _z)
                     //according to the origin point
-                    /*
+                    
                     a1 = center.z - signPos.z;
                     b1 = signPos.x - center.x;
                     c1 = center.x * signPos.z - signPos.x * center.z;
-                    */
-
+                    
+                    float angle = Vector3.Angle(Vector3.left, _direct - center);
+                    Debug.DrawLine(center, _direct, Color.yellow, 200);
+                    //Debug.Log(angle);
                     //according to the degree
                     Vector3 afterRot = Quaternion.AngleAxis(-15 - direction * 30, Vector3.up) * Quaternion.Euler(0, rotateYdif, 0) * Vector3.left;
                     //Debug.Log(exName + " " + direction + " " + afterRot);
                     Debug.DrawLine(center, center + afterRot * 2, Color.green, 200);
                     //Vector3 afterRot = Quaternion.AngleAxis(-15 - direction * 30, Vector3.up) * Vector3.right;
+                    /*
                     a1 = -afterRot.z;
                     b1 = afterRot.x;
                     c1 = center.x * (center.z + afterRot.z) - (center.x + afterRot.x) * center.z;
-                    
+                    */
                     // second line : 2 points -> useVerticesCopy[i] to useVerticesCopy[i + 1] 
                     int next = 0;
                     switch (i) {
@@ -1597,7 +1600,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                          Math.Min(useVerticesCopy[i].z, useVerticesCopy[next].z) <= crossY && crossY <= Math.Max(useVerticesCopy[i].z, useVerticesCopy[next].z))
                     {
                         Vector2 v1 = new Vector2(crossX - center.x, crossY - center.z);
-                        Vector2 v2 = new Vector2(afterRot.x, afterRot.z);
+                        //Vector2 v2 = new Vector2(afterRot.x, afterRot.z);
+                        Vector2 v2 = new Vector2(_direct.x - center.x, _direct.z - center.z);
                         if ( Math.Abs(Vector2.Dot(v1, v2) / (v1.magnitude * v2.magnitude) - 1) < 0.0001f)
                         {
                             finalPoint.x = crossX;
@@ -2286,6 +2290,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 updateSocialDistance = deltaTimeCounter;
             }
 
+            /* just test
             //heatmap update
             //calculate
             foreach (KeyValuePair<string, human_single> person in people)
@@ -2297,13 +2302,13 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 //calculate move and stay
                 //if (person.Value.fullTrajectory.Count() > 0)
                 //{
-                /*
-                int last = person.Value.fullTrajectory.Count() - 1;
-                int sx = (int)Math.Floor((1 + (person.Value.fullTrajectory[last][0] / scene_half_size)) * radius); //col
-                int sy = (int)Math.Floor((1 - (person.Value.fullTrajectory[last][1] / scene_half_size)) * radius); //row
-                sx = CheckValidValue(sx, matrixSize);
-                sy = CheckValidValue(sy, matrixSize);
-                */
+                
+                //int last = person.Value.fullTrajectory.Count() - 1;
+                //int sx = (int)Math.Floor((1 + (person.Value.fullTrajectory[last][0] / scene_half_size)) * radius); //col
+                //int sy = (int)Math.Floor((1 - (person.Value.fullTrajectory[last][1] / scene_half_size)) * radius); //row
+                //sx = CheckValidValue(sx, matrixSize);
+                //sy = CheckValidValue(sy, matrixSize);
+                
                 if (person.Value.model.activeSelf)
                 {
                     
@@ -2343,7 +2348,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
                 //}
             }
-
+            */
 
             // show fps
             fps_deltaTime += (Time.unscaledDeltaTime - fps_deltaTime) * 0.1f;
@@ -3021,7 +3026,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
     }
 
-    void TrajectoryToHeatmapWithGaussian(int size, int scene_half_size, int gaussian_rate)
+    public void TrajectoryToHeatmapWithGaussian(int size, int scene_half_size, int gaussian_rate, bool saveTXT)
     {
         float[,] space_usage = new float[size, size];
         float[,] time_usage = new float[size, size];
@@ -3142,6 +3147,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             */
         }
 
+        //make people disappear
+        foreach (KeyValuePair<string, human_single> person in people)
+        {
+            person.Value.model.SetActive(false);
+        }
+
         //set to Heatmap script
         staticMatrix = space_usage;
         heatmapMode = "static";
@@ -3149,33 +3160,37 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
         //write file
         //space usage file
-        FileStream fs = new FileStream(directory + "space_usage.txt", FileMode.OpenOrCreate);
-        StreamWriter sw = new StreamWriter(fs);
-        for (int i = 0; i < size; i++)
+        if (saveTXT)
         {
-            for (int j = 0; j < size; j++)
+            FileStream fs = new FileStream(directory + "space_usage.txt", FileMode.OpenOrCreate);
+            StreamWriter sw = new StreamWriter(fs);
+            for (int i = 0; i < size; i++)
             {
-                sw.Write(space_usage[i, j] + " ");
+                for (int j = 0; j < size; j++)
+                {
+                    sw.Write(space_usage[i, j] + " ");
+                }
+                sw.Write("\n");
             }
-            sw.Write("\n");
-        }
-        sw.Flush();
-        sw.Close();
-        /*
-        //timee usage file
-        fs = new FileStream(directory + "time_usage.txt", FileMode.OpenOrCreate);
-        sw = new StreamWriter(fs);
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size; j++)
+            sw.Flush();
+            sw.Close();
+            /*
+            //timee usage file
+            fs = new FileStream(directory + "time_usage.txt", FileMode.OpenOrCreate);
+            sw = new StreamWriter(fs);
+            for (int i = 0; i < size; i++)
             {
-                sw.Write(time_usage[i, j] + " ");
+                for (int j = 0; j < size; j++)
+                {
+                    sw.Write(time_usage[i, j] + " ");
+                }
+                sw.Write("\n");
             }
-            sw.Write("\n");
+            sw.Flush();
+            sw.Close();
+            */
         }
-        sw.Flush();
-        sw.Close();
-        */
+
     }
 
 
@@ -3374,4 +3389,34 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         Debug.Log("Status Time complete");
     }
 
+
+    #region Replay Mode Function
+    void SaveReplayDataToLocal()
+    {
+        SimulationReplayData simulationReplayData = new SimulationReplayData();
+        simulationReplayData.sceneOption = UIController.instance.curOption;
+        simulationReplayData.exhibitionLayoutFilename = ""; //later handle
+
+        //store the information we need
+        foreach (KeyValuePair<string, human_single> person in people)
+        {
+            VisitorReplayData visitorReplayData = new VisitorReplayData();
+            visitorReplayData.name = person.Value.name;
+            visitorReplayData.age = person.Value.age;
+            visitorReplayData.gender = person.Value.gender;
+            visitorReplayData.modelName = person.Value.modelName;
+            visitorReplayData.replayData = new List<FrameData>();
+            visitorReplayData.replayData = person.Value.visitorFrameData;
+            simulationReplayData.visitorsReplayData.Add(visitorReplayData);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        JsonWriter writer = new JsonWriter(sb);
+        writer.PrettyPrint = true;
+        JsonMapper.ToJson(simulationReplayData, writer);
+        string outputJsonStr = sb.ToString();
+        System.IO.File.WriteAllText(directory + "replay.json", outputJsonStr);
+
+    }
+    #endregion
 }

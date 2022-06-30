@@ -17,7 +17,7 @@ public class ModifyExhibition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isSelected)
+        if (isSelected && !UIController.instance.isOriginalScene)
         {
             //clockwise
             if (Input.GetKey(KeyCode.Q))
@@ -39,7 +39,7 @@ public class ModifyExhibition : MonoBehaviour
     float posY;
     void OnMouseDown()
     {
-        if (UIController.instance.modifyScene && isSelected)
+        if (UIController.instance.modifyScene && isSelected && !UIController.instance.isOriginalScene)
         {
             startPos = transform.position;
             dist = Camera.main.WorldToScreenPoint(transform.position);
@@ -51,7 +51,7 @@ public class ModifyExhibition : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if (UIController.instance.modifyScene && isSelected)
+        if (UIController.instance.modifyScene && isSelected && !UIController.instance.isOriginalScene)
         {
             float disX = Input.mousePosition.x - posX;
             float disY = Input.mousePosition.y - posY;

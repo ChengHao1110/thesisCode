@@ -4,6 +4,14 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
 
+
+public class FrameData
+{
+    public bool isVisible;
+    public double posX, posY, posZ;
+    public double rotX, rotY, rotZ;
+}
+
 public class human_single  // List<human_single> humanCrowd;
 {
     /* initialize */
@@ -76,6 +84,10 @@ public class human_single  // List<human_single> humanCrowd;
 
     /*random seed, ensure*/
     public int randomSeed;
+
+    //replay data
+    public string modelName;
+    public List<FrameData> visitorFrameData;
 
     public bool updateTarget(float personNeededTimeToExit, string fromWhichFunction="")
     {
@@ -420,6 +432,31 @@ public class human_single  // List<human_single> humanCrowd;
         /* make the board move to current position and face to camera*/
         this.informationBoard.transform.position = new Vector3(this.currentPosition.x, 3.3f, this.currentPosition.z);
         this.informationBoard.transform.LookAt(Camera.main.transform.position);
+    }
+
+    public void SaveReplayFrameData()
+    {
+        FrameData fd = new FrameData();
+        fd.isVisible = model.activeSelf;
+        if (fd.isVisible)
+        {
+            fd.posX = (double)model.transform.position.x;
+            fd.posY = (double)model.transform.position.y;
+            fd.posZ = (double)model.transform.position.z;
+            fd.rotX = (double)model.transform.rotation.eulerAngles.x;
+            fd.rotY = (double)model.transform.rotation.eulerAngles.y;
+            fd.rotZ = (double)model.transform.rotation.eulerAngles.z;
+        }
+        else
+        {
+            fd.posX = 0;
+            fd.posY = 0;
+            fd.posZ = 0;
+            fd.rotX = 0;
+            fd.rotY = 0;
+            fd.rotZ = 0;
+        }
+        visitorFrameData.Add(fd);
     }
 }
 
