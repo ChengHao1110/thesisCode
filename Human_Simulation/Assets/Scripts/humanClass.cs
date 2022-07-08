@@ -10,6 +10,9 @@ public class FrameData
     public bool isVisible;
     public double posX, posY, posZ;
     public double rotX, rotY, rotZ;
+    public bool animationWalk;
+    public double animationSpeed;
+    public double navAgentVelocity;
 }
 
 public class human_single  // List<human_single> humanCrowd;
@@ -37,6 +40,7 @@ public class human_single  // List<human_single> humanCrowd;
     public List<gatheringEvent> gatherEvent = new List<gatheringEvent>();
     public string exitName;
     public float walkSpeed;
+    public bool animeWalk = false;
     public float animeSpeed = 1;
     public float gatherDesire;
     public float startSimulateTime = 0;
@@ -399,6 +403,7 @@ public class human_single  // List<human_single> humanCrowd;
             if (!isMove) agent.avoidancePriority = 45; // those stop have a higher priority
             else agent.avoidancePriority = 50;
         }
+        animeWalk = isMove;
         this.model.GetComponent<Animator>().SetBool("walk", isMove);
     }
 
@@ -456,6 +461,9 @@ public class human_single  // List<human_single> humanCrowd;
             fd.rotY = 0;
             fd.rotZ = 0;
         }
+        fd.animationWalk = animeWalk;
+        fd.animationSpeed = animeSpeed;
+        fd.navAgentVelocity = (double) agent.velocity.magnitude;
         visitorFrameData.Add(fd);
     }
 }

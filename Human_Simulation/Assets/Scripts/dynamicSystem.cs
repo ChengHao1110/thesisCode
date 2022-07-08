@@ -82,8 +82,8 @@ public class humanInfo
 public class SimulationReplayData 
 {
     public string sceneOption;
-    public string exhibitionLayoutFilename;
     public List<VisitorReplayData> visitorsReplayData = new List<VisitorReplayData>();
+    public exhibitionsInScene exhibitionsInScene = new exhibitionsInScene();
 }
 
 public class VisitorReplayData
@@ -3395,7 +3395,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     {
         SimulationReplayData simulationReplayData = new SimulationReplayData();
         simulationReplayData.sceneOption = UIController.instance.curOption;
-        simulationReplayData.exhibitionLayoutFilename = ""; //later handle
 
         //store the information we need
         foreach (KeyValuePair<string, human_single> person in people)
@@ -3409,6 +3408,61 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             visitorReplayData.replayData = person.Value.visitorFrameData;
             simulationReplayData.visitorsReplayData.Add(visitorReplayData);
         }
+
+        //save exhibition info
+        exhibitionsInScene exhibitionsInScene = new exhibitionsInScene();
+        GameObject scene = GameObject.Find("/[EnvironmentsOfEachScene]/" + UIController.instance.curOption);
+        string sceneNum = UIController.instance.curOption.Substring(0, 3);
+        //get each exhibition
+        List<exhibitionInfo> exhibitionsInfo = new List<exhibitionInfo>();
+        foreach (Transform child in scene.transform)
+        {
+            if (child.name.Contains(sceneNum) && !child.name.Contains("ExitDoor"))
+            {
+                exhibitionInfo exInfo = new exhibitionInfo();
+                exInfo.name = child.name;
+                exInfo.posX = child.transform.position.x;
+                exInfo.posY = child.transform.position.y;
+                exInfo.posZ = child.transform.position.z;
+                exInfo.rotX = child.transform.rotation.eulerAngles.x;
+                exInfo.rotY = child.transform.rotation.eulerAngles.y;
+                exInfo.rotZ = child.transform.rotation.eulerAngles.z;
+                exInfo.sclX = child.transform.localScale.x;
+                exInfo.sclY = child.transform.localScale.y;
+                exInfo.sclZ = child.transform.localScale.z;
+
+                string key = child.name.Replace(UIController.instance.currentScene + "_", "p");
+                if (dynamicSystem.instance.currentSceneSettings.Exhibitions.ContainsKey(key))
+                {
+                    settings_exhibition info = dynamicSystem.instance.currentSceneSettings.Exhibitions[key];
+                    exInfo.capacityMax = info.capacity.max;
+                    exInfo.capacityMean = info.capacity.mean;
+                    exInfo.capacityMedian = info.capacity.median;
+                    exInfo.stayTimeMax = info.stayTime.max;
+                    exInfo.stayTimeMin = info.stayTime.min;
+                    exInfo.stayTimeMean = info.stayTime.mean;
+                    exInfo.stayTimeStd = info.stayTime.std;
+                    exInfo.chooseProbability = info.chosenProbabilty;
+                    exInfo.repeatChooseProbability = info.repeatChosenProbabilty;
+                }
+                else
+                {
+                    exInfo.capacityMax = 0;
+                    exInfo.capacityMean = 0;
+                    exInfo.capacityMedian = 0;
+                    exInfo.stayTimeMax = 0;
+                    exInfo.stayTimeMin = 0;
+                    exInfo.stayTimeMean = 0;
+                    exInfo.stayTimeStd = 0;
+                    exInfo.chooseProbability = 0;
+                    exInfo.repeatChooseProbability = 0;
+                }
+                exhibitionsInfo.Add(exInfo);
+            }
+        }
+        exhibitionsInScene.sceneName = UIController.instance.curOption;
+        exhibitionsInScene.exhibitionsInfo = exhibitionsInfo;
+        simulationReplayData.exhibitionsInScene = exhibitionsInScene;
 
         StringBuilder sb = new StringBuilder();
         JsonWriter writer = new JsonWriter(sb);

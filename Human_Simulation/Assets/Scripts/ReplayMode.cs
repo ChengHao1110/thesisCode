@@ -1,4 +1,5 @@
 ﻿using LitJson;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,7 @@ public class ReplayMode : MonoBehaviour
     bool Run = false;
     int visitorNumber = 0;
     int currentFrameIdx = 0;
+    int totalFrameCount = 0;
     public GameObject peopleParent; // 放people
     public Button loadReplayDataButton, playButton;
     public Dictionary<string, ReplaySimulation> ReplaySimulationInfo = new Dictionary<string, ReplaySimulation>();
@@ -48,13 +50,40 @@ public class ReplayMode : MonoBehaviour
                                                      );
                     rs.Value.model.transform.position = pos;
                     rs.Value.model.transform.rotation = rot;
-                }
+
+                    //handle animation
+                    rs.Value.model.GetComponent<Animator>().SetBool("walk", rs.Value.fd[currentFrameIdx].animationWalk);
+
+                    //handle animation speed
+                    /* set animation Speed (idle ~ walk) */
+                    float newAnimeSpeed = (float)rs.Value.fd[currentFrameIdx].navAgentVelocity / 1.05f;
+                    if (Math.Abs(newAnimeSpeed - 0.2) < 0.1 && Math.Abs(newAnimeSpeed - rs.Value.fd[currentFrameIdx].animationSpeed) < 0.2) { }
+                    else
+                    {
+                        if (newAnimeSpeed <= 0.2f)
+                        {
+                            rs.Value.model.GetComponent<Animator>().SetFloat("speed", 0.2f, 0.01f, Time.deltaTime);
+                            rs.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", 1);
+                        }
+                        else
+                        {
+                            rs.Value.model.GetComponent<Animator>().SetFloat("speed", 1f, 0.01f, Time.deltaTime);
+                            rs.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", newAnimeSpeed);
+                        }
+                    }
+
+                } // is visible
                 else
                 {
                     rs.Value.model.SetActive(false);
                 }
             }
             currentFrameIdx++;
+            if (currentFrameIdx == totalFrameCount)
+            {
+                Run = false;
+                return;
+            }
         }
     }
 
@@ -71,14 +100,18 @@ public class ReplayMode : MonoBehaviour
 
             //
             visitorNumber = simulationReplayData.visitorsReplayData.Count;
+            totalFrameCount = simulationReplayData.visitorsReplayData[0].replayData.Count;
 
             // set scene
             ChangeScene(simulationReplayData.sceneOption);
 
+            // load eexhibition
+            LoadExhibition();
+
             // load character
             LoadCharacter();
 
-
+            
         }
     }
 
@@ -135,6 +168,11 @@ public class ReplayMode : MonoBehaviour
 
             ReplaySimulation rs = new ReplaySimulation();
             rs.model = model;
+
+            //Add model animation controller
+            Animator animator = rs.model.GetComponent<Animator>();
+            animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimationClips/ManPose");
+
             rs.fd = simulationReplayData.visitorsReplayData[i].replayData;
 
             ReplaySimulationInfo.Add(model.name, rs);
@@ -184,5 +222,31 @@ public class ReplayMode : MonoBehaviour
             }
         }
         return type;
+    }
+
+    void LoadExhibition()
+    {
+        GameObject scene = GameObject.Find("/[EnvironmentsOfEachScene]/" + simulationReplayData.exhibitionsInScene.sceneName);
+        foreach (exhibitionInfo exInfo in simulationReplayData.exhibitionsInScene.exhibitionsInfo)
+        {
+            GameObject ex = scene.transform.Find(exInfo.name).gameObject;
+            ex.transform.position = new Vector3((float)exInfo.posX, (float)exInfo.posY, (float)exInfo.posZ);
+            ex.transform.rotation = Quaternion.Euler((float)exInfo.rotX, (float)exInfo.rotY, (float)exInfo.rotZ);
+            ex.transform.localScale = new Vector3((float)exInfo.sclX, (float)exInfo.sclY, (float)exInfo.sclZ);
+
+            string key = exInfo.name.Replace(UIController.instance.currentScene + "_", "p");
+            if (dynamicSystem.instance.currentSceneSettings.Exhibitions.ContainsKey(key))
+            {
+                dynamicSystem.instance.currentSceneSettings.Exhibitions[key].capacity.max = exInfo.capacityMax;
+                dynamicSystem.instance.currentSceneSettings.Exhibitions[key].capacity.mean = exInfo.capacityMean;
+                dynamicSystem.instance.currentSceneSettings.Exhibitions[key].capacity.median = exInfo.capacityMedian;
+                dynamicSystem.instance.currentSceneSettings.Exhibitions[key].stayTime.max = exInfo.stayTimeMax;
+                dynamicSystem.instance.currentSceneSettings.Exhibitions[key].stayTime.min = exInfo.stayTimeMin;
+                dynamicSystem.instance.currentSceneSettings.Exhibitions[key].stayTime.mean = exInfo.stayTimeMean;
+                dynamicSystem.instance.currentSceneSettings.Exhibitions[key].stayTime.std = exInfo.stayTimeStd;
+                dynamicSystem.instance.currentSceneSettings.Exhibitions[key].chosenProbabilty = exInfo.chooseProbability;
+                dynamicSystem.instance.currentSceneSettings.Exhibitions[key].repeatChosenProbabilty = exInfo.repeatChooseProbability;
+            }
+        }
     }
 }
