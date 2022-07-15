@@ -71,6 +71,9 @@ public class human_single  // List<human_single> humanCrowd;
     public bool wanderAroundExhibit = false;
     public float wanderStayTime = 5f;
 
+    public bool justIn = false;
+    public float justInTimer = 0.0f;
+
     /* time stamp for each person */
     public float lastTimeStamp_stopWalk = 0f;
     public float lastTimeStamp_recomputeMap = 0f;

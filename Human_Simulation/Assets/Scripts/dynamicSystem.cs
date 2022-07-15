@@ -324,6 +324,17 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     else if (person.Value.status == "at") person.Value.statusTime[2] += Time.fixedDeltaTime;
                     else person.Value.statusTime[0] += Time.fixedDeltaTime;
 
+                    //check just leave
+                    if (person.Value.justIn && person.Value.justInTimer <= 2.0f)
+                    {
+                        person.Value.justInTimer += Time.fixedDeltaTime;
+                        if(person.Value.justInTimer > 2.0f)
+                        {
+                            person.Value.justIn = false;
+                            person.Value.justInTimer = 0.0f;
+                        }
+                    }
+
 
                     /* gather state machine */
                     if (deltaTimeCounter - person.Value.lastTimeStamp_recomputeGathers > currentSceneSettings.customUI.UI_Global.UpdateRate["gathers"])
@@ -405,7 +416,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                                 }
                                 person.Value.lastTimeStamp_rotate = deltaTimeCounter;
                             }
-                            if (person.Value.status != "close") person.Value.nearExhibition("close");
+                            if (person.Value.status != "close")
+                            {
+                                person.Value.nearExhibition("close");
+                                Debug.Log("no time");
+                            }
                             person.Value.ifMoveNavMeshAgent(true);
                         }
                         else
@@ -566,8 +581,13 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
             person.model.transform.LookAt(lookAtPos);
             Quaternion NewRot = person.model.transform.rotation;
+            //animation
+            person.model.GetComponent<Animator>().SetBool("walk", true);
+            person.model.GetComponent<Animator>().SetFloat("speed", 0.75f);
+            //Debug.Log("Rotation Animation");
             //Quaternion NewRot = Quaternion.LookRotation(lookAtPos - person.currentPosition);
             person.model.transform.rotation = Quaternion.Slerp(OriginalRot, NewRot, (deltaTimeCounter - person.lastTimeStamp_rotate) / 30);
+            
             if (deltaTimeCounter - person.lastTimeStamp_rotate > 1)
             {
                 person.lastTimeStamp_rotate = -1;

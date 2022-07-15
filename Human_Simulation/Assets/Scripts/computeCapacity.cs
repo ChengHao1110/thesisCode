@@ -52,7 +52,15 @@ public class computeCapacity : MonoBehaviour
                 thisExhibit.currentHumanInside.Add(humanName);
                 thisExhibit.capacity_cur = thisExhibit.currentHumanInside.Count;
                 thisExhibit.updateInformationBoard();
-                dynamicSystem.instance.people[humanName].nearExhibition("close");
+                
+                if(dynamicSystem.instance.people[humanName].nextTarget_name == exhibitName)
+                {
+                    Debug.Log(exhibitName);
+                    Debug.Log("enter");
+                    dynamicSystem.instance.people[humanName].justIn = true;
+                    dynamicSystem.instance.people[humanName].nearExhibition("close");
+                }
+                
             }
         }
         else
@@ -62,7 +70,12 @@ public class computeCapacity : MonoBehaviour
                 thisExhibit.currentHumanInside.Remove(humanName);
                 thisExhibit.capacity_cur = thisExhibit.currentHumanInside.Count;
                 thisExhibit.updateInformationBoard();
-                dynamicSystem.instance.people[humanName].nearExhibition("goTo");
+                if (!dynamicSystem.instance.people[humanName].justIn)
+                {
+                    dynamicSystem.instance.people[humanName].nearExhibition("goTo");
+                    Debug.Log(exhibitName);
+                    Debug.Log("exit");
+                }
             }
         }
         

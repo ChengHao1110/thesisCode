@@ -165,6 +165,7 @@ public class ReplayMode : MonoBehaviour
                 );
             model.transform.position = startPos;
             model.transform.rotation = startRot;
+            model.transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
 
             ReplaySimulation rs = new ReplaySimulation();
             rs.model = model;
