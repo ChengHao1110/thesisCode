@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.AI;
 using LitJson;
 using UnityEditor;
+using UnityEngine.Animations.Rigging;
 
 public class desiredListStatus
 {
@@ -179,53 +180,59 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     //replay mode
     public Dictionary<string, string> modelName = new Dictionary<string, string>();
 
+    public bool generateAnalyzeData = false;
+
     /* update information */
     void updatePeople()
     {
         if (allPeopleFinish()) // all people finish, stop the time counter.
         {
             Run = false;
-            writeLog_fps("viewMode_fps", fpsList);
-            writeLog_fps("compute_influenceMap", analysis_influenceMap);
-            writeLog_fps("compute_updatePosition", analysis_updatePosition);
-
-            logTheLeavingAnalysis();
-            wrapExhibitionRecord tmpRec = new wrapExhibitionRecord();
-            tmpRec.rec = exhibitRec;
-            tmpRec.popularThreshold = currentSceneSettings.customUI.UI_Exhibit.popularThreshold;
-            tmpRec.crowdedThreshold = currentSceneSettings.customUI.UI_Exhibit.crowdedThreshold;
-            writeLog_fps("simulation_exhibit", tmpRec);
-
-
-            //store analysis data
-            //create directory
-            System.DateTime dt = System.DateTime.Now;
-            string date = dt.Year + "-" + dt.Month + "-" + dt.Day + "T" + dt.Hour + "-" + dt.Minute + "-" + dt.Second;
-            string directoryName = date + "_" + 
-                                   UIController.instance.curOption + "_"+
-                                   currentSceneSettings.customUI.UI_Global.agentCount + "agents";
-
-            directory = Application.streamingAssetsPath + "/Simulation_Result/" + directoryName + "/";
-            if (!Directory.Exists(directory))
+            if (generateAnalyzeData)
             {
-                DirectoryInfo di = Directory.CreateDirectory(directory);
-                Debug.Log("Create Directory!");
+                writeLog_fps("viewMode_fps", fpsList);
+                writeLog_fps("compute_influenceMap", analysis_influenceMap);
+                writeLog_fps("compute_updatePosition", analysis_updatePosition);
+
+                logTheLeavingAnalysis();
+                wrapExhibitionRecord tmpRec = new wrapExhibitionRecord();
+                tmpRec.rec = exhibitRec;
+                tmpRec.popularThreshold = currentSceneSettings.customUI.UI_Exhibit.popularThreshold;
+                tmpRec.crowdedThreshold = currentSceneSettings.customUI.UI_Exhibit.crowdedThreshold;
+                writeLog_fps("simulation_exhibit", tmpRec);
+
+
+                //store analysis data
+                //create directory
+                System.DateTime dt = System.DateTime.Now;
+                string date = dt.Year + "-" + dt.Month + "-" + dt.Day + "T" + dt.Hour + "-" + dt.Minute + "-" + dt.Second;
+                string directoryName = date + "_" +
+                                       UIController.instance.curOption + "_" +
+                                       currentSceneSettings.customUI.UI_Global.agentCount + "agents";
+
+                directory = Application.streamingAssetsPath + "/Simulation_Result/" + directoryName + "/";
+                if (!Directory.Exists(directory))
+                {
+                    DirectoryInfo di = Directory.CreateDirectory(directory);
+                    Debug.Log("Create Directory!");
+                }
+
+                /*heatmap*/
+                TrajectoryToHeatmapWithGaussian(matrixSize, sceneSize / 2, gaussian_rate, true);
+
+                //exhibition transform
+                ExhibitionsTransform();
+
+                RecordExhibitionRealtimeHumanCount();
+                RecordVisitingTimeInEachExhibition();
+                RecordSocialDistance();
+                RecordVisitorStatusTime();
+                Debug.Log("analyze finish");
+
+                SaveReplayDataToLocal();
+                Debug.Log("replay save");
             }
-
-            /*heatmap*/
-            TrajectoryToHeatmapWithGaussian(matrixSize, sceneSize / 2, gaussian_rate, true);
-
-            //exhibition transform
-            ExhibitionsTransform();
-
-            RecordExhibitionRealtimeHumanCount();
-            RecordVisitingTimeInEachExhibition();
-            RecordSocialDistance();
-            RecordVisitorStatusTime();
-            Debug.Log("analyze finish");
-
-            SaveReplayDataToLocal();
-            Debug.Log("replay save");
+            
             //average speed
             /*
             string person_velocity_filename;
@@ -335,7 +342,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         }
                     }
 
-
                     /* gather state machine */
                     if (deltaTimeCounter - person.Value.lastTimeStamp_recomputeGathers > currentSceneSettings.customUI.UI_Global.UpdateRate["gathers"])
                     {
@@ -382,11 +388,49 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     // Debug.Log("free: " + person.Value.freeTime_totalLeft + ", time to exit: " + personNeededTimeToExit);
                     /* stay in the target, watching the exhibition
                      * Not update target until time is not enough or finish watching*/
+
+
                     if ((person.Value.checkIfArriveTarget() || person.Value.wanderAroundExhibit) && person.Value.freeTime_totalLeft > personNeededTimeToExit)
                     {
+                        //get view point list
+                        if (person.Value.lookExhibitionStatus == "None" && person.Value.lastLookExhibitionName != person.Value.nextTarget_name && person.Value.nextTarget_name.StartsWith("p"))
+                        {
+                            person.Value.viewPoints.Clear();
+                            //Debug.Log(person.Value.nextTarget_name);
+                            Transform viewPointsInExhibition = exhibitions[person.Value.nextTarget_name].model.transform.parent.Find("ViewPoint");
+                            foreach (Transform viewPoint in viewPointsInExhibition)
+                            {
+                                //calculate distance
+                                float dist = Vector3.Distance(person.Value.head.transform.position, viewPoint.position);
+                                ViewPointAttribute viewPointAttribte = new ViewPointAttribute();
+                                viewPointAttribte.viewPoint = viewPoint.gameObject;
+                                viewPointAttribte.distance = dist;
+                                person.Value.viewPoints.Add(viewPointAttribte);
+                                //Debug.Log("choose " + viewPoint.name);
+
+                            }
+
+                            //sort
+                            person.Value.viewPoints.Sort(delegate (ViewPointAttribute v1, ViewPointAttribute v2) {
+                                return v1.distance.CompareTo(v2.distance);                                                                    
+                            });
+
+                            //Debug
+                            /*
+                            for(int i = 0; i < person.Value.viewPoints.Count; i++)
+                            {
+                                Debug.Log(person.Value.viewPoints[i].viewPoint.name);
+                            }
+                            */
+                            person.Value.viewPoint.transform.position = person.Value.viewPoints[0].viewPoint.transform.position;
+                            person.Value.viewPointIdx = 0;
+                            person.Value.lookExhibitionStatus = "Start";
+                            //Debug.Log(name + " Status: None -> Start Looking");
+                        }
+
                         //Debug.Log(person.Value.freeTime_stayInNextExhibit);
                         //calculate visiting time
-                        if(person.Value.status == "at" && person.Value.nextTarget_name.StartsWith("p"))
+                        if (person.Value.status == "at" && person.Value.nextTarget_name.StartsWith("p"))
                         {
                             int exId = person.Value.nextTarget_name[1] - '0' - 1;
                             person.Value.visitingTimeInEachEx[exId] += Time.fixedDeltaTime;
@@ -396,7 +440,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         person.Value.freeTime_stayInNextExhibit -= Time.fixedDeltaTime;
                         if (person.Value.freeTime_stayInNextExhibit <= 0.5f || person.Value.freeTime_totalLeft <= personNeededTimeToExit)
                         {
-                            
+                            if (person.Value.lookExhibitionStatus == "Watching" || person.Value.lookExhibitionStatus == "Start")
+                            {
+                                Debug.Log(person.Value.name + " Status: Watching/Start -> End");
+                                person.Value.lookExhibitionStatus = "End";
+                            }
+
                             person.Value.wanderAroundExhibit = false;
                             /* Use new influenceMap to check target 
                             * deal with suddenly appear target and normally arrive and go next */
@@ -410,31 +459,37 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                                 /* if target change or move, update */
                                 person.Value.agent.SetDestination(person.Value.nextTarget_pos);
                                 // person.Value.generateNewPath(walkableMask);
+
                                 if (Run)
                                 {
-                                    person.Value.ifMoveNavMeshAgent(true);
+                                    //Debug.Log(person.Value.name + " " + person.Value.rigWeight);
+                                    //Debug.Log(person.Value.name + " animation not end!!!");
+                                    //if(person.Value.lookExhibitionStatus != "End") person.Value.ifMoveNavMeshAgent(true);
                                 }
                                 person.Value.lastTimeStamp_rotate = deltaTimeCounter;
                             }
+                            person.Value.nearExhibition("goTo");
+                            /*
                             if (person.Value.status != "close")
                             {
                                 person.Value.nearExhibition("close");
                                 Debug.Log("no time");
                             }
-                            person.Value.ifMoveNavMeshAgent(true);
+                            */
+                            //person.Value.ifMoveNavMeshAgent(true);
                         }
                         else
                         {
                             // person.Value.ifMoveNavMeshAgent(false);
                             person.Value.wanderAroundExhibit = true;
-
                             // should move around the best view direction if having enough space (instead of stand still)
                             if (person.Value.nextTarget_name.StartsWith("p"))  // is an exhibition
                             {
                                 if (person.Value.status != "at") person.Value.nearExhibition("at");
                                 dealWithWanderAroundExhibit(person.Value);
                             }
-                        }                                                
+                        }                       
+
                     }
 
                     /* walk to next target */
@@ -447,14 +502,25 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             /* if target change or move, update */
                             person.Value.agent.SetDestination(person.Value.nextTarget_pos);
                             // person.Value.generateNewPath(walkableMask);
-                            
+                            /*
+                            if (person.Value.nextTarget_name.Contains("exit") && person.Value.lookExhibitionStatus != "None" && person.Value.lookExhibitionStatus != "End")
+                            {
+                                person.Value.lookExhibitionStatus = "End";
+                                
+                            }
+                            */
+
+                            if (person.Value.nextTarget_name.Contains("exit"))
+                            {
+                                person.Value.nearExhibition("goTo");
+
+                            }
                             if (Run)
                             {
                                 person.Value.ifMoveNavMeshAgent(true);
                             }
                             person.Value.lastTimeStamp_rotate = deltaTimeCounter;
                         }
-
                         // deal with  walk and stop state machine      
                         if (deltaTimeCounter - person.Value.lastTimeStamp_stopWalk > currentSceneSettings.customUI.UI_Global.UpdateRate["stopWalkStatus"])  // every x seconds
                         {
@@ -485,15 +551,102 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     }
                     person.Value.animeSpeed = newAnimeSpeed;
 
-                    /* Draw path to debug in unity scene  // person.Value.cornerId
+                    // Draw path to debug in unity scene  // person.Value.cornerId
+                    /*
+                    person.Value.agent.CalculatePath(person.Value.nextTarget_pos, person.Value.currentPath);
+                    Vector3 ll = person.Value.agent.steeringTarget;
+                    GameObject point = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    point.transform.localPosition = new Vector3(0.05f, 0.05f, 0.05f);
+                    point.transform.position = ll;
+                    Debug.Log("Corner Count: " + person.Value.currentPath.corners.Length);
+
                     for (int i = 0; i < person.Value.currentPath.corners.Length - 1; i++)
                     {
-                        // Debug.Log("Drawing line");
-                        Debug.DrawLine(person.Value.currentPath.corners[i], person.Value.currentPath.corners[i + 1], Color.red, 10);
-                    }*/
+                        Debug.Log("Drawing line");
+                        //GameObject point = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        //point.transform.localPosition = new Vector3(0.2f, 0.2f, 0.2f);
+                        //point.transform.position = person.Value.currentPath.corners[i];
+                        
+                        Vector3 v1 = person.Value.currentPath.corners[i];
+                        v1.y = 0.15f;
+                        Vector3 v2 = person.Value.currentPath.corners[i + 1];
+                        v2.y = 0.15f;
+                        //Debug.DrawLine(person.Value.currentPath.corners[i], person.Value.currentPath.corners[i + 1], Color.red, 10);
+                        Debug.DrawLine(v1, v2, Color.red, 10);
+                    }
+                    */
+                    /*SFM 排斥力*/
+                    if (Vector3.Distance(person.Value.model.transform.position, person.Value.nextTarget_pos) < 2f)
+                    {
+                        Vector3 strangeForce = Vector3.zero;
+                        foreach (KeyValuePair<string, human_single> otherAgent in people)
+                        {
+                            if (otherAgent.Value.name == person.Value.name) continue;
+                            //calculate future position //wait
+                            strangeForce += person.Value.CalculateStrangeForce(otherAgent.Value);
+                        }
+
+                        if (strangeForce.magnitude > 0.0f)
+                        {
+                            person.Value.avoidCollision = true;
+                            //calculate the position
+                            Vector3 accel = strangeForce;
+                            Vector3 velocity = person.Value.agent.velocity + accel;
+                            Vector3 position = person.Value.model.transform.position + velocity;
+                            Debug.Log(person.Value.name + " Original Pos: " + person.Value.model.transform.position);
+                            Debug.Log(person.Value.name + " SFM Change Pos: " + position);
+                            NavMeshPath path = new NavMeshPath();
+                            NavMesh.CalculatePath(person.Value.model.transform.position, position, walkableMask, path);
+                            if (path.status != NavMeshPathStatus.PathComplete)
+                            {
+                                // Debug.Log(exName + " " + direction + " " + walkableMask);
+                                // GameObject st_ = Instantiate(signPrefab, planeCenter, Quaternion.identity);
+
+                                NavMeshHit myNavHit;
+                                Vector3 newPosition = new Vector3();
+                                if (NavMesh.SamplePosition(position, out myNavHit, 5.0f, walkableMask))
+                                {
+                                    newPosition = myNavHit.position;
+                                    NavMesh.CalculatePath(person.Value.model.transform.position, newPosition, walkableMask, path);
+                                    if (path.status == NavMeshPathStatus.PathComplete)
+                                    {
+                                        person.Value.tempDestination = newPosition;
+                                        person.Value.agent.SetDestination(newPosition);
+                                        // GameObject st = Instantiate(signPrefab, _direct_touch, Quaternion.identity);
+                                        // st.transform.Find("Text").GetComponent<TextMesh>().text = direction.ToString();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                person.Value.tempDestination = position;
+                                person.Value.agent.SetDestination(position);
+                            }
+                            //person.Value.agent.SetDestination(position);
+                            /*
+                            Rigidbody rb = person.Value.model.GetComponent<Rigidbody>();
+                            rb.AddForce(strangeForce);
+                            */
+                        }
+
+                        //arrive
+                        
+                        if (Vector3.Distance(person.Value.model.transform.position, person.Value.tempDestination) < 0.01f)
+                        {
+                            person.Value.avoidCollision = false;
+                            person.Value.agent.SetDestination(person.Value.nextTarget_pos);
+                        }
+                        
+                    }
+                    
+
+
 
                     person.Value.updateInformationBoard();
                     dealWithRotate(person.Value, person.Value.lookAt_pos);
+                    //Handle Animation
+                    //Look animation
+                    person.Value.animationStatusMachine();
                 }
 
                 /* Store trajectory */
@@ -1188,14 +1341,68 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             Animator animator = newPerson.model.GetComponent<Animator>();
             animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimationClips/ManPose");            
             newPerson.model.AddComponent<Rigidbody>();
-            Rigidbody rig = newPerson.model.GetComponent<Rigidbody>();
-            rig.useGravity = false;
-            rig.isKinematic = false;
-            rig.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePosition;
-            rig.interpolation = RigidbodyInterpolation.Interpolate;
+            Rigidbody rigid = newPerson.model.GetComponent<Rigidbody>();
+            rigid.useGravity = false;
+            rigid.isKinematic = false;
+            rigid.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePosition;
+            rigid.interpolation = RigidbodyInterpolation.Interpolate;
 
+            /*initialize animation rigging compoment*/
+            newPerson.model.AddComponent<RigBuilder>();
+            newPerson.viewPoint = new GameObject(newPerson.name + "_ViewPoint");
+
+            GameObject rig = new GameObject("Rig");
+            rig.AddComponent<Rig>();
+            rig.transform.SetParent(newPerson.model.transform);
+            GameObject headAim = new GameObject("Aim");
+            headAim.AddComponent<MultiAimConstraint>();
+            headAim.transform.SetParent(rig.transform);
+            MultiAimConstraint mac = headAim.GetComponent<MultiAimConstraint>();
+            //GameObject head = new GameObject();
+            /*
+            if (newPerson.model.transform.Find("Bip01/Bip01 Pelvis/Bip01 Spine/Bip01 Spine1/Bip01 Spine2/Bip01 Neck/Bip01 Head"))
+            {
+                head = newPerson.model.transform.Find("Bip01/Bip01 Pelvis/Bip01 Spine/Bip01 Spine1/Bip01 Spine2/Bip01 Neck/Bip01 Head").gameObject;
+            }
+            else
+            {
+                head = newPerson.model.transform.Find
+                    ("Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Spine1/Bip001 Spine2/Bip001 Spine3/Bip001 Neck/Bip001 Head").gameObject;
+            }
+            */
+            Queue<Transform> allChildren = new Queue<Transform>();
+            allChildren.Enqueue(newPerson.model.transform);
+            while(allChildren.Count != 0)
+            {
+                Transform parent = allChildren.Dequeue();
+                foreach(Transform child in parent)
+                {
+                    if (child.name.Contains("Head")) 
+                    {
+                        Debug.Log(child.name);
+                        newPerson.head = child.transform.gameObject;
+                        Debug.Log("Find");
+
+                        while (allChildren.Count != 0) allChildren.Dequeue();
+                        break;
+                    }
+                    else allChildren.Enqueue(child);
+                }
+            }
             
-
+            mac.data = new MultiAimConstraintData
+            {
+                constrainedObject = newPerson.head.transform,
+                aimAxis = MultiAimConstraintData.Axis.Y,
+                constrainedXAxis = true,
+                constrainedYAxis = true,
+                constrainedZAxis = true,
+                limits = new Vector2(-180.0f, 180.0f)
+            };
+            RigBuilder rb = newPerson.model.GetComponent<RigBuilder>();
+            RigLayer rl = new RigLayer(rig.GetComponent<Rig>());
+            rb.layers.Add(rl);
+            rb.Build();
 
             /* set human feature */
             if (loadVIS)
@@ -1501,7 +1708,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         Vector3 lineEnd = lineStart + rot * Vector3.forward * 5;
         //lineEnd = lineStart + rot * Vector3.left * 5;
         lineEnd = lineStart + Vector3.left * 3;
-        Debug.DrawLine(lineStart, lineEnd, Color.red, 200);
+        //Debug.DrawLine(lineStart, lineEnd, Color.red, 200);
 
 
         foreach (int direction in ex.bestViewDirection)

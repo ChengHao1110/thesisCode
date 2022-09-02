@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
-
+using UnityEngine.Animations.Rigging;
 
 public class FrameData
 {
@@ -14,7 +14,11 @@ public class FrameData
     public double animationSpeed;
     public double navAgentVelocity;
 }
-
+public class ViewPointAttribute
+{
+    public GameObject viewPoint;
+    public float distance;
+}
 public class human_single  // List<human_single> humanCrowd;
 {
     /* initialize */
@@ -63,6 +67,7 @@ public class human_single  // List<human_single> humanCrowd;
     public float freeTime_totalLeft;
     public string walkStopState = "walk"; // for simulating the walk and stop behavior
     public string status = "";
+    public bool goToExit = false;
     // save new influence map and update after all computation
     public Dictionary<string, float> influenceMap = new Dictionary<string, float>();
     public Dictionary<string, float> newInfluenceMap = new Dictionary<string, float>();
@@ -96,12 +101,32 @@ public class human_single  // List<human_single> humanCrowd;
     public string modelName;
     public List<FrameData> visitorFrameData;
 
-    public bool updateTarget(float personNeededTimeToExit, string fromWhichFunction="")
+    //animation rigging component
+
+    public GameObject head;
+    public string lookExhibitionStatus = "None";
+    public string lastLookExhibitionName = "None";
+    public float rigWeight = 0.0f;
+    public float weightChangeSpeed = 0.01f;
+    public GameObject viewPoint;
+    public List<ViewPointAttribute> viewPoints = new List<ViewPointAttribute>();
+    public int viewPointIdx;
+
+    //handle stuck
+    public Vector3 tempDestination;
+    public bool avoidCollision = false;
+    public bool arriveTempDestination = false;
+
+    public bool updateTarget(float personNeededTimeToExit, string fromWhichFunction = "")
     {
         string fromFunction = "[ " + fromWhichFunction + " ] ";
+        if (goToExit) return false;
+        if (avoidCollision) return false;
+
         if (freeTime_totalLeft <= personNeededTimeToExit && this.nextTarget_name != this.exitName)
-        {            
-            // Debug.Log(fromFunction + "force " + name + " to Exit");
+        {
+            Debug.Log(fromFunction + "force " + name + " to Exit");
+            goToExit = true;
             dynamicSystem.instance.computeNewInfluenceMap(this);
             updateInfluenceMap();
             setTargetAndStayTime(this.exitName);
@@ -124,7 +149,7 @@ public class human_single  // List<human_single> humanCrowd;
         }
 
         /* not yet arrive target but attract by others */
-        else if (!checkIfArriveTarget() && (this.nextTarget_name != chosenTarget)) 
+        else if (!checkIfArriveTarget() && (this.nextTarget_name != chosenTarget))
         {
             // Debug.Log("suddenly change target to " + chosenTarget);
             /* 
@@ -136,18 +161,18 @@ public class human_single  // List<human_single> humanCrowd;
             // string debugstr = string.Join(", ", influenceMap);
             // debugstr += "\n" + " totalLeft: " + freeTime_totalLeft + ", needExit: " + personNeededTimeToExit;
             // Debug.Log(fromFunction + "suddenly " + this.name + " : " + this.preTarget_name + "->" + this.nextTarget_name + "\n" + debugstr);
-            changeTarget = true; 
+            changeTarget = true;
         }
 
         /* arrive target and stay long enough: simply find next desire exhibition */
-        else if (checkIfArriveTarget() && this.freeTime_stayInNextExhibit <= 0)  
+        else if (checkIfArriveTarget() && this.freeTime_stayInNextExhibit <= 0)
         {
             /* Arrive, update DesireList */
             if (this.nextTarget_name.StartsWith("p"))
             {
                 Debug.Log("change desireList");
-                updateDesireList(this.nextTarget_name); 
-            }            
+                updateDesireList(this.nextTarget_name);
+            }
 
             /* use influence map to get new target*/
             string chosenTarget2 = getMostAttractive();
@@ -161,7 +186,7 @@ public class human_single  // List<human_single> humanCrowd;
                 // Debug.Log(this.name + " : " + this.preTarget_name + "->" + this.nextTarget_name);
 
                 changeTarget = true; // target change
-            }            
+            }
         }
 
         /* just not arrive yet*/
@@ -203,11 +228,11 @@ public class human_single  // List<human_single> humanCrowd;
         if (this.nextTarget_name.StartsWith("p"))
         {
             this.wanderStayTime = generateWanderStayTime();
-        }        
+        }
     }
 
     void adjustPriority(float personNeededTimeToExit)
-    {       
+    {
         agent.avoidancePriority = 50;
         if (dynamicSystem.instance.exhibitions.Keys.Contains(preTarget_name))
         {
@@ -215,18 +240,18 @@ public class human_single  // List<human_single> humanCrowd;
             {
                 agent.avoidancePriority = 30;
             }
-        }    
-        
+        }
+
         if (status == "at") agent.avoidancePriority = 30;
 
-        if (walkStopState == "stop") agent.avoidancePriority = 40;        
+        if (walkStopState == "stop") agent.avoidancePriority = 40;
 
         if (nextTarget_name == exitName)
         {
             if (freeTime_totalLeft <= personNeededTimeToExit) agent.avoidancePriority = 0;
         }
     }
-    
+
     float generateStayTime(string targetName)
     {
         // Debug.Log("generate target stay time: " + targetName);
@@ -241,7 +266,7 @@ public class human_single  // List<human_single> humanCrowd;
             return 1;
         }
         else // an exhibit
-        {        
+        {
             float speed = agent.speed;
 
             float distance = dynamicSystem.instance.calculateDistance(this.currentPosition, this.nextTarget_pos);
@@ -256,7 +281,7 @@ public class human_single  // List<human_single> humanCrowd;
             float newStayTime = dynamicSystem.instance.exhibitions[targetName].generateStayTime(maxTimeToStay);
             // Debug.Log("maxTimeToStay in " + targetName + ": " + maxTimeToStay + ", get: " + newStayTime);
             return newStayTime;
-        }        
+        }
     }
 
     void updateDesireList(string chosenTarget)
@@ -267,7 +292,7 @@ public class human_single  // List<human_single> humanCrowd;
         float randomNum = (float)random.Next(101);
         //float randomNum = dynamicSystem.instance.random.Next(101);
         randomNum /= 100f;
-        this.desireExhibitionList.Remove(chosenTarget);        
+        this.desireExhibitionList.Remove(chosenTarget);
         this.influenceMap.Remove(chosenTarget); /* update influenceMap too, so getMostAttractive will not get repeat exhibit*/
         this.newInfluenceMap.Remove(chosenTarget);
         // Debug.Log("update desire: " + chosenTarget);
@@ -281,7 +306,7 @@ public class human_single  // List<human_single> humanCrowd;
                 this.influenceMap.Add(chosenTarget, 1);
                 this.newInfluenceMap.Add(chosenTarget, 1);
             }
-        }        
+        }
     }
 
     string getMostAttractive()
@@ -324,10 +349,10 @@ public class human_single  // List<human_single> humanCrowd;
             this.trajectoryOrder.Add(nextTarget_name);
         }
     } // for output result on thesis
-    
+
     bool checkIfVisitAllInDesireList()
     {
-        if(desireExhibitionList.Count == 0)
+        if (desireExhibitionList.Count == 0)
         {
             return true;
         }
@@ -358,7 +383,7 @@ public class human_single  // List<human_single> humanCrowd;
         }
         return this.finishAllExhibit;
     }
-    
+
     public void nearExhibition(string status)
     {
         this.status = status;
@@ -392,11 +417,11 @@ public class human_single  // List<human_single> humanCrowd;
 
         /* set collider Range */
         float radiusTimes2 = agent.radius * 2;
-        colliderShape.transform.localScale = new Vector3(radiusTimes2, 1, radiusTimes2);       
-    }       
+        colliderShape.transform.localScale = new Vector3(radiusTimes2, 1, radiusTimes2);
+    }
 
     public void ifMoveNavMeshAgent(bool isMove)
-    {        
+    {
         if (this.model.activeSelf)
         {
             agent.updatePosition = isMove;
@@ -421,18 +446,18 @@ public class human_single  // List<human_single> humanCrowd;
         {
             inMainHumanGather = dynamicSystem.instance.peopleGathers[influenceMapVisualize.instance.mainHuman.gatherIndex].humans.Contains(this.name);
             inMainHumanGather = inMainHumanGather || influenceMapVisualize.instance.mainHumanName == this.name;
-        }            
+        }
         this.marker.SetActive(isVis && inMainHumanGather);
     }
 
     /* for debug and check */
-    public void updateInformationBoard()  
+    public void updateInformationBoard()
     {
         /* update text on model */
         string changeText = "";
         changeText += "free time: \n" + this.freeTime_totalLeft.ToString("F2") + " / " + this.freeTime_total.ToString("F2") + "\n";
         changeText += "desireList: " + (this.desireExhibitionList.Count - 1) + "\n"; // minus the exit
-        changeText += "next target: " + this.nextTarget_name + "(" + this.nextTarget_direction +")\n";
+        changeText += "next target: " + this.nextTarget_name + "(" + this.nextTarget_direction + ")\n";
         changeText += "stay: " + this.freeTime_stayInNextExhibit.ToString("F0");
 
         this.informationText.text = this.fixedText + changeText;
@@ -466,8 +491,160 @@ public class human_single  // List<human_single> humanCrowd;
         }
         fd.animationWalk = animeWalk;
         fd.animationSpeed = animeSpeed;
-        fd.navAgentVelocity = (double) agent.velocity.magnitude;
+        fd.navAgentVelocity = (double)agent.velocity.magnitude;
         visitorFrameData.Add(fd);
+    }
+
+    public void StartLookingAnimation()
+    {
+        //Debug.Log("StartLookingAnimation");
+        rigWeight += weightChangeSpeed;
+        if (rigWeight >= 1.0f)
+        {
+            rigWeight = 1.0f;
+            lookExhibitionStatus = "Watching";
+            //Debug.Log(name + " Status: Start -> Watching");
+        }
+        MultiAimConstraint mac = model.GetComponentInChildren<MultiAimConstraint>();
+        var data = mac.data.sourceObjects;
+        data.Clear();
+        data.Add(new WeightedTransform(viewPoint.transform, rigWeight));
+        mac.data.sourceObjects = data;
+        Rig rig = model.GetComponentInChildren<Rig>();
+        rig.weight = rigWeight;
+
+        RigBuilder rb = model.GetComponent<RigBuilder>();
+        rb.Build(); 
+    }
+
+    public void ViewPointMoving()
+    {
+        //Debug.Log("ViewPointMoving");
+        int nextViewPointIdx = viewPointIdx + 1;
+        if (nextViewPointIdx == viewPoints.Count()) nextViewPointIdx = 0;
+
+        Vector3 currentViewPos = viewPoint.transform.position;
+        Vector3 targetViewPos = viewPoints[nextViewPointIdx].viewPoint.transform.position;
+
+        viewPoint.transform.position = Vector3.MoveTowards(currentViewPos, targetViewPos, 0.01f);
+        if(Vector3.Distance(viewPoint.transform.position, targetViewPos) < 0.001f)
+        {
+            viewPointIdx++;
+            if (viewPointIdx == viewPoints.Count()) viewPointIdx = 0;
+        }
+    }
+
+    public void FinishLookingAnimation()
+    {
+        //Debug.Log("FinishLookingAnimation");
+        if (rigWeight > 0)
+        {
+            //Debug.Log(name + " " + rigWeight);
+            rigWeight -= weightChangeSpeed * 10;
+            if (rigWeight <= 0)
+            {
+                rigWeight = 0.0f;
+                MultiAimConstraint mac = model.GetComponentInChildren<MultiAimConstraint>();
+                var data = mac.data.sourceObjects;
+                data.Clear();
+                mac.data.sourceObjects = data;
+                lookExhibitionStatus = "None";
+                lastLookExhibitionName = nextTarget_name;
+                nearExhibition("goTo");
+                ifMoveNavMeshAgent(true);
+                //Debug.Log(name + " Status: End -> None");
+            }
+            else
+            {
+                MultiAimConstraint mac = model.GetComponentInChildren<MultiAimConstraint>();
+                var data = mac.data.sourceObjects;
+                data.Clear();
+                data.Add(new WeightedTransform(viewPoint.transform, 1));
+                mac.data.sourceObjects = data;
+                Rig rig = model.GetComponentInChildren<Rig>();
+                rig.weight = rigWeight;
+                ifMoveNavMeshAgent(false);
+            }
+            RigBuilder rb = model.GetComponent<RigBuilder>();
+            //rb.layers.Clear();
+            rb.Build();
+        }
+    }
+
+    public void animationStatusMachine()
+    {
+        switch (lookExhibitionStatus) 
+        {
+            case "Start":
+                StartLookingAnimation();
+                break;
+            case "Watching":
+                ViewPointMoving();
+                break;
+            case "End":
+                FinishLookingAnimation();
+                break;
+            case "None":
+                break;
+        }
+
+    }
+
+    public Vector3 CalculateStrangeForce(human_single otherAgent)
+    {
+        Vector3 strangeForce = Vector3.zero;
+        Vector3 otherAgentPos = otherAgent.model.transform.position;
+        Vector3 otherAgentToThisAgent = otherAgentPos - this.model.transform.position;
+        if (otherAgentToThisAgent.magnitude <= 1.0f)
+        {
+            Vector3 otherAgentMoveDirection = (otherAgent.agent.steeringTarget - otherAgentPos).normalized;
+            Vector3 thisAgentMoveDirection = (this.agent.steeringTarget - this.model.transform.position).normalized;
+            Vector3 otherAgentVelocity = otherAgent.agent.velocity;
+            Vector3 grad_ij = -1 * Gradient_v_ab(otherAgentToThisAgent, otherAgentMoveDirection, otherAgentVelocity.magnitude);
+            //compute weight
+            float c = 0.5f;
+            float w = Vector3.Dot(thisAgentMoveDirection, -1 * grad_ij);
+            float angle = 100;
+            if (w >= (grad_ij.magnitude) * Mathf.Cos(angle * 2.0f * Mathf.PI / 360.0f))
+            {
+                c = 1.0f;
+            }
+            //add strange force to p[i]
+            strangeForce = c * grad_ij;
+        }
+        return strangeForce;
+    }
+
+    public Vector3 Gradient_v_ab(Vector3 r_ab, Vector3 b_dir, float speed_b)
+    {
+        float delta = 0.001f;
+        float v, dxdv, dzdv;
+        Vector3 dx, dz, grad;
+        v = Value_v_ab(r_ab, b_dir, speed_b);
+        dx = new Vector3(delta, 0, 0);
+        dz = new Vector3(0, 0, delta);
+        dxdv = (Value_v_ab(r_ab + dx, b_dir, speed_b) - v) / delta;
+        dzdv = (Value_v_ab(r_ab + dz, b_dir, speed_b) - v) / delta;
+        grad = new Vector3(dxdv, 0, dzdv);
+        return grad;
+    }
+
+    public float Value_v_ab(Vector3 r_ab, Vector3 b_dir, float speed_b)
+    {
+        float b, in_sqrt, v_ab;
+        //compute b
+        float delta_time = 2.0f;
+        Vector3 diff = r_ab - speed_b * delta_time * b_dir;
+        in_sqrt = Mathf.Pow(r_ab.magnitude + diff.magnitude, 2) - Mathf.Pow(speed_b * delta_time, 2);
+
+        if (in_sqrt < 0) in_sqrt = 0;
+
+        b = Mathf.Sqrt(in_sqrt) / 2.0f;
+        //compute v_ab
+        float v0 = 2.1f;
+        float a = 0.3f;
+        v_ab = v0 * Mathf.Exp((-1 * b) / a);  //v0 * e ^ (-b/a)
+        return v_ab;
     }
 }
 
