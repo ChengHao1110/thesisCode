@@ -60,6 +60,7 @@ public class human_single  // List<human_single> humanCrowd;
     public Vector3 preTarget_pos;
     public string nextTarget_name;
     public int nextTarget_direction;
+    public string targetPointName;
     public Vector3 nextTarget_pos;
     public Vector3 lookAt_pos; // for exhibit: since where to stand and where to look at are different to a human
     public float freeTime_stayInNextExhibit;
@@ -115,13 +116,23 @@ public class human_single  // List<human_single> humanCrowd;
     //handle stuck
     public Vector3 tempDestination;
     public bool avoidCollision = false;
-    public bool arriveTempDestination = false;
+    public List<string> nearByVisitors = new List<string>();
+
+    //another method
+    public bool isStuck = false;
+    public Vector3 lastPos = new Vector3(0, -10, 0);
+    public float stuckTimeCounter = 0.0f;
+    public int avoidPriority = 50;
+    public int id;
+
+    //full capacity in exhibitons
+    public string fullCapacityExhibitons = "";
 
     public bool updateTarget(float personNeededTimeToExit, string fromWhichFunction = "")
     {
         string fromFunction = "[ " + fromWhichFunction + " ] ";
         if (goToExit) return false;
-        if (avoidCollision) return false;
+        if (isStuck) return false;
 
         if (freeTime_totalLeft <= personNeededTimeToExit && this.nextTarget_name != this.exitName)
         {
@@ -170,7 +181,7 @@ public class human_single  // List<human_single> humanCrowd;
             /* Arrive, update DesireList */
             if (this.nextTarget_name.StartsWith("p"))
             {
-                Debug.Log("change desireList");
+                //Debug.Log("change desireList");
                 updateDesireList(this.nextTarget_name);
             }
 
@@ -311,12 +322,31 @@ public class human_single  // List<human_single> humanCrowd;
 
     string getMostAttractive()
     {
+        
         if (this.influenceMap.Count > 0)
         {
             string selectTarget = this.influenceMap.First().Key;
             return selectTarget;
         }
         return "";  // nothing can return
+        
+        /*
+        foreach(KeyValuePair<string, float> imp in this.influenceMap)
+        {
+            string selectTarget = imp.Key;
+            foreach (KeyValuePair<string, bool> vp in dynamicSystem.instance.isTargetPointUse)
+            {
+                if (vp.Key.Contains(selectTarget))
+                {
+                    if (!dynamicSystem.instance.isTargetPointUse[vp.Key])
+                    {
+                        return selectTarget;
+                    }
+                }
+            }
+        }
+        return "";
+        */
     }
 
     public void updateInfluenceMap()
@@ -399,6 +429,7 @@ public class human_single  // List<human_single> humanCrowd;
             agent.speed = speedBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["GoTo"].speed;
             agent.acceleration = accelerateBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["GoTo"].speed;
             colliderShape.transform.Find("Cylinder").GetComponent<MeshRenderer>().material.color = Color.green;
+            agent.avoidancePriority = avoidPriority;
         }
         else if (status == "close")
         {
@@ -406,6 +437,7 @@ public class human_single  // List<human_single> humanCrowd;
             agent.speed = speedBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["Close"].speed;
             agent.acceleration = accelerateBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["Close"].speed;
             colliderShape.transform.Find("Cylinder").GetComponent<MeshRenderer>().material.color = Color.yellow;
+            agent.avoidancePriority = 30 + id;
         }
         else // status == at
         {
@@ -413,10 +445,11 @@ public class human_single  // List<human_single> humanCrowd;
             agent.speed = speedBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["At"].speed;
             agent.acceleration = accelerateBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["At"].speed;
             colliderShape.transform.Find("Cylinder").GetComponent<MeshRenderer>().material.color = Color.red;
+            agent.avoidancePriority = 10;
         }
 
         /* set collider Range */
-        float radiusTimes2 = agent.radius * 2;
+        float radiusTimes2 = agent.radius * 1.5f;
         colliderShape.transform.localScale = new Vector3(radiusTimes2, 1, radiusTimes2);
     }
 
@@ -428,8 +461,8 @@ public class human_single  // List<human_single> humanCrowd;
             // agent.updateRotation = isMove;
             // agent.velocity = Vector3.zero;
             agent.isStopped = !isMove;
-            if (!isMove) agent.avoidancePriority = 45; // those stop have a higher priority
-            else agent.avoidancePriority = 50;
+            //if (!isMove) agent.avoidancePriority = 45; // those stop have a higher priority
+            //else agent.avoidancePriority = 50;
         }
         animeWalk = isMove;
         this.model.GetComponent<Animator>().SetBool("walk", isMove);

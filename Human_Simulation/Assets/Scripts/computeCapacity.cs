@@ -69,6 +69,7 @@ public class computeCapacity : MonoBehaviour
                 thisExhibit.currentHumanInside.Remove(humanName);
                 thisExhibit.capacity_cur = thisExhibit.currentHumanInside.Count;
                 thisExhibit.updateInformationBoard();
+                //dynamicSystem.instance.people[humanName].justIn = false;
                 if (!dynamicSystem.instance.people[humanName].justIn)
                 {
                     //dynamicSystem.instance.people[humanName].nearExhibition("goTo");
