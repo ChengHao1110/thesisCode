@@ -35075,6 +35075,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 526888329}
     m_Modifications:
+    - target: {fileID: 849873679647391826, guid: 4f9c8fd2e93e37645971ba713a6ee84b, type: 3}
+      propertyPath: m_Carve
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2317590601461571893, guid: 4f9c8fd2e93e37645971ba713a6ee84b, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -47838,6 +47842,7 @@ MonoBehaviour:
   heatmapToggle: {fileID: 356728940}
   deltaTimeCounter: 0
   storeTimeCounter: 0
+  walkableMask: 0
   showInfoBoard_human: 1
   updateVisBoard: 0
   halfW: 960
