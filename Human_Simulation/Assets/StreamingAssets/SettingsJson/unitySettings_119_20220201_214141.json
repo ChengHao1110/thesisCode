@@ -88,15 +88,15 @@
     },
     "walkStage"       : {
         "GoTo" : {
-            "radius" : 0.400000005960464,
+            "radius" : 0.3,
             "speed"  : 1.0
         },
         "Close" : {
-            "radius" : 0.349999994039536,
+            "radius" : 0.2,
             "speed"  : 0.699999988079071
         },
         "At"    : {
-            "radius" : 0.300000011920929,
+            "radius" : 0.1,
             "speed"  : 0.5
         }
     }

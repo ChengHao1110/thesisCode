@@ -19,7 +19,7 @@ public class ViewPointAttribute
     public GameObject viewPoint;
     public float distance;
 }
-public class human_single  // List<human_single> humanCrowd;
+public class human_single// List<human_single> humanCrowd;
 {
     /* initialize */
     public string name;
@@ -44,6 +44,7 @@ public class human_single  // List<human_single> humanCrowd;
     public List<gatheringEvent> gatherEvent = new List<gatheringEvent>();
     public string exitName;
     public float walkSpeed;
+    public float navSpeed = 0.0f;
     public bool animeWalk = false;
     public float animeSpeed = 1;
     public float gatherDesire;
@@ -114,8 +115,7 @@ public class human_single  // List<human_single> humanCrowd;
 
     //handle stuck
     public Vector3 tempDestination;
-    public bool avoidCollision = false;
-    public List<string> nearByVisitors = new List<string>();
+    public List<string> nearByStuckedVisitors = new List<string>();
 
     //another method
     public bool isStuck = false;
@@ -123,6 +123,7 @@ public class human_single  // List<human_single> humanCrowd;
     public float stuckTimeCounter = 0.0f;
     public int avoidPriority = 50;
     public int id;
+    public float lastMoveTime = 0.0f;
 
     //full capacity in exhibitons
     public string fullCapacityExhibitons = "";
@@ -130,34 +131,40 @@ public class human_single  // List<human_single> humanCrowd;
     //wayPoints method
     public NavMeshObstacle obstacle;
     public Queue<Vector3> navPathCorners = new Queue<Vector3>();
-    public bool detectCollision = false, needToBePolite = false, waitForPathFinding = false;
+    public bool detectCollision = false, needToBePolite = false;
     public List<string> agentWithCollision = new List<string>();
     public Vector3 nextPoint = Vector3.zero;
     public Vector3 currentVelocity = Vector3.zero;
     public Vector3 curMoveDirection = Vector3.zero;
     public bool hasTempDestination = false;
-    
-    
+
+    public void CheckWhetherStuck()
+    {
+        if (status == "at" || walkStopState == "stop") return;
+        if (Vector3.Distance(lastPos, model.transform.position) > 0.1f)
+        {
+            lastMoveTime = dynamicSystem.instance.deltaTimeCounter;
+            lastPos = model.transform.position;
+            isStuck = false;
+        }
+        if(lastMoveTime + 0.5f < dynamicSystem.instance.deltaTimeCounter)
+        {
+            isStuck = true;
+            Debug.Log(name + " stuck");
+        }
+    }
+
     public void SetDestination(Vector3 targetPoint)
     {
         // enable agent & disable obstacle to pathfinding
         //agent.enabled = true;
         //obstacle.enabled = false;
-        waitForPathFinding = false;
+        
 
         NavMeshPath path = new NavMeshPath();
-        //NavMesh.CalculatePath(model.transform.position, targetPoint, dynamicSystem.instance.walkableMask, path);
         agent.CalculatePath(targetPoint, path);
         agent.updatePosition = false;
-        
-        if(path.status == NavMeshPathStatus.PathPartial)
-        {
-            Debug.Log(name +" NavMeshPathStatus.PathPartial");
-            tempDestination = path.corners[path.corners.Length - 1];
-            agent.CalculatePath(tempDestination, path);
-            hasTempDestination = true;
-        }
-        
+
         navPathCorners.Clear();
         foreach (Vector3 corner in path.corners) navPathCorners.Enqueue(corner);
         GetNextPoint();
@@ -176,18 +183,11 @@ public class human_single  // List<human_single> humanCrowd;
     public void UpdatePosition()
     {
         if (checkIfArriveTarget()) return;
-        
-        if (ArriveAtTempDestination())
-        {
-            hasTempDestination = false;
-            SetDestination(nextTarget_pos);
-        }
-        
+
         if (ArriveAtPoint(nextPoint))
         {
             GetNextPoint();
         }
-
         // update position to the next point
         // detect collision -> decide whether to be polite
         curMoveDirection = (nextPoint - model.transform.position).normalized;
@@ -204,12 +204,6 @@ public class human_single  // List<human_single> humanCrowd;
     public bool ArriveAtPoint(Vector3 point)
     {
         if (Vector3.Distance(model.transform.position, point) <= 0.5f) return true;
-        else return false;
-    }
-
-    public bool ArriveAtTempDestination()
-    {
-        if (hasTempDestination && ArriveAtPoint(tempDestination)) return true;
         else return false;
     }
 
@@ -446,7 +440,7 @@ public class human_single  // List<human_single> humanCrowd;
 
     public bool checkIfArriveTarget()
     {
-        if (Vector3.Distance(this.currentPosition, this.nextTarget_pos) < 0.5f) // close enough means arrive
+        if (Vector3.Distance(this.currentPosition, this.nextTarget_pos) < 0.2f) // close enough means arrive
         {
             addTrajectory();
             return true;
@@ -516,6 +510,8 @@ public class human_single  // List<human_single> humanCrowd;
             agent.acceleration = accelerateBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["GoTo"].speed;
             colliderShape.transform.Find("Cylinder").GetComponent<MeshRenderer>().material.color = Color.green;
             agent.avoidancePriority = avoidPriority;
+            obstacle.enabled = false;
+            agent.enabled = true;
         }
         else if (status == "close")
         {
@@ -523,7 +519,7 @@ public class human_single  // List<human_single> humanCrowd;
             agent.speed = speedBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["Close"].speed;
             agent.acceleration = accelerateBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["Close"].speed;
             colliderShape.transform.Find("Cylinder").GetComponent<MeshRenderer>().material.color = Color.yellow;
-            //agent.avoidancePriority = 30 + id;
+            agent.avoidancePriority = 30 + id;
         }
         else // status == at
         {
@@ -531,9 +527,11 @@ public class human_single  // List<human_single> humanCrowd;
             agent.speed = speedBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["At"].speed;
             agent.acceleration = accelerateBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["At"].speed;
             colliderShape.transform.Find("Cylinder").GetComponent<MeshRenderer>().material.color = Color.red;
-            agent.avoidancePriority = 10;
+            agent.avoidancePriority = 0;
+            obstacle.enabled = true;
+            agent.enabled = false;
         }
-
+        navSpeed = agent.speed;
         /* set collider Range */
         float radiusTimes2 = agent.radius * 2f;
         colliderShape.transform.localScale = new Vector3(radiusTimes2, 1, radiusTimes2);
@@ -543,9 +541,14 @@ public class human_single  // List<human_single> humanCrowd;
     {
         if (this.model.activeSelf)
         {
-            agent.updatePosition = isMove;
-            agent.isStopped = !isMove;
-            
+            agent.enabled = isMove;
+            if (agent.enabled)
+            {
+                agent.updatePosition = isMove;
+                agent.isStopped = !isMove;
+            }
+            obstacle.enabled = !isMove;
+
             // agent.updateRotation = isMove;
             // agent.velocity = Vector3.zero;
 

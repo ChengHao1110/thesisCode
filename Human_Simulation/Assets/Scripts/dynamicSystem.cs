@@ -440,7 +440,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             //isTargetPointUse[person.Value.targetPointName] = true;
                         }
 
-
                         person.Value.freeTime_stayInNextExhibit -= Time.fixedDeltaTime;
                         if (person.Value.freeTime_stayInNextExhibit <= 0.5f || person.Value.freeTime_totalLeft <= personNeededTimeToExit)
                         {
@@ -465,7 +464,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             if (person.Value.updateTarget(personNeededTimeToExit, "arriveOrWander"))
                             {
                                 /* if target change or move, update */
-                                person.Value.agent.SetDestination(person.Value.nextTarget_pos);
+                                //person.Value.agent.SetDestination(person.Value.nextTarget_pos);
                                 //person.Value.SetDestination(person.Value.nextTarget_pos);
                                 // person.Value.generateNewPath(walkableMask);
 
@@ -496,7 +495,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             if (person.Value.nextTarget_name.StartsWith("p"))  // is an exhibition
                             {
                                 if (person.Value.status != "at") person.Value.nearExhibition("at");
-                                dealWithWanderAroundExhibit(person.Value);
+                                //dealWithWanderAroundExhibit(person.Value);
                             }
                         }                       
 
@@ -510,16 +509,9 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         if (person.Value.updateTarget(personNeededTimeToExit, "normalWalking"))
                         {
                             /* if target change or move, update */
-                            person.Value.agent.SetDestination(person.Value.nextTarget_pos);
+                            //person.Value.agent.SetDestination(person.Value.nextTarget_pos);
                             //person.Value.SetDestination(person.Value.nextTarget_pos);
                             // person.Value.generateNewPath(walkableMask);
-                            /*
-                            if (person.Value.nextTarget_name.Contains("exit") && person.Value.lookExhibitionStatus != "None" && person.Value.lookExhibitionStatus != "End")
-                            {
-                                person.Value.lookExhibitionStatus = "End";
-                                
-                            }
-                            */
 
                             if (person.Value.nextTarget_name.Contains("exit"))
                             {
@@ -540,7 +532,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         }                                     
                     }
 
-
+                   
                     /* save human new position */
                     person.Value.currentPosition = person.Value.model.transform.position;
 
@@ -562,8 +554,48 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         }                                                
                     }
                     person.Value.animeSpeed = newAnimeSpeed;
+                    /*
+                    if (!person.Value.hasTempDestination)
+                    {
+                        person.Value.agent.SetDestination(person.Value.nextTarget_pos);
+                    }
+                    else
+                    {
+                        if(Vector3.Distance(person.Value.model.transform.position, person.Value.tempDestination) <= 0.2f)
+                        {
+                            person.Value.hasTempDestination = false;
+                            
+                        }
+                    }
 
-                    //person.Value.SetDestination(person.Value.nextTarget_pos);
+                    person.Value.CheckWhetherStuck();
+                    */
+                    /*
+                    if (person.Value.isStuck)
+                    {
+                        person.Value.tempDestination = Vector3.zero;
+                        person.Value.hasTempDestination = true;
+
+                    }
+                    else
+                    {
+                        person.Value.agent.updatePosition = true;
+                    }
+                    */
+                    if (person.Value.agent.enabled)
+                    { 
+                        person.Value.agent.SetDestination(person.Value.nextTarget_pos);
+                        //draw path
+                        Color c = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+                        path = person.Value.agent.path;
+                        for (int i = 0; i < path.corners.Length - 1; i++)
+                        {
+                            Debug.DrawLine(path.corners[i], path.corners[i + 1], c, 10);
+                        }
+                    }
+
+                    
+
 
                     //person.Value.UpdatePosition();
                     //handle collision 
@@ -572,38 +604,52 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         if (other.Value.name == person.Value.name) continue;
                         Vector3 otherToMe = other.Value.model.transform.position - person.Value.model.transform.position;
                         float dist = otherToMe.magnitude;
-                        if (dist < 1.0f){
-                            float overlay = (1.0f - dist) / 2.0f;
-                            person.Value.model.transform.position -= overlay * otherToMe.normalized;
-                            other.Value.model.transform.position += overlay * otherToMe.normalized;
+                        if (dist < 0.6f){
+                            float overlay = (0.6f - dist) / 2.0f;
+                            
+                            if (person.Value.status == "at")
+                            {
+                                person.Value.model.transform.position -= 0.3f * overlay * otherToMe.normalized;
+                                other.Value.model.transform.position += 1.7f * overlay * otherToMe.normalized;
+                            }
+                            else if (other.Value.status == "at")
+                            {
+                                person.Value.model.transform.position -= 1.7f * overlay * otherToMe.normalized;
+                                other.Value.model.transform.position += 0.3f * overlay * otherToMe.normalized;
+                            }
+                            else
+                            {
+                                person.Value.model.transform.position -= overlay * otherToMe.normalized;
+                                other.Value.model.transform.position += overlay * otherToMe.normalized;
+                            }
+                            
                         }
                     }
-                    
-                    
-                    // Draw path to debug in unity scene  // person.Value.cornerId
-                    /*
-                    person.Value.agent.CalculatePath(person.Value.nextTarget_pos, person.Value.currentPath);
-                    Vector3 ll = person.Value.agent.steeringTarget;
-                    GameObject point = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    point.transform.localPosition = new Vector3(0.05f, 0.05f, 0.05f);
-                    point.transform.position = ll;
-                    Debug.Log("Corner Count: " + person.Value.currentPath.corners.Length);
 
-                    for (int i = 0; i < person.Value.currentPath.corners.Length - 1; i++)
+                    Vector3 fwd = person.Value.model.transform.TransformDirection(Vector3.forward);
+                    Debug.DrawRay(person.Value.model.transform.position, fwd * 2.0f, Color.green);
+                    RaycastHit objectHit;
+                    if (Physics.Raycast(person.Value.model.transform.position, fwd, out objectHit, 2.0f))
                     {
-                        Debug.Log("Drawing line");
-                        //GameObject point = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        //point.transform.localPosition = new Vector3(0.2f, 0.2f, 0.2f);
-                        //point.transform.position = person.Value.currentPath.corners[i];
-                        
-                        Vector3 v1 = person.Value.currentPath.corners[i];
-                        v1.y = 0.15f;
-                        Vector3 v2 = person.Value.currentPath.corners[i + 1];
-                        v2.y = 0.15f;
-                        //Debug.DrawLine(person.Value.currentPath.corners[i], person.Value.currentPath.corners[i + 1], Color.red, 10);
-                        Debug.DrawLine(v1, v2, Color.red, 10);
+                        if(objectHit.transform.tag == "Visitor")
+                        {
+                            human_single hm = people[objectHit.transform.gameObject.name];
+                            if (hm.id < person.Value.id)
+                            {
+                                person.Value.agent.speed = person.Value.navSpeed * 0.5f;
+                            }
+
+                        }
+                        else
+                        {
+                            person.Value.agent.speed = person.Value.navSpeed;
+                        }
                     }
-                    */
+                    else
+                    {
+                        person.Value.agent.speed = person.Value.navSpeed;
+                    }
+                    
                     #region SFM
                     /*SFM 排斥力*/
                     /*
@@ -749,7 +795,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                                     Debug.DrawLine(person.Value.model.transform.position, person.Value.tempDestination, Color.red, 5);
                                     person.Value.agent.SetDestination(person.Value.tempDestination);
                                     person.Value.isStuck = true;
-                                    person.Value.agent.avoidancePriority = 0;
+                                    //person.Value.agent.avoidancePriority = 0;
                                 }
                             }
                         }
@@ -767,7 +813,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     person.Value.lastPos = person.Value.model.transform.position;
                     */
 
-                    
+
 
                     person.Value.updateInformationBoard();
                     dealWithRotate(person.Value, person.Value.lookAt_pos);
@@ -824,7 +870,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             }
         }
         */
-        if (person.agent.remainingDistance < 0.5f /* remainDistance < 0.5f */) // get to
+        if (person.agent.remainingDistance < 0.5f /*remainDistance < 0.5f*/) // get to
         {
             if (person.wanderStayTime <= 0 && exhibitions[person.nextTarget_name].bestViewDirection_vector3.Count > 1)
             {                
@@ -837,7 +883,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     person.nextTarget_pos = anotherBestPosSelected;
                     int directionIndex = exhibitions[person.nextTarget_name].bestViewDirection_vector3.IndexOf(person.nextTarget_pos);
                     person.nextTarget_direction = exhibitions[person.nextTarget_name].bestViewDirection[directionIndex];
-                    person.agent.SetDestination(person.nextTarget_pos);
+                    //person.agent.SetDestination(person.nextTarget_pos);
                     //person.SetDestination(person.nextTarget_pos);
                     person.wanderStayTime = person.generateWanderStayTime();
                     person.lookAt_pos = person.nextTarget_pos;
@@ -1507,6 +1553,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             newPerson.preTarget_name = "init";            
             newPerson.nextTarget_name = "";            
             newPerson.model = loadAllCharacterModels.instance.randomCreatePrefab(newPerson.gender, newPerson.age);
+            newPerson.model.tag = "Visitor";
 
             //save model name for replay mode
             newPerson.modelName = newPerson.model.name.Replace("(Clone)", "");
@@ -1612,12 +1659,13 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
             newPerson.model.AddComponent<NavMeshAgent>();
             NavMeshAgent navAgent = newPerson.model.GetComponent<NavMeshAgent>();
-            navAgent.updateRotation = true;
+            //navAgent.updateRotation = true;
             navAgent.speed *= 0.5f * (newPerson.walkSpeed / 100f);
             navAgent.acceleration *= 0.25f * (newPerson.walkSpeed / 100f);
-            navAgent.radius = 0.5f;
+            navAgent.radius = (float)currentSceneSettings.customUI.walkStage["GoTo"].radius;
             navAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
             navAgent.areaMask = walkableMask;
+            newPerson.navSpeed = navAgent.speed;
             //navAgent.autoRepath = true;
             //random
             /*
@@ -1626,7 +1674,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             newPerson.avoidPriority = val;
             */
             //id
-          
+
             newPerson.id = i;
             navAgent.avoidancePriority = 50 + i;
             newPerson.avoidPriority = 50 + i;
@@ -1636,7 +1684,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             newPerson.agent = navAgent;
 
             //NavMeshObstacle
-            /*
+            
             newPerson.model.AddComponent<NavMeshObstacle>();
             NavMeshObstacle navObstacle = newPerson.model.GetComponent<NavMeshObstacle>();
             navObstacle.shape = NavMeshObstacleShape.Capsule;
@@ -1644,11 +1692,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             navObstacle.height = 2f;
             navObstacle.carving = true;
             navObstacle.carvingMoveThreshold = 0.1f;
-            navObstacle.carvingTimeToStationary = 0.2f;
+            navObstacle.carvingTimeToStationary = 0.5f;
             navObstacle.carveOnlyStationary = false;
             newPerson.obstacle = navObstacle;
             newPerson.obstacle.enabled = false;
-            */
+                    
 
             /* set information board */
             newPerson.informationBoard = (GameObject)Instantiate(informationBoardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
@@ -2187,6 +2235,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         foreach (KeyValuePair<string, human_single> person in people)
         {
             Destroy(person.Value.model);
+            Destroy(person.Value.viewPoint);
             Destroy(person.Value.informationBoard);
             Destroy(person.Value.marker);
             Destroy(person.Value.gatherMarker);
@@ -2964,7 +3013,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     void NavMeshBake()
     {
         NavMesh.RemoveAllNavMeshData();
-        NavMesh.avoidancePredictionTime = 0.5f;
+        NavMesh.avoidancePredictionTime = 5.0f;
         navMeshSurface.BuildNavMesh();
     }
 

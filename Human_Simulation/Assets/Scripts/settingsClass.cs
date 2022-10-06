@@ -37,9 +37,14 @@ public class UISettings
     public UISetting_InfluenceMap UI_InfluenceMap = new UISetting_InfluenceMap();
     public Dictionary<string, navAgentParameters> walkStage = new Dictionary<string, navAgentParameters>()
     {
+        /*
         ["GoTo"] = new navAgentParameters { radius = 0.4, speed =  1 },
         ["Close"] = new navAgentParameters { radius = 0.35, speed = 0.7 },
         ["At"] = new navAgentParameters { radius = 0.3, speed = 0.5 },
+        */
+        ["GoTo"] = new navAgentParameters { radius = 0.3, speed = 1 },
+        ["Close"] = new navAgentParameters { radius = 0.2, speed = 0.7 },
+        ["At"] = new navAgentParameters { radius = 0.1, speed = 0.5 },
     };
     public UISettings copy()
     {
@@ -51,7 +56,10 @@ public class UISettings
         foreach (KeyValuePair<string, navAgentParameters> dict in this.walkStage)
         {
             if (this.walkStage.ContainsKey(dict.Key))
+            {
+                Debug.Log(dict.Value.radius);
                 set.walkStage[dict.Key] = dict.Value;
+            }
             else
                 set.walkStage.Add(dict.Key, dict.Value.copy());
         }
