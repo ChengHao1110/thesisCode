@@ -317,6 +317,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             if (person.Value.startSimulateTime <= deltaTimeCounter)
             {
                 updatePosition_startTime = Time.realtimeSinceStartup;
+
                 /* Check if visit all and get to the last target, if yes then stop all behavior */
                 if (person.Value.checkIfFinishVisit())
                 {
@@ -328,6 +329,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 else
                 {
                     person.Value.modelVisible(true);
+                    
                     /*record the status time*/
                     if (person.Value.status == "close") person.Value.statusTime[1] += Time.fixedDeltaTime;
                     else if (person.Value.status == "at") person.Value.statusTime[2] += Time.fixedDeltaTime;
@@ -583,7 +585,16 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     }
                     */
                     if (person.Value.agent.enabled)
-                    { 
+                    {
+                        if (person.Value.obstacleToAgent)
+                        {
+                            person.Value.agent.updatePosition = false;
+                            person.Value.obstacleToAgent = false;
+                        }
+                        else
+                        {                            
+                            person.Value.agent.updatePosition = true;   
+                        }
                         person.Value.agent.SetDestination(person.Value.nextTarget_pos);
                         //draw path
                         Color c = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
@@ -1024,11 +1035,13 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     {
         if (objName.StartsWith("id_")) // is a human
         {
+            Debug.Log(person.name + " choose person for destination");
             person.lookAt_pos = people[objName].currentPosition;
             return people[objName].currentPosition;
         }
         else if (objName.StartsWith("exit")) // is a exit
         {
+            Debug.Log(person.name + " choose exit for destination");
             person.lookAt_pos = exits[objName].leavePosition;
             return exits[objName].leavePosition;// centerPosition;
         }
@@ -1044,6 +1057,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             //int index = random.Next(exhibitions[objName].bestViewDirection_vector3.Count);
             for(int i = 0; i < exhibitions[objName].bestViewDirection_vector3.Count; i++)
             {
+                Debug.Log(person.name + " index count: " + indexList.Count + " " + person.nextTarget_name);
                 int index = random.Next(indexList.Count);
                 // Debug.Log(person.name + ": " + exhibitions[objName].bestViewDirection_vector3.Count + ", and pick direction: " + exhibitions[objName].bestViewDirection[index]);
                 person.nextTarget_direction = exhibitions[objName].bestViewDirection[index];
@@ -1069,6 +1083,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             {
                 Debug.Log(person.name + " choose " + person.nextTarget_name + " no space");
                 int index = random.Next(exhibitions[objName].bestViewDirection_vector3.Count);
+                person.lookAt_pos = exhibitions[objName].bestViewDirection_vector3[index];
                 person.nextTarget_direction = exhibitions[objName].bestViewDirection[index];
                 string targetPointName = person.nextTarget_name + " " + person.nextTarget_direction;
                 person.targetPointName = targetPointName;

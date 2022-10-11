@@ -123,10 +123,7 @@ public class human_single// List<human_single> humanCrowd;
     public float stuckTimeCounter = 0.0f;
     public int avoidPriority = 50;
     public int id;
-    public float lastMoveTime = 0.0f;
-
-    //full capacity in exhibitons
-    public string fullCapacityExhibitons = "";
+    public float lastMoveTime = 0.0f;    
 
     //wayPoints method
     public NavMeshObstacle obstacle;
@@ -137,6 +134,7 @@ public class human_single// List<human_single> humanCrowd;
     public Vector3 currentVelocity = Vector3.zero;
     public Vector3 curMoveDirection = Vector3.zero;
     public bool hasTempDestination = false;
+    public bool obstacleToAgent = false;
 
     public void CheckWhetherStuck()
     {
@@ -402,7 +400,7 @@ public class human_single// List<human_single> humanCrowd;
 
     string getMostAttractive()
     {
-        
+        Debug.Log(name + " influenceMap.Count: " + this.influenceMap.Count);
         if (this.influenceMap.Count > 0)
         {
             string selectTarget = this.influenceMap.First().Key;
@@ -510,8 +508,9 @@ public class human_single// List<human_single> humanCrowd;
             agent.acceleration = accelerateBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["GoTo"].speed;
             colliderShape.transform.Find("Cylinder").GetComponent<MeshRenderer>().material.color = Color.green;
             agent.avoidancePriority = avoidPriority;
-            obstacle.enabled = false;
-            agent.enabled = true;
+            //obstacle.enabled = false;
+            //agent.enabled = true;
+            ifMoveNavMeshAgent(true);
         }
         else if (status == "close")
         {
@@ -528,8 +527,9 @@ public class human_single// List<human_single> humanCrowd;
             agent.acceleration = accelerateBase * (float)dynamicSystem.instance.currentSceneSettings.customUI.walkStage["At"].speed;
             colliderShape.transform.Find("Cylinder").GetComponent<MeshRenderer>().material.color = Color.red;
             agent.avoidancePriority = 0;
-            obstacle.enabled = true;
-            agent.enabled = false;
+            //obstacle.enabled = true;
+            //agent.enabled = false;
+            ifMoveNavMeshAgent(false);
         }
         navSpeed = agent.speed;
         /* set collider Range */
@@ -541,7 +541,17 @@ public class human_single// List<human_single> humanCrowd;
     {
         if (this.model.activeSelf)
         {
-            agent.enabled = isMove;
+            if(obstacle.enabled && isMove)
+            {
+                obstacle.enabled = false;
+                agent.enabled = isMove;
+                obstacleToAgent = true;
+            }
+            else
+            {
+                agent.enabled = isMove;
+            }
+
             if (agent.enabled)
             {
                 agent.updatePosition = isMove;
