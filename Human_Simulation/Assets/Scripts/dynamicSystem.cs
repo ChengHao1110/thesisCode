@@ -157,7 +157,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public float trajectoryRecordTime = 0.1f; //influence heatmap maxValue in UIController
 
     /*directory where data analysis store in*/
-    string directory;
+    public string directory;
 
     /*visitors initial setting */
     public bool saveVIS = false, loadVIS = false, randomVIS = false;
@@ -203,22 +203,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 tmpRec.popularThreshold = currentSceneSettings.customUI.UI_Exhibit.popularThreshold;
                 tmpRec.crowdedThreshold = currentSceneSettings.customUI.UI_Exhibit.crowdedThreshold;
                 writeLog_fps("simulation_exhibit", tmpRec);
-
-
-                //store analysis data
-                //create directory
-                System.DateTime dt = System.DateTime.Now;
-                string date = dt.Year + "-" + dt.Month + "-" + dt.Day + "T" + dt.Hour + "-" + dt.Minute + "-" + dt.Second;
-                string directoryName = date + "_" +
-                                       UIController.instance.curOption + "_" +
-                                       currentSceneSettings.customUI.UI_Global.agentCount + "agents";
-
-                directory = Application.streamingAssetsPath + "/Simulation_Result/" + directoryName + "/";
-                if (!Directory.Exists(directory))
-                {
-                    DirectoryInfo di = Directory.CreateDirectory(directory);
-                    Debug.Log("Create Directory!");
-                }
 
                 /*heatmap*/
                 TrajectoryToHeatmapWithGaussian(matrixSize, sceneSize / 2, gaussian_rate, true);
@@ -1323,7 +1307,23 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             UIController.instance.ShowMsgPanel("Warning", error);
             return;
         }
-        
+
+        //store analysis data
+        //create directory
+        System.DateTime dt = System.DateTime.Now;
+        string date = dt.Year + "-" + dt.Month + "-" + dt.Day + "T" + dt.Hour + "-" + dt.Minute + "-" + dt.Second;
+        string directoryName = date + "_" +
+                               UIController.instance.curOption + "_" +
+                               currentSceneSettings.customUI.UI_Global.agentCount + "agents";
+
+        directory = Application.streamingAssetsPath + "/Simulation_Result/" + directoryName + "/";
+        if (!Directory.Exists(directory))
+        {
+            DirectoryInfo di = Directory.CreateDirectory(directory);
+            Debug.Log("Create Directory!");
+        }
+
+        UIController.instance.CalulateOperation();
 
         // clean every thing
         cleanPeopleBeforeGenerate();
@@ -2741,7 +2741,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         {
             gaussianValue[i] = (float)Math.Exp(-(i * i) / 2 * (gaussian_rate * gaussian_rate));
         }
-
     }
 
     void FixedUpdate()

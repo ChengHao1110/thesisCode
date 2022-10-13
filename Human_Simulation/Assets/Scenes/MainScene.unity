@@ -75441,6 +75441,8 @@ MonoBehaviour:
   StageSpeedAtSlider: {fileID: 1209972050}
   heatmapMaxValueInput: {fileID: 177379666}
   heatmap: {fileID: 1213209090}
+  uiOperationOrder: []
+  realUIOperationOrder: []
 --- !u!1 &1936926416
 GameObject:
   m_ObjectHideFlags: 0
