@@ -497,7 +497,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             if (person.Value.nextTarget_name.StartsWith("p"))  // is an exhibition
                             {
                                 if (person.Value.status != "at") person.Value.nearExhibition("at");
-                                dealWithWanderAroundExhibit(person.Value);
+                                //dealWithWanderAroundExhibit(person.Value);
                             }
                         }                       
 
@@ -866,7 +866,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     void dealWithWanderAroundExhibit(human_single person)
     {
-        //float remainDistance = person.agent.remainingDistance;
+        float remainDistance = person.agent.remainingDistance;
         /*
         float remainDistance = Vector3.Distance(person.nextPoint, person.model.transform.position);
         for (int i = 0; i < person.navPathCorners.Count; i++)
@@ -881,8 +881,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             }
         }
         */
-        //if (person.agent.remainingDistance < 0.5f /*remainDistance < 0.5f*/) // get to
-        //{
+        if (person.agent.remainingDistance < 0.5f /*remainDistance < 0.5f*/) // get to
+        {
             if (person.wanderStayTime <= 0 && exhibitions[person.nextTarget_name].bestViewDirection_vector3.Count > 1)
             {                
                 Vector3 anotherBestPosSelected = selectAnotherBestViewPos(person.nextTarget_pos, exhibitions[person.nextTarget_name], person);
@@ -920,7 +920,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 dealWithRotate(person, exhibitions[person.nextTarget_name].centerPosition);
                 person.ifMoveNavMeshAgent(false);
             }
-        //}
+        }
     }
 
     void dealWithRotate(human_single person, Vector3 lookAtPos)
