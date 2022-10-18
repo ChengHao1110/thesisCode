@@ -1091,6 +1091,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
     public Slider weightHumanSlider, weightExhibitSlider;
     public InputField humanFollowDesireInput, humanTakeTimeInput, humanGatherDesireInput, humanTypeAttractInput, humanBehaviorAttractInput;
     public InputField exhibitCapacityInput, exhibitTakeTimeInput, exhibitPopularLvInput, exhibitHumanPreferInput, exhibitCloseBestInput;
+    public double totalValueOfHumanInfluence = 0, totalValueOfExhibitInfluence = 0;
     /* Immediate change */
     public Text StageRadiusGoToText, StageRadiusCloseText, StageRadiusAtText;
     public Slider StageRadiusGoToSlider, StageRadiusCloseSlider, StageRadiusAtSlider;
@@ -1102,7 +1103,16 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
 
     /* UI operation adjustment count*/
     public UIOperationCount uiOperationCount = new UIOperationCount();
-    public List<string> uiOperationOrder = new List<string>();
+
+    public class UIOrder 
+    {
+        public string orderName;
+        public float orderTime;
+    }
+    public float lastModifyUITime;
+    public bool startModifyUI = false;
+
+    public List<UIOrder> uiOperationOrder = new List<UIOrder>();
     public List<string> realUIOperationOrder = new List<string>();
     
 
@@ -1119,8 +1129,8 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         //heatmapMaxValueInput.text = heatmap.maxLimit.ToString();
         changeAddAgentCount();
         uiOperationOrder.RemoveAt(uiOperationOrder.Count - 1); //remove add agent 
-        uiOperationOrder.Add("Num of Agent");
-        
+
+        AddUIOrderToList("Num of Agent");
     }
 
     public void changeAdultPercent()
@@ -1128,30 +1138,29 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)(adultPercentSlider.value / 100);  // % -> 0.xx
         adultPercentText.text = (value).ToString("F2");
         tmpSaveUISettings.UI_Global.adultPercentage = value;
-        uiOperationOrder.Add("Adult Percentage");
+        AddUIOrderToList("Adult Percentage");
     }
 
     public void changeAddAgentCount()
     {
-
         int value = (int)addAgentCountSlider.value;
         addAgentCountText.text = (value).ToString();
         tmpSaveUISettings.UI_Global.addAgentCount = value;
-        uiOperationOrder.Add("Add Agent");
+        AddUIOrderToList("Add Agent");
     }
 
     public void changeStartAddAgentMin()
     {
         int value = int.Parse(startAddAgentMinInput.text);
         tmpSaveUISettings.UI_Global.startAddAgentMin = value;
-        uiOperationOrder.Add("Start Add Range");
+        AddUIOrderToList("Start Add Range");
     }
 
     public void changeStartAddAgentMax()
     {
         int value = int.Parse(startAddAgentMaxInput.text);
         tmpSaveUISettings.UI_Global.startAddAgentMax = value;
-        uiOperationOrder.Add("Start Add Range");
+        AddUIOrderToList("Start Add Range");
     }
 
     public void changeUpdateRateGather()
@@ -1159,7 +1168,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         int value = (int)updateRateGatherSlider.value;
         updateRateGatherText.text = (value).ToString() + "s";
         tmpSaveUISettings.UI_Global.UpdateRate["gathers"] = value;
-        uiOperationOrder.Add("Update Rate Gather");
+        AddUIOrderToList("Update Rate Gather");
     }
 
     public void changeUpdateRateStatus()
@@ -1167,7 +1176,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         int value = (int)updateRateStatusSlider.value;
         updateRateStatusText.text = (value).ToString() + "s";
         tmpSaveUISettings.UI_Global.UpdateRate["stopWalkStatus"] = value;
-        uiOperationOrder.Add("Update Rate Status");
+        AddUIOrderToList("Update Rate Status");
     }
 
     public void changeUpdateRateMap()
@@ -1175,7 +1184,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         int value = (int)updateRateMapSlider.value;
         updateRateMapText.text = (value).ToString() + "s";
         tmpSaveUISettings.UI_Global.UpdateRate["influenceMap"] = value;
-        uiOperationOrder.Add("Update Rate Map");
+        AddUIOrderToList("Update Rate Map");
     }
 
     public void changeTimescale()
@@ -1191,28 +1200,28 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
     {
         int value = int.Parse(walkSpeedMinInput.text);
         tmpSaveUISettings.UI_Human.walkSpeedMin = value;
-        uiOperationOrder.Add("Walk Speed Range");
+        AddUIOrderToList("Walk Speed Range");
     }
 
     public void changeWalkSpeedMax()
     {
         int value = int.Parse(walkSpeedMaxInput.text);
         tmpSaveUISettings.UI_Human.walkSpeedMax = value;
-        uiOperationOrder.Add("Walk Speed Range");
+        AddUIOrderToList("Walk Speed Range");
     }
 
     public void changeFreeTimeMin()
     {
         int value = int.Parse(freeTimeMinInput.text);
         tmpSaveUISettings.UI_Human.freeTimeMin = value;
-        uiOperationOrder.Add("Free Time Range");
+        AddUIOrderToList("Free Time Range");
     }
 
     public void changeFreeTimeMax()
     {
         int value = int.Parse(freeTimeMaxInput.text);
         tmpSaveUISettings.UI_Human.freeTimeMax = value;
-        uiOperationOrder.Add("Free Time Range");
+        AddUIOrderToList("Free Time Range");
         //heatmap.maxLimit = (value * tmpSaveUISettings.UI_Human.freeTimeMax) / dynamicSystem.instance.trajectoryRecordTime;
         //heatmapMaxValueInput.text = heatmap.maxLimit.ToString();
     }
@@ -1222,7 +1231,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)(gatherProbabilityMeanSlider.value / 100);  // % -> 0.xx
         gatherProbabilityMeanText.text = (value).ToString("F2");
         tmpSaveUISettings.UI_Human.gatherProbability.mean = value;
-        uiOperationOrder.Add("Gather Desire Mean");
+        AddUIOrderToList("Gather Desire Mean");
     }
 
     public void changeGatherStdProbability()
@@ -1230,7 +1239,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)(gatherProbabilityStdSlider.value / 100);  // % -> 0.xx
         gatherProbabilityStdText.text = (value).ToString("F2");
         tmpSaveUISettings.UI_Human.gatherProbability.std = value;
-        uiOperationOrder.Add("Gather Desire Std");
+        AddUIOrderToList("Gather Desire Std");
     }
 
     public void changeJoinProbability()
@@ -1238,7 +1247,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)(joinProbabilitySlider.value / 100);  // % -> 0.xx
         joinProbabilityText.text = (value).ToString("F2");
         tmpSaveUISettings.UI_Human.behaviorProbability["join"].mean = value;
-        uiOperationOrder.Add("Behavior Join Mean");
+        AddUIOrderToList("Behavior Join Mean");
     }
 
     public void changeKeepAloneProbability()
@@ -1246,7 +1255,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)(keepAloneProbabilitySlider.value / 100);  // % -> 0.xx
         keepAloneProbabilityText.text = (value).ToString("F2");
         tmpSaveUISettings.UI_Human.behaviorProbability["keepAlone"].mean = value;
-        uiOperationOrder.Add("Behavior Keep Alone Mean");
+        AddUIOrderToList("Behavior Keep Alone Mean");
     }
 
     public void changeKeepGatherSameGroupProbability()
@@ -1254,7 +1263,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)(keepGatherSameGroupProbabilitySlider.value / 100);  // % -> 0.xx
         keepGatherSameGroupProbabilityText.text = (value).ToString("F2");
         tmpSaveUISettings.UI_Human.behaviorProbability["keepGather_sameGroup"].mean = value;
-        uiOperationOrder.Add("Behavior Keep Same Group Mean");
+        AddUIOrderToList("Behavior Keep Same Group Mean");
     }
 
     public void changeKeepGatherDifGroupProbability()
@@ -1262,7 +1271,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)(keepGatherDifGroupProbabilitySlider.value / 100);  // % -> 0.xx
         keepGatherDifGroupProbabilityText.text = (value).ToString("F2");
         tmpSaveUISettings.UI_Human.behaviorProbability["keepGather_difGroup"].mean = value;
-        uiOperationOrder.Add("Behavior Keep Diff Group Mean");
+        AddUIOrderToList("Behavior Keep Diff Group Mean");
     }
 
     public void changeLeaveProbability()
@@ -1270,7 +1279,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)(leaveProbabilitySlider.value / 100);  // % -> 0.xx
         leaveProbabilityText.text = (value).ToString("F2");
         tmpSaveUISettings.UI_Human.behaviorProbability["leave"].mean = value;
-        uiOperationOrder.Add("Behavior Leave Mean");
+        AddUIOrderToList("Behavior Leave Mean");
     }
     #endregion
     /* Exhibit */
@@ -1280,7 +1289,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)capacityTimesSlider.value;
         capacityTimesText.text = (value).ToString();
         tmpSaveUISettings.UI_Exhibit.capacityLimitTimes = value;
-        uiOperationOrder.Add("Capacity Limit");
+        AddUIOrderToList("Capacity Limit");
     }
 
     public void changePopularThreshold()
@@ -1288,7 +1297,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         int value = (int)popularThresholdSlider.value;
         popularThresholdText.text = (value).ToString() + "%";
         tmpSaveUISettings.UI_Exhibit.popularThreshold = value / 100f;
-        uiOperationOrder.Add("Popular Threshold");
+        AddUIOrderToList("Popular Threshold");
     }
 
     public void changeCrowdedThreshold()
@@ -1296,7 +1305,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         int value = (int)crowdedThresholdSlider.value;
         crowdedThresholdText.text = (value).ToString() + "%";
         tmpSaveUISettings.UI_Exhibit.crowdedThreshold = value / 100f;
-        uiOperationOrder.Add("Crowded Threshold");
+        AddUIOrderToList("Crowded Threshold");
     }
 
     public void changeCrowdedTimeLimit()
@@ -1304,7 +1313,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         int value = (int)crowdedTimeLimitSlider.value;
         crowdedTimeLimitText.text = (value).ToString() + "s";
         tmpSaveUISettings.UI_Exhibit.crowdedTimeLimit = value;
-        uiOperationOrder.Add("Crowded Time Limit");
+        AddUIOrderToList("Crowded Time Limit");
     }
     #endregion
     /* Influence Map */
@@ -1314,7 +1323,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)weightHumanSlider.value;
         weightHumanText.text = (value).ToString("F1");
         tmpSaveUISettings.UI_InfluenceMap.weightHuman = value;
-        uiOperationOrder.Add("Human Influence Weight");
+        AddUIOrderToList("Human Influence Weight");
     }
 
     public void changeExhibitInfluenceWeight()
@@ -1322,77 +1331,109 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)weightExhibitSlider.value;
         weightExhibitText.text = (value).ToString("F1");
         tmpSaveUISettings.UI_InfluenceMap.weightExhibit = value;
-        uiOperationOrder.Add("Exhibit Influence Weight");
+        AddUIOrderToList("Exhibit Influence Weight");
     }
 
     public void changeHumanInfluence_followDesire()
     {
         int value = int.Parse(humanFollowDesireInput.text);
         tmpSaveUISettings.UI_InfluenceMap.humanInflence["followDesire"] = value / 100f;
-        uiOperationOrder.Add("Human Follow Desire");
+        AddUIOrderToList("Human Follow Desire");
     }
 
     public void changeHumanInfluence_takeTime()
     {
         int value = int.Parse(humanTakeTimeInput.text);
         tmpSaveUISettings.UI_InfluenceMap.humanInflence["takeTime"] = value / 100f;
-        uiOperationOrder.Add("Human Take Time");
+        AddUIOrderToList("Human Take Time");
     }
 
     public void changeHumanInfluence_gatherDesire()
     {
         int value = int.Parse(humanGatherDesireInput.text);
         tmpSaveUISettings.UI_InfluenceMap.humanInflence["gatherDesire"] = value / 100f;
-        uiOperationOrder.Add("Human Gather Desire");
+        AddUIOrderToList("Human Gather Desire");
     }
 
     public void changeHumanInfluence_humanTypeAttraction()
     {
         int value = int.Parse(humanTypeAttractInput.text);
         tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] = value / 100f;
-        uiOperationOrder.Add("Human Human Type Attraction");
+        AddUIOrderToList("Human Human Type Attraction");
     }
 
     public void changeHumanInfluence_behaviorAttraction()
     {
         int value = int.Parse(humanBehaviorAttractInput.text);
         tmpSaveUISettings.UI_InfluenceMap.humanInflence["behaviorAttraction"] = value / 100f;
-        uiOperationOrder.Add("Human Behavior Attraction");
+        AddUIOrderToList("Human Behavior Attraction");
     }
 
     public void changeExhibitInfluence_capactiy()
     {
         int value = int.Parse(exhibitCapacityInput.text);
         tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["capactiy"] = value / 100f;
-        uiOperationOrder.Add("Exhibit Capacity");
+        AddUIOrderToList("Exhibit Capacity");
     }
 
     public void changeExhibitInfluence_takeTime()
     {
         int value = int.Parse(exhibitTakeTimeInput.text);
         tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["takeTime"] = value / 100f;
-        uiOperationOrder.Add("Exhibit Take Time");
+        AddUIOrderToList("Exhibit Take Time");
     }
 
     public void changeExhibitInfluence_popularLevel()
     {
         int value = int.Parse(exhibitPopularLvInput.text);
         tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["popularLevel"] = value / 100f;
-        uiOperationOrder.Add("Exhibit Popular Level");
+        AddUIOrderToList("Exhibit Popular Level");
     }
 
     public void changeExhibitInfluence_humanPreference()
     {
         int value = int.Parse(exhibitHumanPreferInput.text);
         tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["humanPreference"] = value / 100f;
-        uiOperationOrder.Add("Exhibit Human Preference");
+        AddUIOrderToList("Exhibit Human Preference");
     }
 
     public void changeExhibitInfluence_closeToBestViewDirection()
     {
         int value = int.Parse(exhibitCloseBestInput.text);
         tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["closeToBestViewDirection"] = value / 100f;
-        uiOperationOrder.Add("Exhibit Close To Best View Direction");
+        AddUIOrderToList("Exhibit Close To Best View Direction");
+    }
+
+    public void NormalizeInfluenceValue()
+    {
+        totalValueOfExhibitInfluence = 
+            tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["capactiy"] +
+            tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["takeTime"] +
+            tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["popularLevel"] +
+            tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["humanPreference"] +
+            tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["closeToBestViewDirection"];
+        totalValueOfHumanInfluence =
+            tmpSaveUISettings.UI_InfluenceMap.humanInflence["followDesire"] +
+            tmpSaveUISettings.UI_InfluenceMap.humanInflence["takeTime"] +
+            tmpSaveUISettings.UI_InfluenceMap.humanInflence["gatherDesire"] +
+            tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] +
+            tmpSaveUISettings.UI_InfluenceMap.humanInflence["behaviorAttraction"];
+        if (totalValueOfExhibitInfluence > 1.0d)
+        {
+            tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["capactiy"] /= totalValueOfExhibitInfluence;
+            tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["takeTime"] /= totalValueOfExhibitInfluence;
+            tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["popularLevel"] /= totalValueOfExhibitInfluence;
+            tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["humanPreference"] /= totalValueOfExhibitInfluence;
+            tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["closeToBestViewDirection"] /= totalValueOfExhibitInfluence;
+        }
+        if(totalValueOfHumanInfluence > 1.0d)
+        {
+            tmpSaveUISettings.UI_InfluenceMap.humanInflence["followDesire"] /= totalValueOfHumanInfluence;
+            tmpSaveUISettings.UI_InfluenceMap.humanInflence["takeTime"] /= totalValueOfHumanInfluence;
+            tmpSaveUISettings.UI_InfluenceMap.humanInflence["gatherDesire"] /= totalValueOfHumanInfluence;
+            tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] /= totalValueOfHumanInfluence;
+            tmpSaveUISettings.UI_InfluenceMap.humanInflence["behaviorAttraction"] /= totalValueOfHumanInfluence;
+        }
     }
     #endregion
     /* Immediate change variables */
@@ -1402,42 +1443,42 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)StageRadiusGoToSlider.value;
         StageRadiusGoToText.text = (value).ToString();
         tmpSaveUISettings.walkStage["GoTo"].radius = value;
-        uiOperationOrder.Add("GoTo Radius");
+        AddUIOrderToList("GoTo Radius");
     }
     public void changeStageSpeed_GoTo()
     {
         float value = (float)StageSpeedGoToSlider.value;
         StageSpeedGoToText.text = "x " + (value).ToString();
         tmpSaveUISettings.walkStage["GoTo"].speed = value;
-        uiOperationOrder.Add("GoTo Speed");
+        AddUIOrderToList("GoTo Speed");
     }
     public void changeStageRadius_Close()
     {
         float value = (float)StageRadiusCloseSlider.value;
         StageRadiusCloseText.text = (value).ToString();
         tmpSaveUISettings.walkStage["Close"].radius = value;
-        uiOperationOrder.Add("Close Radius");
+        AddUIOrderToList("Close Radius");
     }
     public void changeStageSpeed_Close()
     {
         float value = (float)StageSpeedCloseSlider.value;
         StageSpeedCloseText.text = "x " + (value).ToString();
         tmpSaveUISettings.walkStage["Close"].speed = value;
-        uiOperationOrder.Add("Close Speed");
+        AddUIOrderToList("Close Speed");
     }
     public void changeStageRadius_At()
     {
         float value = (float)StageRadiusAtSlider.value;
         StageRadiusAtText.text = (value).ToString();
         tmpSaveUISettings.walkStage["At"].radius = value;
-        uiOperationOrder.Add("At Radius");
+        AddUIOrderToList("At Radius");
     }
     public void changeStageSpeed_At()
     {
         float value = (float)StageSpeedAtSlider.value;
         StageSpeedAtText.text = "x " + (value).ToString();
         tmpSaveUISettings.walkStage["At"].speed = value;
-        uiOperationOrder.Add("At Speed");
+        AddUIOrderToList("At Speed");
     }
 
     public void LoadTmpSettingToCurrentSceneSettings(){
@@ -1462,6 +1503,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         InitialExhibitionsOperationCount();
         InitialHumanWalkStageOperationCount();
         InitialInfluenceMapWeightOperationCount();
+        UIController.instance.startModifyUI = false;
         uiOperationOrder.Clear();
     }
     public void InitialGlobalOperationCount()
@@ -1523,22 +1565,15 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         string curOperation = "";
         for(int i = 0; i < uiOperationOrder.Count(); i++)
         {
-            if (uiOperationOrder[i] != curOperation)
+            if (uiOperationOrder[i].orderName != curOperation)
             {
-                realUIOperationOrder.Add(uiOperationOrder[i] + ":" + GetOperationAreaName(uiOperationOrder[i]));
-                CalulateOperationCount(uiOperationOrder[i]);
-                curOperation = uiOperationOrder[i];
+                realUIOperationOrder.Add(uiOperationOrder[i].orderName + ":" + GetOperationAreaName(uiOperationOrder[i].orderName) + ":"  + uiOperationOrder[i].orderTime.ToString("f2"));
+                CalulateOperationCount(uiOperationOrder[i].orderName);
+                curOperation = uiOperationOrder[i].orderName;
             }
         }
         WriteOpertationCountToFile();
         WriteOperationOrderToFile();
-        /*
-        for (int i = 0; i < realUIOperationOrder.Count(); i++)
-        {
-            print(realUIOperationOrder[i]);
-        }
-        */
-
     }
 
     public void CalulateOperationCount(string operation){
@@ -1717,6 +1752,29 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         }
         return area;
     }
+    
+    public void AddUIOrderToList(string orderName)
+    {
+        CheckIfStartModifyUI();
+        UIOrder uiOrder = new UIOrder();
+        uiOrder.orderName = orderName;
+        uiOrder.orderTime = Time.time - lastModifyUITime;
+        uiOperationOrder.Add(uiOrder);
+    }
+
+    public void CheckIfStartModifyUI()
+    {
+        if (!startModifyUI)
+        {
+            startModifyUI = true;
+            lastModifyUITime = Time.time;
+        }
+        else
+        {
+            return;
+        }
+    }
+
     public void WriteOpertationCountToFile()
     {
         string path = dynamicSystem.instance.directory + "UIOperationCount.json";

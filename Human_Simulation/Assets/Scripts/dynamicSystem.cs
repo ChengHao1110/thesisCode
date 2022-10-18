@@ -184,6 +184,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     //exhibition target point isUse
     public Dictionary<string, bool> isTargetPointUse = new Dictionary<string, bool>();
+    public Dictionary<string, GameObject> targetPointBall = new Dictionary<string, GameObject>();
 
     /* update information */
     void updatePeople()
@@ -191,6 +192,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         if (allPeopleFinish()) // all people finish, stop the time counter.
         {
             Run = false;
+            UIController.instance.startModifyUI = false;
             if (generateAnalyzeData)
             {
                 writeLog_fps("viewMode_fps", fpsList);
@@ -296,6 +298,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
         //NavMeshBake();
         // system simulating
+        UpdateIsTargetPointUseStatus();
         foreach (KeyValuePair<string, human_single> person in people)
         {
             if (person.Value.startSimulateTime <= deltaTimeCounter)
@@ -440,7 +443,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             person.Value.wanderAroundExhibit = false;
                             /* Use new influenceMap to check target 
                             * deal with suddenly appear target and normally arrive and go next */
-                            isTargetPointUse[person.Value.targetPointName] = false;
+                            //isTargetPointUse[person.Value.targetPointName] = false;
+                            person.Value.targetPointName = "";
 
                             if (!person.Value.nextTarget_name.StartsWith("exit"))
                             {
@@ -573,11 +577,18 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         if (person.Value.obstacleToAgent)
                         {
                             person.Value.agent.updatePosition = false;
-                            person.Value.obstacleToAgent = false;
+                            //person.Value.obstacleToAgent = false;
+                            person.Value.changeCounter += Time.fixedDeltaTime;
+                            if (person.Value.changeCounter >= 0.5f)
+                            {
+                                person.Value.obstacleToAgent = false;
+                                person.Value.changeCounter = 0.0f;
+                            }
                         }
                         else
                         {                            
-                            person.Value.agent.updatePosition = true;   
+                            person.Value.agent.updatePosition = true;
+
                         }
                         person.Value.agent.SetDestination(person.Value.nextTarget_pos);
                         //draw path
@@ -604,13 +615,13 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             
                             if (person.Value.status == "at")
                             {
-                                person.Value.model.transform.position -= 0.3f * overlay * otherToMe.normalized;
-                                other.Value.model.transform.position += 1.7f * overlay * otherToMe.normalized;
+                                person.Value.model.transform.position -= 0.15f * overlay * otherToMe.normalized;
+                                other.Value.model.transform.position += 1.85f * overlay * otherToMe.normalized;
                             }
                             else if (other.Value.status == "at")
                             {
-                                person.Value.model.transform.position -= 1.7f * overlay * otherToMe.normalized;
-                                other.Value.model.transform.position += 0.3f * overlay * otherToMe.normalized;
+                                person.Value.model.transform.position -= 1.85f * overlay * otherToMe.normalized;
+                                other.Value.model.transform.position += 0.15f * overlay * otherToMe.normalized;
                             }
                             else
                             {
@@ -868,7 +879,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         //if (person.agent.remainingDistance < 0.5f /*remainDistance < 0.5f*/) // get to
         //{
             if (person.wanderStayTime <= 0 && exhibitions[person.nextTarget_name].bestViewDirection_vector3.Count > 1)
-            {                
+            {
+                Debug.Log(person.name + " Wander Change View Point");
                 Vector3 anotherBestPosSelected = selectAnotherBestViewPos(person.nextTarget_pos, exhibitions[person.nextTarget_name], person);
                 float gotoDistance = calculateDistance(person.currentPosition, anotherBestPosSelected);
                 float gotoTakeTime = gotoDistance / person.agent.speed;
@@ -971,6 +983,9 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         {
             randomIndex = random.Next(currentExhibit.bestViewDirection_vector3.Count);
         }
+        isTargetPointUse[person.targetPointName] = false;
+        person.nextTarget_direction = currentExhibit.bestViewDirection[randomIndex];
+        person.targetPointName = person.nextTarget_name + " " + person.nextTarget_direction;
 
         return currentExhibit.bestViewDirection_vector3[randomIndex];
     }
@@ -1020,12 +1035,14 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         if (objName.StartsWith("id_")) // is a human
         {
             Debug.Log(person.name + " choose person for destination");
+            person.targetPointName = "";
             person.lookAt_pos = people[objName].currentPosition;
             return people[objName].currentPosition;
         }
         else if (objName.StartsWith("exit")) // is a exit
         {
             Debug.Log(person.name + " choose exit for destination");
+            person.targetPointName = "";
             person.lookAt_pos = exits[objName].leavePosition;
             return exits[objName].leavePosition;// centerPosition;
         }
@@ -1041,15 +1058,16 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             //int index = random.Next(exhibitions[objName].bestViewDirection_vector3.Count);
             for(int i = 0; i < exhibitions[objName].bestViewDirection_vector3.Count; i++)
             {
-                Debug.Log(person.name + " index count: " + indexList.Count + " " + person.nextTarget_name);
+                //Debug.Log(person.name + " index count: " + indexList.Count + " " + person.nextTarget_name);
                 int index = random.Next(indexList.Count);
+                int indexForEx = indexList[index];
                 // Debug.Log(person.name + ": " + exhibitions[objName].bestViewDirection_vector3.Count + ", and pick direction: " + exhibitions[objName].bestViewDirection[index]);
-                person.nextTarget_direction = exhibitions[objName].bestViewDirection[index];
+                person.nextTarget_direction = exhibitions[objName].bestViewDirection[indexForEx];
                 string targetPointName = person.nextTarget_name + " " + person.nextTarget_direction;
                 if (!isTargetPointUse[targetPointName])
                 {
-                    person.lookAt_pos = exhibitions[objName].bestViewDirection_vector3[index]; // exhibitions[objName].centerPosition;//
-                    indexChosen = index;
+                    person.lookAt_pos = exhibitions[objName].bestViewDirection_vector3[indexForEx]; // exhibitions[objName].centerPosition;//
+                    indexChosen = indexForEx;
                     canFindPoint = true;
                     isTargetPointUse[targetPointName] = true;
                     person.targetPointName = targetPointName;
@@ -1065,16 +1083,15 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             }
             if (!canFindPoint)
             {
-                Debug.Log(person.name + " choose " + person.nextTarget_name + " no space");
+                //Debug.Log(person.name + " choose " + person.nextTarget_name + " no space");
                 int index = random.Next(exhibitions[objName].bestViewDirection_vector3.Count);
                 person.lookAt_pos = exhibitions[objName].bestViewDirection_vector3[index];
                 person.nextTarget_direction = exhibitions[objName].bestViewDirection[index];
                 string targetPointName = person.nextTarget_name + " " + person.nextTarget_direction;
                 person.targetPointName = targetPointName;
-                indexChosen = index;
-                
+                indexChosen = index; 
             }
-            //Debug.Log(person.name + " choose " + person.nextTarget_name + " " + indexChosen);
+            Debug.Log(person.name + " choose " + person.nextTarget_name + " " + indexChosen);
             return exhibitions[objName].bestViewDirection_vector3[indexChosen];
         }
     }
@@ -1307,9 +1324,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             UIController.instance.ShowMsgPanel("Warning", error);
             return;
         }
-
+        UIController.instance.NormalizeInfluenceValue();
         //store analysis data
         //create directory
+        
         System.DateTime dt = System.DateTime.Now;
         string date = dt.Year + "-" + dt.Month + "-" + dt.Day + "T" + dt.Hour + "-" + dt.Minute + "-" + dt.Second;
         string directoryName = date + "_" +
@@ -1324,7 +1342,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
 
         UIController.instance.CalulateOperation();
-
+        
         // clean every thing
         cleanPeopleBeforeGenerate();
 
@@ -1355,6 +1373,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
         /* Exhibitions */
         isTargetPointUse.Clear();
+        targetPointBall.Clear();
         generateExhibitions();
 
         /* People */
@@ -1703,7 +1722,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             newPerson.model.AddComponent<NavMeshObstacle>();
             NavMeshObstacle navObstacle = newPerson.model.GetComponent<NavMeshObstacle>();
             navObstacle.shape = NavMeshObstacleShape.Capsule;
-            navObstacle.radius = 0f;
+            navObstacle.radius = 0.3f;
             navObstacle.height = 2f;
             navObstacle.carving = true;
             navObstacle.carvingMoveThreshold = 0.1f;
@@ -2016,6 +2035,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 sign_test.transform.parent = ex.model.transform;
 
                 isTargetPointUse.Add(sign_test.name, false);
+                GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                ball.transform.position = new Vector3(sign_test.transform.position.x, 4, sign_test.transform.position.z);
+                ball.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                targetPointBall.Add(sign_test.name, ball);
+
                 //ex.bestViewSign.Add(sign_test);
                 /*
                 GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -2941,6 +2965,32 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         outputVec[1] -= 50 * UIController.instance.curSceneOptions.IndexOf(UIController.instance.curOption);
 
         return outputVec;
+    }
+
+    void UpdateIsTargetPointUseStatus()
+    {
+        for (int i = 0; i < isTargetPointUse.Count; i++) 
+        { 
+            isTargetPointUse[isTargetPointUse.ElementAt(i).Key] = false; 
+        }
+        foreach (KeyValuePair<string, human_single> person in people)
+        {
+            if (person.Value.targetPointName.StartsWith("p")) isTargetPointUse[person.Value.targetPointName] = true;
+        }
+        foreach (KeyValuePair<string, bool> tp in isTargetPointUse)
+        {
+            //Debug.Log("tp.Key: " + tp.Key);
+            GameObject ball = targetPointBall[tp.Key];
+            var renderer = ball.GetComponent<Renderer>();
+            if (tp.Value)
+            {
+                renderer.material.SetColor("_Color", Color.red);
+            }
+            else
+            {
+                renderer.material.SetColor("_Color", Color.green);
+            }
+        }
     }
 
     /* Checker */

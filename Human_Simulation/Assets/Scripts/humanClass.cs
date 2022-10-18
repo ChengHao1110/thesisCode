@@ -61,7 +61,7 @@ public class human_single// List<human_single> humanCrowd;
     public Vector3 preTarget_pos;
     public string nextTarget_name;
     public int nextTarget_direction;
-    public string targetPointName;
+    public string targetPointName = "";
     public Vector3 nextTarget_pos;
     public Vector3 lookAt_pos; // for exhibit: since where to stand and where to look at are different to a human
     public float freeTime_stayInNextExhibit;
@@ -135,6 +135,7 @@ public class human_single// List<human_single> humanCrowd;
     public Vector3 curMoveDirection = Vector3.zero;
     public bool hasTempDestination = false;
     public bool obstacleToAgent = false;
+    public float changeCounter = 0.0f;
 
     public void CheckWhetherStuck()
     {
@@ -400,11 +401,50 @@ public class human_single// List<human_single> humanCrowd;
 
     string getMostAttractive()
     {
-        Debug.Log(name + " influenceMap.Count: " + this.influenceMap.Count);
+        //Debug.Log(name + " influenceMap.Count: " + this.influenceMap.Count);
         if (this.influenceMap.Count > 0)
         {
-            string selectTarget = this.influenceMap.First().Key;
-            return selectTarget;
+            int i = 0;
+            bool notFound = true;
+            while (i < this.influenceMap.Count)
+            {
+                string selectTarget = this.influenceMap.ElementAt(i).Key;
+                //Debug.Log(name + " selectTatrget " + selectTarget);
+                if (!selectTarget.StartsWith("p"))
+                {
+                    return selectTarget; // person or exit
+                }
+
+                if (targetPointName.Contains(selectTarget)) return selectTarget;
+
+                int total = dynamicSystem.instance.exhibitions[selectTarget].bestViewDirection_vector3.Count, count = 0;
+                foreach (KeyValuePair<string, bool> tp in dynamicSystem.instance.isTargetPointUse)
+                {
+                    if (tp.Key.Contains(selectTarget) && tp.Value)
+                    {
+                        //Debug.Log("this one has people");
+                        count++;
+                    }
+                }
+                if (count == total)
+                {
+                    Debug.Log(name + " choose " + selectTarget + " is full");
+                    i++;
+                    continue;
+                }
+                else
+                {
+                    notFound = false;
+                    return selectTarget;
+                }
+            }
+            // all full condition
+            if (notFound)
+            {
+                Debug.Log(name + " no found");
+                string selectTarget = this.influenceMap.ElementAt(0).Key;
+                return selectTarget;
+            }
         }
         return "";  // nothing can return
         
@@ -552,13 +592,20 @@ public class human_single// List<human_single> humanCrowd;
                 agent.enabled = isMove;
             }
 
-            if (agent.enabled)
+            if (agent.enabled && !obstacleToAgent)
             {
                 agent.updatePosition = isMove;
                 agent.isStopped = !isMove;
             }
             obstacle.enabled = !isMove;
-
+            if (obstacle.enabled)
+            {
+                obstacle.carving = true;
+            }
+            else
+            {
+                obstacle.carving = false;
+            }
             // agent.updateRotation = isMove;
             // agent.velocity = Vector3.zero;
 
