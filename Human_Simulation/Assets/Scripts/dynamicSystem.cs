@@ -579,6 +579,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             person.Value.agent.updatePosition = false;
                             //person.Value.obstacleToAgent = false;
                             person.Value.changeCounter += Time.fixedDeltaTime;
+                            person.Value.model.GetComponent<Animator>().SetBool("walk", false);
                             if (person.Value.changeCounter >= 0.5f)
                             {
                                 person.Value.obstacleToAgent = false;
@@ -588,7 +589,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         else
                         {                            
                             person.Value.agent.updatePosition = true;
-
+                            person.Value.model.GetComponent<Animator>().SetBool("walk", true);
                         }
                         person.Value.agent.SetDestination(person.Value.nextTarget_pos);
                         //draw path

@@ -68,9 +68,14 @@ public partial class UIController : PersistentSingleton<UIController>
     public GameObject modifyController;
     public GameObject saveLoadPanel;
     public GameObject heatmapSettingPanel;
+    public GameObject simpleUISettingPanel;
+    public GameObject menuPanel;
+    public GameObject replayPanel;
     bool openSaveLoadPanel;
     public bool modifyScene;
     bool openHeatmapSettingPanel;
+    bool openSimpleUISettingPanel;
+    bool openReplayPanel;
     public bool isOriginalScene;
 
     public List<string> allScene;
@@ -99,6 +104,8 @@ public partial class UIController : PersistentSingleton<UIController>
         openSaveLoadPanel = false;
         modifyScene = false;
         openHeatmapSettingPanel = false;
+        openSimpleUISettingPanel = false;
+        openReplayPanel = false;
 
         //camera setting
         cameras = new Dictionary<string, cameraPerScene>
@@ -152,6 +159,7 @@ public partial class UIController : PersistentSingleton<UIController>
     #region modifySceneButton Functions
     /*modifyscene button function*/
     /*main camera and mini camera swap*/
+    #region Panel Open Function
     public void ModifySceneButton()
     {
         modifyScene = !modifyScene;
@@ -172,6 +180,8 @@ public partial class UIController : PersistentSingleton<UIController>
             modifyController.transform.SetSiblingIndex(childCount - 1);
             openSaveLoadPanel = false;
             openHeatmapSettingPanel = false;
+            openReplayPanel = false;
+            menuPanel.SetActive(false);
         }
         else
         {
@@ -283,8 +293,10 @@ public partial class UIController : PersistentSingleton<UIController>
                 modifyScene = false;
                 ModifySceneCameraSwap();  
             }
-            
+            openSimpleUISettingPanel = false;
             openHeatmapSettingPanel = false;
+            openReplayPanel = false;
+            menuPanel.SetActive(false);
         }
         else
         {
@@ -307,6 +319,9 @@ public partial class UIController : PersistentSingleton<UIController>
                 ModifySceneCameraSwap();
             }
             openSaveLoadPanel = false;
+            openSimpleUISettingPanel = false;
+            openReplayPanel = false;
+            menuPanel.SetActive(false);
         }
         else
         {
@@ -315,6 +330,75 @@ public partial class UIController : PersistentSingleton<UIController>
         }
     }
 
+    //simple UI Setting Panel
+    public void SimpleUISettingPanel()
+    {
+        openSimpleUISettingPanel = !openSimpleUISettingPanel;
+        if (openSimpleUISettingPanel)
+        {
+            int childCount = simulationModeUI.transform.childCount;
+            simpleUISettingPanel.transform.SetSiblingIndex(childCount - 1);
+            if (modifyScene)
+            {
+                modifyScene = false;
+                ModifySceneCameraSwap();
+            }
+            openSaveLoadPanel = false;
+            openHeatmapSettingPanel = false;
+            openReplayPanel = false;
+            menuPanel.SetActive(false);
+        }
+        else
+        {
+            int childCount = simulationModeUI.transform.childCount;
+            settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+        }
+    }
+    //replay panel
+    public void ReplayPanel()
+    {
+        openReplayPanel = !openReplayPanel;
+        if (openReplayPanel)
+        {
+            int childCount = simulationModeUI.transform.childCount;
+            replayPanel.transform.SetSiblingIndex(childCount - 1);
+            if (modifyScene)
+            {
+                modifyScene = false;
+                ModifySceneCameraSwap();
+            }
+            openSaveLoadPanel = false;
+            openHeatmapSettingPanel = false;
+            openSimpleUISettingPanel = false;
+            menuPanel.SetActive(false);
+        }
+        else
+        {
+            int childCount = simulationModeUI.transform.childCount;
+            settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+        }
+    }
+    public void BackToAdvancedSetting()
+    {
+        if (modifyScene)
+        {
+            modifyScene = false;
+            ModifySceneCameraSwap();
+        }
+        int childCount = simulationModeUI.transform.childCount;
+        settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+    }
+
+    public void OpenMenuPanel()
+    {
+        menuPanel.SetActive(true);
+    }
+
+    public void CloseMenuPanel()
+    {
+        menuPanel.SetActive(false);
+    }
+    #endregion
     /* update when mode or scene change*/
     public void setScene(string sceneName)
     {
@@ -589,6 +673,7 @@ public partial class UIController : PersistentSingleton<UIController>
         StageSpeedAtSlider.value = (float)inputSetting.walkStage["At"].speed;
         changeStageSpeed_At();
         InitialOperationCount();
+        SimpleUISetting.instance.GetValueFromUIController();
         //heatmap.maxLimit = (tmpSaveUISettings.UI_Global.agentCount * tmpSaveUISettings.UI_Human.freeTimeMax) / dynamicSystem.instance.trajectoryRecordTime;
         //heatmapMaxValueInput.text = heatmap.maxLimit.ToString();
     }
@@ -1418,7 +1503,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
             tmpSaveUISettings.UI_InfluenceMap.humanInflence["gatherDesire"] +
             tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] +
             tmpSaveUISettings.UI_InfluenceMap.humanInflence["behaviorAttraction"];
-        if (totalValueOfExhibitInfluence > 1.0d)
+        if (totalValueOfExhibitInfluence != 1.0d)
         {
             tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["capactiy"] /= totalValueOfExhibitInfluence;
             tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["takeTime"] /= totalValueOfExhibitInfluence;
@@ -1426,7 +1511,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
             tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["humanPreference"] /= totalValueOfExhibitInfluence;
             tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["closeToBestViewDirection"] /= totalValueOfExhibitInfluence;
         }
-        if(totalValueOfHumanInfluence > 1.0d)
+        if(totalValueOfHumanInfluence != 1.0d)
         {
             tmpSaveUISettings.UI_InfluenceMap.humanInflence["followDesire"] /= totalValueOfHumanInfluence;
             tmpSaveUISettings.UI_InfluenceMap.humanInflence["takeTime"] /= totalValueOfHumanInfluence;
@@ -1434,6 +1519,18 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
             tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] /= totalValueOfHumanInfluence;
             tmpSaveUISettings.UI_InfluenceMap.humanInflence["behaviorAttraction"] /= totalValueOfHumanInfluence;
         }
+        //UI Modify Text To Correct Value
+        humanFollowDesireInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["followDesire"] * 100).ToString("f0");
+        humanTakeTimeInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["takeTime"] * 100).ToString("f0");
+        humanGatherDesireInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["gatherDesire"] * 100).ToString("f0");
+        humanTypeAttractInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] * 100).ToString("f0");
+        humanBehaviorAttractInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] * 100).ToString("f0");
+
+        exhibitCapacityInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["capactiy"] * 100).ToString("f2");
+        exhibitTakeTimeInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["takeTime"] * 100).ToString("f2");
+        exhibitPopularLvInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["popularLevel"] * 100).ToString("f2");
+        exhibitHumanPreferInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["humanPreference"] * 100).ToString("f2");
+        exhibitCloseBestInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["closeToBestViewDirection"] * 100).ToString("f2");
     }
     #endregion
     /* Immediate change variables */

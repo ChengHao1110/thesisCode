@@ -6,6 +6,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ReplaySimulation{
     public GameObject model;
@@ -21,6 +22,7 @@ public class ReplayMode : MonoBehaviour
     int totalFrameCount = 0;
     public GameObject peopleParent; // 放people
     public Button loadReplayDataButton, playButton;
+    public TextMeshProUGUI filename;
     public Dictionary<string, ReplaySimulation> ReplaySimulationInfo = new Dictionary<string, ReplaySimulation>();
 
     // Start is called before the first frame update
@@ -96,6 +98,11 @@ public class ReplayMode : MonoBehaviour
         if (path.Length != 0)
         {
             string tmpJsonDataStr = File.ReadAllText(path);
+
+            //get file name
+            string[] frac = path.Split('/');
+            filename.text = frac[frac.Length - 2];
+
             simulationReplayData = JsonMapper.ToObject<SimulationReplayData>(tmpJsonDataStr);
 
             //
