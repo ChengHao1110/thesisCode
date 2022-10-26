@@ -180,7 +180,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     //replay mode
     public Dictionary<string, string> modelName = new Dictionary<string, string>();
 
-    public bool generateAnalyzeData = false;
+    public bool generateAnalyzeData = true;
 
     //exhibition target point isUse
     public Dictionary<string, bool> isTargetPointUse = new Dictionary<string, bool>();
@@ -192,7 +192,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         if (allPeopleFinish()) // all people finish, stop the time counter.
         {
             Run = false;
-            UIController.instance.startModifyUI = false;
             if (generateAnalyzeData)
             {
                 writeLog_fps("viewMode_fps", fpsList);
@@ -218,7 +217,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 RecordVisitorStatusTime();
                 Debug.Log("analyze finish");
 
-                SaveReplayDataToLocal();
+                 SaveReplayDataToLocal();
                 Debug.Log("replay save");
             }
             
@@ -1509,7 +1508,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     void generateHumans()
     {
-        string dirPath = Application.streamingAssetsPath + "/SettingsJson/";
+        //need to update
+        string dirPath = Application.streamingAssetsPath + "/SettingsJson/Default Settings";
         string jsonPath = dirPath + "/specificDesireList_" + UIController.instance.currentScene + ".json";
         string tmpJsonDataStr = File.ReadAllText(jsonPath);
         JsonData tmpJsonData = new JsonData();

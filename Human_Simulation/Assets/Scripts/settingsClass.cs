@@ -57,7 +57,7 @@ public class UISettings
         {
             if (this.walkStage.ContainsKey(dict.Key))
             {
-                Debug.Log(dict.Value.radius);
+                //Debug.Log(dict.Value.radius);
                 set.walkStage[dict.Key] = dict.Value;
             }
             else

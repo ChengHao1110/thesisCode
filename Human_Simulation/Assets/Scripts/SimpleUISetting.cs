@@ -132,19 +132,25 @@ public class SimpleUISetting : PersistentSingleton<SimpleUISetting>
 
     public void AloneInfluence(float value)
     {
-        float realValue = 1.0f - value; 
-        UIController.instance.tmpSaveUISettings.UI_InfluenceMap.humanInflence["followDesire"] = realValue;
-        UIController.instance.tmpSaveUISettings.UI_InfluenceMap.humanInflence["gatherDesire"] = realValue;
-        UIController.instance.humanFollowDesireInput.text = ((int)(realValue * 100)).ToString();
-        UIController.instance.humanGatherDesireInput.text = ((int)(realValue * 100)).ToString();
+        float realValue = (1.0f - value) * 25 / 0.5f;
+        UIController.instance.tmpSaveUISettings.UI_InfluenceMap.humanInflence["followDesire"] = realValue / 100;
+        UIController.instance.tmpSaveUISettings.UI_InfluenceMap.humanInflence["gatherDesire"] = realValue / 100;
+        UIController.instance.tmpSaveUISettings.UI_InfluenceMap.humanInflence["takeTime"] = 0.25f;
+        UIController.instance.tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] = 0.25f;
+        UIController.instance.humanFollowDesireInput.text = ((int)(realValue)).ToString();
+        UIController.instance.humanGatherDesireInput.text = ((int)(realValue)).ToString();
 
     }
 
     public void RelaxInfluence(float value)
     {
         //exhibit take time
-        float realValue = value * 30 / 0.4f;
+        float realValue = value * 20 / 0.4f;
         UIController.instance.tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["takeTime"] = realValue / 100;
+        UIController.instance.tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["capactiy"] = 0.2f;
+        UIController.instance.tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["popularLevel"] = 0.2f;
+        UIController.instance.tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["humanPreference"] = 0.2f;
+        UIController.instance.tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["closeToBestViewDirection"] = 0.2f; ;
         UIController.instance.exhibitTakeTimeInput.text = ((int)(realValue)).ToString();
     }
     #endregion

@@ -104,7 +104,7 @@ public partial class UIController : PersistentSingleton<UIController>
         openSaveLoadPanel = false;
         modifyScene = false;
         openHeatmapSettingPanel = false;
-        openSimpleUISettingPanel = false;
+        openSimpleUISettingPanel = true;
         openReplayPanel = false;
 
         //camera setting
@@ -293,7 +293,7 @@ public partial class UIController : PersistentSingleton<UIController>
                 modifyScene = false;
                 ModifySceneCameraSwap();  
             }
-            openSimpleUISettingPanel = false;
+            //openSimpleUISettingPanel = false;
             openHeatmapSettingPanel = false;
             openReplayPanel = false;
             menuPanel.SetActive(false);
@@ -319,7 +319,7 @@ public partial class UIController : PersistentSingleton<UIController>
                 ModifySceneCameraSwap();
             }
             openSaveLoadPanel = false;
-            openSimpleUISettingPanel = false;
+            //openSimpleUISettingPanel = false;
             openReplayPanel = false;
             menuPanel.SetActive(false);
         }
@@ -369,7 +369,7 @@ public partial class UIController : PersistentSingleton<UIController>
             }
             openSaveLoadPanel = false;
             openHeatmapSettingPanel = false;
-            openSimpleUISettingPanel = false;
+            //openSimpleUISettingPanel = false;
             menuPanel.SetActive(false);
         }
         else
@@ -378,15 +378,36 @@ public partial class UIController : PersistentSingleton<UIController>
             settingUIBoard.transform.SetSiblingIndex(childCount - 1);
         }
     }
-    public void BackToAdvancedSetting()
+    public void BackToSetting()
     {
         if (modifyScene)
         {
             modifyScene = false;
             ModifySceneCameraSwap();
         }
+        if (openSimpleUISettingPanel)
+        {
+            GoToBasicSetting();
+        }
+        else
+        {
+            GoToAdvancedSetting();
+        }
+    }
+
+    //Go To Advanced Setting & Go To Basic Setting
+    public void GoToAdvancedSetting() 
+    {
+        openSimpleUISettingPanel = false;
         int childCount = simulationModeUI.transform.childCount;
         settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+    }
+
+    public void GoToBasicSetting()
+    {
+        openSimpleUISettingPanel = true;
+        int childCount = simulationModeUI.transform.childCount;
+        simpleUISettingPanel.transform.SetSiblingIndex(childCount - 1);
     }
 
     public void OpenMenuPanel()
@@ -568,9 +589,17 @@ public partial class UIController : PersistentSingleton<UIController>
 
     public void changeSettingsInit()  // change setting back to init setting
     {
+        /*
         tmpSaveUISettings = allSceneSettings[currentScene].oriJson.copy();
         loadSettingToUI(tmpSaveUISettings);
         allSceneSettings[currentScene].customUI = tmpSaveUISettings.copy();
+        */
+        string dirPath = Application.streamingAssetsPath + "/SettingsJson/Default Settings";
+        string[] file = Directory.GetFiles(dirPath, "unitySettings_" + currentScene + "*.json");
+        tmpSaveUISettings = JsonMapper.ToObject<UISettings>(File.ReadAllText(file[0]));
+        loadSettingToUI(tmpSaveUISettings);
+        allSceneSettings[currentScene].customUI = tmpSaveUISettings.copy();
+
         ShowMsgPanel("Success", "UI setting is reset.");
     }
 
@@ -681,7 +710,7 @@ public partial class UIController : PersistentSingleton<UIController>
     void loadSettingsFromJson(string scene)  // only do at start, load local file
     {
         settingsClass newSceneSetting = new settingsClass();
-        string dirPath = Application.streamingAssetsPath + "/SettingsJson/";
+        string dirPath = Application.streamingAssetsPath + "/SettingsJson/Default Settings";
         string jsonPath = dirPath + "/statisticOutput_" + scene + ".json";
         string tmpJsonDataStr = File.ReadAllText(jsonPath);
         JsonData tmpJsonData = new JsonData();
@@ -750,7 +779,10 @@ public partial class UIController : PersistentSingleton<UIController>
             newSceneSetting.humanTypes.Add(k["type"].ToString(), newHumanType);
         }
 
-        /* get custom UI settings*/        
+        /* get custom UI settings*/
+        //need to update
+        //dirPath += "/Default Settings";
+        /*
         string[] allFiles = Directory.GetFiles(dirPath, "unitySettings_" + scene + "*.json"); 
         if (allFiles.Length != 0)
         {
@@ -760,6 +792,9 @@ public partial class UIController : PersistentSingleton<UIController>
         }
         else
             newSceneSetting.customUI = newSceneSetting.oriJson.copy();
+        */
+        string[] file = Directory.GetFiles(dirPath, "unitySettings_" + scene + "*.json");
+        newSceneSetting.customUI = JsonMapper.ToObject<UISettings>(File.ReadAllText(file[0]));
 
         allSceneSettings.Add(scene, newSceneSetting);  // save
     }
@@ -1194,7 +1229,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         public string orderName;
         public float orderTime;
     }
-    public float lastModifyUITime;
+    public float loadingTime; // UI Loading Time
     public bool startModifyUI = false;
 
     public List<UIOrder> uiOperationOrder = new List<UIOrder>();
@@ -1212,6 +1247,12 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         addAgentCountSlider.maxValue = value;
         //heatmap.maxLimit = (value * tmpSaveUISettings.UI_Human.freeTimeMax) / dynamicSystem.instance.trajectoryRecordTime;
         //heatmapMaxValueInput.text = heatmap.maxLimit.ToString();
+
+        //change basic UI setting
+        SimpleUISetting.instance.numberOfAgentSlider.value = value;
+        SimpleUISetting.instance.numberOfAgentText.text = value.ToString();
+        SimpleUISetting.instance.laterVisitorSlider.maxValue = value;
+
         changeAddAgentCount();
         uiOperationOrder.RemoveAt(uiOperationOrder.Count - 1); //remove add agent 
 
@@ -1223,6 +1264,11 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         float value = (float)(adultPercentSlider.value / 100);  // % -> 0.xx
         adultPercentText.text = (value).ToString("F2");
         tmpSaveUISettings.UI_Global.adultPercentage = value;
+
+        //change basic UI setting
+        SimpleUISetting.instance.adultRatioSlider.value = value * 100;
+        SimpleUISetting.instance.adultRatioText.text = value.ToString();
+
         AddUIOrderToList("Adult Percentage");
     }
 
@@ -1520,17 +1566,17 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
             tmpSaveUISettings.UI_InfluenceMap.humanInflence["behaviorAttraction"] /= totalValueOfHumanInfluence;
         }
         //UI Modify Text To Correct Value
-        humanFollowDesireInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["followDesire"] * 100).ToString("f0");
-        humanTakeTimeInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["takeTime"] * 100).ToString("f0");
-        humanGatherDesireInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["gatherDesire"] * 100).ToString("f0");
-        humanTypeAttractInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] * 100).ToString("f0");
-        humanBehaviorAttractInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] * 100).ToString("f0");
+        humanFollowDesireInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["followDesire"] * 100).ToString("f1");
+        humanTakeTimeInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["takeTime"] * 100).ToString("f1");
+        humanGatherDesireInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["gatherDesire"] * 100).ToString("f1");
+        humanTypeAttractInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] * 100).ToString("f1");
+        humanBehaviorAttractInput.text = (tmpSaveUISettings.UI_InfluenceMap.humanInflence["humanTypeAttraction"] * 100).ToString("f1");
 
-        exhibitCapacityInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["capactiy"] * 100).ToString("f2");
-        exhibitTakeTimeInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["takeTime"] * 100).ToString("f2");
-        exhibitPopularLvInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["popularLevel"] * 100).ToString("f2");
-        exhibitHumanPreferInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["humanPreference"] * 100).ToString("f2");
-        exhibitCloseBestInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["closeToBestViewDirection"] * 100).ToString("f2");
+        exhibitCapacityInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["capactiy"] * 100).ToString("f1"); 
+        exhibitTakeTimeInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["takeTime"] * 100).ToString("f1");
+        exhibitPopularLvInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["popularLevel"] * 100).ToString("f1");
+        exhibitHumanPreferInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["humanPreference"] * 100).ToString("f1");
+        exhibitCloseBestInput.text = (tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["closeToBestViewDirection"] * 100).ToString("f1");
     }
     #endregion
     /* Immediate change variables */
@@ -1600,7 +1646,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         InitialExhibitionsOperationCount();
         InitialHumanWalkStageOperationCount();
         InitialInfluenceMapWeightOperationCount();
-        UIController.instance.startModifyUI = false;
+        loadingTime = Time.time;
         uiOperationOrder.Clear();
     }
     public void InitialGlobalOperationCount()
@@ -1852,24 +1898,10 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
     
     public void AddUIOrderToList(string orderName)
     {
-        CheckIfStartModifyUI();
         UIOrder uiOrder = new UIOrder();
         uiOrder.orderName = orderName;
-        uiOrder.orderTime = Time.time - lastModifyUITime;
+        uiOrder.orderTime = Time.time - loadingTime;
         uiOperationOrder.Add(uiOrder);
-    }
-
-    public void CheckIfStartModifyUI()
-    {
-        if (!startModifyUI)
-        {
-            startModifyUI = true;
-            lastModifyUITime = Time.time;
-        }
-        else
-        {
-            return;
-        }
     }
 
     public void WriteOpertationCountToFile()
