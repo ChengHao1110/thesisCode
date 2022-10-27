@@ -181,14 +181,15 @@ public partial class UIController : PersistentSingleton<UIController>
             openSaveLoadPanel = false;
             openHeatmapSettingPanel = false;
             openReplayPanel = false;
-            menuPanel.SetActive(false);
         }
         else
         {
-            int childCount = simulationModeUI.transform.childCount;
-            settingUIBoard.transform.SetSiblingIndex(childCount - 1);
-        }
+            //int childCount = simulationModeUI.transform.childCount;
+            //settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+            BackToSetting();
 
+        }
+        menuPanel.SetActive(false);
         ModifySceneCameraSwap();
     }
 
@@ -296,13 +297,15 @@ public partial class UIController : PersistentSingleton<UIController>
             //openSimpleUISettingPanel = false;
             openHeatmapSettingPanel = false;
             openReplayPanel = false;
-            menuPanel.SetActive(false);
+
         }
         else
         {
-            int childCount = simulationModeUI.transform.childCount;
-            settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+            //int childCount = simulationModeUI.transform.childCount;
+            //settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+            BackToSetting();
         }
+        menuPanel.SetActive(false);
     }
 
     //Heatmap Setting Panel
@@ -321,39 +324,16 @@ public partial class UIController : PersistentSingleton<UIController>
             openSaveLoadPanel = false;
             //openSimpleUISettingPanel = false;
             openReplayPanel = false;
-            menuPanel.SetActive(false);
         }
         else
         {
-            int childCount = simulationModeUI.transform.childCount;
-            settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+            //int childCount = simulationModeUI.transform.childCount;
+            //settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+            BackToSetting();
         }
+        menuPanel.SetActive(false);
     }
 
-    //simple UI Setting Panel
-    public void SimpleUISettingPanel()
-    {
-        openSimpleUISettingPanel = !openSimpleUISettingPanel;
-        if (openSimpleUISettingPanel)
-        {
-            int childCount = simulationModeUI.transform.childCount;
-            simpleUISettingPanel.transform.SetSiblingIndex(childCount - 1);
-            if (modifyScene)
-            {
-                modifyScene = false;
-                ModifySceneCameraSwap();
-            }
-            openSaveLoadPanel = false;
-            openHeatmapSettingPanel = false;
-            openReplayPanel = false;
-            menuPanel.SetActive(false);
-        }
-        else
-        {
-            int childCount = simulationModeUI.transform.childCount;
-            settingUIBoard.transform.SetSiblingIndex(childCount - 1);
-        }
-    }
     //replay panel
     public void ReplayPanel()
     {
@@ -370,13 +350,14 @@ public partial class UIController : PersistentSingleton<UIController>
             openSaveLoadPanel = false;
             openHeatmapSettingPanel = false;
             //openSimpleUISettingPanel = false;
-            menuPanel.SetActive(false);
         }
         else
         {
-            int childCount = simulationModeUI.transform.childCount;
-            settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+            //int childCount = simulationModeUI.transform.childCount;
+            //settingUIBoard.transform.SetSiblingIndex(childCount - 1);
+            BackToSetting();
         }
+        menuPanel.SetActive(false);
     }
     public void BackToSetting()
     {
@@ -385,6 +366,10 @@ public partial class UIController : PersistentSingleton<UIController>
             modifyScene = false;
             ModifySceneCameraSwap();
         }
+        openSaveLoadPanel = false;
+        openReplayPanel = false;
+        openHeatmapSettingPanel = false;
+        replayPanel.transform.SetSiblingIndex(0);
         if (openSimpleUISettingPanel)
         {
             GoToBasicSetting();
