@@ -17,7 +17,7 @@ public class HeatMap_Float : MonoBehaviour
     
     void OnEnable()
     {
-        if (dynamicSystem.instance.heatmapMode == "realtime")
+        if (dynamicSystem.instance.heatmapMode == "realtime") // for debug
         {
             Init();
         }
@@ -73,7 +73,8 @@ public class HeatMap_Float : MonoBehaviour
         RenderTexture.active = null; // JC: added to avoid errors
         Destroy(rt);
         byte[] bytes = screenShot.EncodeToPNG();
-        string filename = ScreenShotName(resWidth, resHeight);
+        //string filename = ScreenShotName(resWidth, resHeight);
+        string filename = dynamicSystem.instance.heatmapFilename;
         System.IO.File.WriteAllBytes(filename, bytes);
         //DestroyVisualPrefab();
         heatmapCamera.SetActive(false);
@@ -419,7 +420,16 @@ public class HeatMap_Float : MonoBehaviour
 
         int size = dynamicSystem.instance.staticMatrix.GetLength(0);
         float sceneSize = dynamicSystem.instance.sceneSize;
-        int maxLimit = dynamicSystem.instance.maxLimit;
+        float maxLimit = 0;
+        if (dynamicSystem.instance.heatmapFilename.Contains("move"))
+        {
+            maxLimit = dynamicSystem.instance.moveMaxLimit;
+        }
+        else
+        {
+            maxLimit = dynamicSystem.instance.stayMaxLimit;
+        }
+         
         //string input = File.ReadAllText(@"E:\ChengHao\Lab707\thesisCode\ChengHao\thesisCode\Human_Simulation\Assets\StreamingAssets\Simulation_Result\test37\space_usage.txt");
 
         //float[,] matrix = new float[size, size];
@@ -532,9 +542,16 @@ public class HeatMap_Float : MonoBehaviour
                 }
             }
         }
-
-        HeatmapSetting.instance.maxValueInput.text = max.ToString();
-
+        if (dynamicSystem.instance.heatmapFilename.Contains("move"))
+        {
+            HeatmapSetting.instance.moveMaxValueInput.text = max.ToString("f2");
+        }
+        else
+        {
+            HeatmapSetting.instance.stayMaxValueInput.text = max.ToString("f2");
+        }
+        
+        
         //set grid
         int edgeMeshCount = size / defaultSize;
         int totalMeshCount = edgeMeshCount * edgeMeshCount;

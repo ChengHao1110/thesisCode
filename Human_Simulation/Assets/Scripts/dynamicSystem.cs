@@ -170,12 +170,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public float[,] matrix, rotMatrix;
     public float[,] staticMatrix;
     public int matrixSize = 500, gaussianFilterSize = 10, sceneSize = 22;
-    public int maxLimit = 5000;
+    public float moveMaxLimit = 5000, stayMaxLimit = 5000;
     public bool useGaussian = false;
     public GameObject Heatmap;
     public int gaussian_rate = 4;
     float[] gaussianValue;
-    public string heatmapMode = "static";
+    public string heatmapMode = "static", heatmapFilename = "";
 
     //replay mode
     public Dictionary<string, string> modelName = new Dictionary<string, string>();
@@ -194,6 +194,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             Run = false;
             if (generateAnalyzeData)
             {
+                UIController.instance.ShowMsgPanel("Notice", "Wait for saving simulation analysis data.");
                 writeLog_fps("viewMode_fps", fpsList);
                 writeLog_fps("compute_influenceMap", analysis_influenceMap);
                 writeLog_fps("compute_updatePosition", analysis_updatePosition);
@@ -206,7 +207,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 writeLog_fps("simulation_exhibit", tmpRec);
 
                 /*heatmap*/
-                TrajectoryToHeatmapWithGaussian(matrixSize, sceneSize / 2, gaussian_rate, true);
+                TrajectoryToHeatmapWithGaussian(matrixSize, sceneSize / 2, gaussian_rate, true, 0, "both");
 
                 //exhibition transform
                 ExhibitionsTransform();
@@ -219,6 +220,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
                  SaveReplayDataToLocal();
                 Debug.Log("replay save");
+                UIController.instance.ShowMsgPanel("Success", "Finish saving simulation analysis data.");
             }
             
             //average speed
@@ -992,7 +994,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     void changeStateWithProbability(human_single person, float personNeededTimeToExit, float personDistanceWithExit)
     {
-        System.Random random = new System.Random(person.randomSeed);
+        //System.Random random = new System.Random(person.randomSeed);
+        System.Random random = new System.Random((int)DateTime.Now.Millisecond);
         // the last 10 second should totally be walking
         float num = random.Next(0, 101);
         num /= 100f;
@@ -1345,6 +1348,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         
         // clean every thing
         cleanPeopleBeforeGenerate();
+
+        //heatmap max value
+        moveMaxLimit = 5000;
+        stayMaxLimit = 5000;
 
         // set nav mesh and cameras
         walkableMask = (1 << NavMesh.GetAreaFromName(UIController.instance.curOption));
@@ -2036,11 +2043,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 sign_test.transform.parent = ex.model.transform;
 
                 isTargetPointUse.Add(sign_test.name, false);
+                /*
                 GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 ball.transform.position = new Vector3(sign_test.transform.position.x, 4, sign_test.transform.position.z);
                 ball.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
                 targetPointBall.Add(sign_test.name, ball);
-
+                */
                 //ex.bestViewSign.Add(sign_test);
                 /*
                 GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -2416,7 +2424,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     public void writeLog_fps<T>(string outputName, T list)
     {
-        string path = Application.streamingAssetsPath + "/";
+        string path = directory;
         string outputFileName = UIController.instance.curOption + "_" + currentSceneSettings.customUI.UI_Global.agentCount +"agent_" + outputName + ".json";
         StringBuilder sb = new StringBuilder();
         JsonWriter writer = new JsonWriter(sb);
@@ -2978,6 +2986,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         {
             if (person.Value.targetPointName.StartsWith("p")) isTargetPointUse[person.Value.targetPointName] = true;
         }
+        /* In generateExhibitions 
         foreach (KeyValuePair<string, bool> tp in isTargetPointUse)
         {
             //Debug.Log("tp.Key: " + tp.Key);
@@ -2992,6 +3001,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 renderer.material.SetColor("_Color", Color.green);
             }
         }
+        */
     }
 
     /* Checker */
@@ -3569,10 +3579,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
     }
 
-    public void TrajectoryToHeatmapWithGaussian(int size, int scene_half_size, int gaussian_rate, bool saveTXT)
+    public void TrajectoryToHeatmapWithGaussian(int size, int scene_half_size, int gaussian_rate, bool saveTXT, int fileIndex, string mode)
     {
         float[,] space_usage = new float[size, size];
         float[,] time_usage = new float[size, size];
+        int[,] count = new int[size, size];
         int radius = size / 2;
         int gaussian_distance = (radius / scene_half_size) / 2;
         int gaussian_total_distance = gaussian_distance * gaussian_rate;
@@ -3595,6 +3606,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             {
                 space_usage[i, j] = 0;
                 time_usage[i, j] = 0;
+                count[i, j] = 0;
             }
         }
 
@@ -3647,7 +3659,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 Vector2 source = new Vector2((float)sy, (float)sx);
                 Vector2 destination = new Vector2((float)dy, (float)dx);
                 float distance = Vector2.Distance(source, destination);
-                if (distance >= 0.0f)
+                if (distance > 0.0f)
                 {
                     //gaussian
                     int rowBegin = dy - gaussian_total_distance;
@@ -3672,22 +3684,23 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             {
                                 //space_usage[j, k]++;
                                 space_usage[j, k] += gaussianValue[level];
-                                //time_usage[j, k] += 1.0f / distance;
+                                time_usage[j, k] += (1.0f / distance) * gaussianValue[level];
+                                count[j, k]++;
                                 //time_usage[j, k] += distance / 0.5f;
                             }
                         }
                     }
                 }
             }
-            /*
+            
             for (int j = 0; j < size; j++)
             {
                 for (int k = 0; k < size; k++)
                 {
-                    if(space_usage[j, k] != 0) time_usage[j, k] = time_usage[j, k] / space_usage[j, k];
+                    if(count[j, k] != 0) time_usage[j, k] = time_usage[j, k] / count[j, k];
                 }
             }
-            */
+            
         }
 
         //make people disappear
@@ -3697,15 +3710,25 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
 
         //set to Heatmap script
-        staticMatrix = space_usage;
-        heatmapMode = "static";
-        Heatmap.SetActive(true);
+        if (mode == "both" || mode == "move")
+        {
+            heatmapMode = "static";
+            staticMatrix = space_usage;
+            heatmapFilename = directory + "moveHeatMap_" + fileIndex.ToString() + ".png";
+            Heatmap.SetActive(true);
+        }
 
+        if (mode == "both" || mode == "stay")
+        {
+            staticMatrix = time_usage;
+            heatmapFilename = directory + "stayHeatMap_" + fileIndex.ToString() + ".png";
+            Heatmap.SetActive(true);
+        }
         //write file
         //space usage file
         if (saveTXT)
         {
-            FileStream fs = new FileStream(directory + "space_usage.txt", FileMode.OpenOrCreate);
+            FileStream fs = new FileStream(directory + "moveHeatMap.txt", FileMode.OpenOrCreate);
             StreamWriter sw = new StreamWriter(fs);
             for (int i = 0; i < size; i++)
             {
@@ -3717,9 +3740,9 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             }
             sw.Flush();
             sw.Close();
-            /*
-            //timee usage file
-            fs = new FileStream(directory + "time_usage.txt", FileMode.OpenOrCreate);
+            
+            //time usage file
+            fs = new FileStream(directory + "stayHeatMap.txt", FileMode.OpenOrCreate);
             sw = new StreamWriter(fs);
             for (int i = 0; i < size; i++)
             {
@@ -3731,7 +3754,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             }
             sw.Flush();
             sw.Close();
-            */
+            
         }
 
     }

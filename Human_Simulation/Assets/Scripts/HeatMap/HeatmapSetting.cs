@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class HeatmapSetting : PersistentSingleton<HeatmapSetting>
 {
     public Toggle useGaussianFilterToggle;
-    public TMP_InputField filterRateInput, maxValueInput, matrixSizeInput;
+    public TMP_InputField filterRateInput, moveMaxValueInput, stayMaxValueInput, matrixSizeInput;
     public GameObject heatmap;
 
     // Start is called before the first frame update
@@ -15,7 +16,8 @@ public class HeatmapSetting : PersistentSingleton<HeatmapSetting>
     {
         //initial value
         filterRateInput.text = dynamicSystem.instance.gaussianFilterSize.ToString();
-        maxValueInput.text = dynamicSystem.instance.maxLimit.ToString();
+        moveMaxValueInput.text = dynamicSystem.instance.moveMaxLimit.ToString();
+        stayMaxValueInput.text = dynamicSystem.instance.stayMaxLimit.ToString();
         matrixSizeInput.text = dynamicSystem.instance.matrixSize.ToString();
         useGaussianFilterToggle.isOn = dynamicSystem.instance.useGaussian;
         
@@ -24,7 +26,8 @@ public class HeatmapSetting : PersistentSingleton<HeatmapSetting>
             if (ifselect) UseGaussianFilterToggle();
         });
         filterRateInput.onValueChanged.AddListener(delegate { ChangeHeatmapFilterRateValue(); });
-        maxValueInput.onValueChanged.AddListener(delegate { ChangeHeatmapMaxValue(); });
+        moveMaxValueInput.onValueChanged.AddListener(delegate { ChangeMoveHeatmapMaxValue(); });
+        stayMaxValueInput.onValueChanged.AddListener(delegate { ChangeStayHeatmapMaxValue(); });
         matrixSizeInput.onValueChanged.AddListener(delegate { ChangeHeatmapSizeValue(); });
     }
 
@@ -39,10 +42,16 @@ public class HeatmapSetting : PersistentSingleton<HeatmapSetting>
         dynamicSystem.instance.useGaussian = true;
     }
 
-    public void ChangeHeatmapMaxValue()
+    public void ChangeMoveHeatmapMaxValue()
     {
-        int value = int.Parse(maxValueInput.text);
-        dynamicSystem.instance.maxLimit = value;
+        float value = float.Parse(moveMaxValueInput.text);
+        dynamicSystem.instance.moveMaxLimit = value;
+    }
+
+    public void ChangeStayHeatmapMaxValue()
+    {
+        float value = float.Parse(moveMaxValueInput.text);
+        dynamicSystem.instance.stayMaxLimit = value;
     }
 
     public void ChangeHeatmapFilterRateValue()
@@ -57,13 +66,53 @@ public class HeatmapSetting : PersistentSingleton<HeatmapSetting>
         dynamicSystem.instance.matrixSize = value;
     }
 
-    public void GenerateAnotherHeatmap()
+    public void GenerateMoveHeatmap()
     {
         if (dynamicSystem.instance.allPeopleFinish())
         {
             //heatmap.SetActive(true);
+            //get another filename
+            int min = -1;
+            var info = new DirectoryInfo(dynamicSystem.instance.directory);
+            var fileInfo = info.GetFiles("*.png");
+            foreach (var file in fileInfo)
+            {
+                if (file.Name.Contains("moveHeatMap"))
+                {
+                    string filename = file.Name;
+                    filename = filename.Replace(".png", "");
+                    string[] frac = filename.Split('_');
+                    int newIndex = int.Parse(frac[1]);
+                    if (newIndex > min) min = newIndex;
+                }
+            }
             dynamicSystem.instance.TrajectoryToHeatmapWithGaussian(dynamicSystem.instance.matrixSize, dynamicSystem.instance.sceneSize / 2,
-                                                                   dynamicSystem.instance.gaussian_rate, false);
+                                                                   dynamicSystem.instance.gaussian_rate, false, min + 1, "move");
+        }
+    }
+
+    public void GenerateStayHeatmap()
+    {
+        if (dynamicSystem.instance.allPeopleFinish())
+        {
+            //heatmap.SetActive(true);
+            //get another filename
+            int min = -1;
+            var info = new DirectoryInfo(dynamicSystem.instance.directory);
+            var fileInfo = info.GetFiles("*.png");
+            foreach (var file in fileInfo)
+            {
+                if (file.Name.Contains("stayHeatMap"))
+                {
+                    string filename = file.Name;
+                    filename = filename.Replace(".png", "");
+                    string[] frac = filename.Split('_');
+                    int newIndex = int.Parse(frac[1]);
+                    if (newIndex > min) min = newIndex;
+                }
+            }
+            dynamicSystem.instance.TrajectoryToHeatmapWithGaussian(dynamicSystem.instance.matrixSize, dynamicSystem.instance.sceneSize / 2,
+                                                                   dynamicSystem.instance.gaussian_rate, false, min + 1, "stay");
         }
     }
 }
