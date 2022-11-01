@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContrller>
 {
@@ -36,7 +37,7 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
     // Update is called once per frame
     void Update()
     {
-        if(!UIController.instance.modifyScene) showAllBoundingBox.isOn = false;
+        if(!UIController.instance.isPanelUsing["modifyScene"]) showAllBoundingBox.isOn = false;
 
         if (showAllBoundingBox.isOn)
         {
@@ -49,10 +50,16 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
             boundingBox.GetComponent<DrawBoundingBox>().DrawBox(Color.red);
         }
 
-        if (UIController.instance.modifyScene)
+        if (UIController.instance.isPanelUsing["modifyScene"])
         {
             if (Input.GetMouseButtonDown(0))
             {
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    Debug.Log("click on UI");
+                    return;
+                }
+
                 RaycastHit hitInfo = new RaycastHit();
                 bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo);
                 if (hit)

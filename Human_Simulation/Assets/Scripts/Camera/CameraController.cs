@@ -108,7 +108,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (UIController.instance.modifyScene) return;
+        if (UIController.instance.isPanelUsing["modifyScene"]) return;
 
         int preIdx = idx;
         if (UIController.instance.curOption.Contains("A")) idx = 1;

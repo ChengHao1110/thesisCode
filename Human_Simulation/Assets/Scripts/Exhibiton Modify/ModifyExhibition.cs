@@ -39,7 +39,7 @@ public class ModifyExhibition : MonoBehaviour
     float posY;
     void OnMouseDown()
     {
-        if (UIController.instance.modifyScene && isSelected && !UIController.instance.isOriginalScene)
+        if (UIController.instance.isPanelUsing["modifyScene"] && isSelected && !UIController.instance.isOriginalScene)
         {
             startPos = transform.position;
             dist = Camera.main.WorldToScreenPoint(transform.position);
@@ -51,7 +51,7 @@ public class ModifyExhibition : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if (UIController.instance.modifyScene && isSelected && !UIController.instance.isOriginalScene)
+        if (UIController.instance.isPanelUsing["modifyScene"] && isSelected && !UIController.instance.isOriginalScene)
         {
             float disX = Input.mousePosition.x - posX;
             float disY = Input.mousePosition.y - posY;

@@ -16,99 +16,97 @@ public class ReplaySimulation{
 public class ReplayMode : MonoBehaviour
 {
     SimulationReplayData simulationReplayData = new SimulationReplayData();
-    bool Run = false;
+    bool Run = false, hasReplayFile = false;
     int visitorNumber = 0;
     int currentFrameIdx = 0;
     int totalFrameCount = 0;
     public GameObject peopleParent; // 放people
-    public Button loadReplayDataButton, playButton;
-    public TextMeshProUGUI filename;
+    public Button loadReplayDataButton, playButton, pauseButton, endButton, replayButton;
+    public Slider frameSlider;
+    public TextMeshProUGUI filename, frameInfoText;
     public Dictionary<string, ReplaySimulation> ReplaySimulationInfo = new Dictionary<string, ReplaySimulation>();
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         loadReplayDataButton.onClick.AddListener(delegate { LoadReplayData(); });
         playButton.onClick.AddListener(delegate { Play(); });
+        pauseButton.onClick.AddListener(delegate { Pause(); });
+        endButton.onClick.AddListener(delegate { End(); });
+        replayButton.onClick.AddListener(delegate { Replay(); });
+        frameSlider.onValueChanged.AddListener(delegate { FrameSliderOnValuedChanged(); });
+        visitorNumber = 0;
+        currentFrameIdx = 0;
+        totalFrameCount = 0;
+        ReplaySimulationInfo.Clear();
+        frameInfoText.text = "Time : - / -";
+        filename.text = "No File";
+        Run = false;
+        frameSlider.value = 0;
+        frameSlider.maxValue = 0;
+    }
+    void OnDisable()
+    {
+        loadReplayDataButton.onClick.RemoveListener(delegate { LoadReplayData(); });
+        playButton.onClick.RemoveListener(delegate { Play(); });
+        pauseButton.onClick.RemoveListener(delegate { Pause(); });
+        endButton.onClick.RemoveListener(delegate { End(); });
+        replayButton.onClick.RemoveListener(delegate { Replay(); });
+        frameSlider.onValueChanged.RemoveListener(delegate { FrameSliderOnValuedChanged(); });
+        visitorNumber = 0;
+        currentFrameIdx = 0;
+        totalFrameCount = 0;
+        ReplaySimulationInfo.Clear();
+        frameInfoText.text = "Time : - / -";
+        filename.text = "No File";
+        Run = false;
+        frameSlider.value = 0;
+        frameSlider.maxValue = 0;
+        //clean people
+        foreach (Transform person in peopleParent.transform)
+        {
+            Destroy(person.gameObject);
+        }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Run)
+        if (Run && hasReplayFile)
         {
-            foreach(KeyValuePair<string, ReplaySimulation> rs in ReplaySimulationInfo)
-            {
-                if (rs.Value.fd[currentFrameIdx].isVisible)
-                {
-                    rs.Value.model.SetActive(true);
-                    Vector3 pos = new Vector3((float)rs.Value.fd[currentFrameIdx].posX,
-                                              (float)rs.Value.fd[currentFrameIdx].posY,
-                                              (float)rs.Value.fd[currentFrameIdx].posZ
-                                             );
-                    Quaternion rot = Quaternion.Euler((float)rs.Value.fd[currentFrameIdx].rotX,
-                                                      (float)rs.Value.fd[currentFrameIdx].rotY,
-                                                      (float)rs.Value.fd[currentFrameIdx].rotZ
-                                                     );
-                    rs.Value.model.transform.position = pos;
-                    rs.Value.model.transform.rotation = rot;
-
-                    //handle animation
-                    rs.Value.model.GetComponent<Animator>().SetBool("walk", rs.Value.fd[currentFrameIdx].animationWalk);
-
-                    //handle animation speed
-                    /* set animation Speed (idle ~ walk) */
-                    float newAnimeSpeed = (float)rs.Value.fd[currentFrameIdx].navAgentVelocity / 1.05f;
-                    if (Math.Abs(newAnimeSpeed - 0.2) < 0.1 && Math.Abs(newAnimeSpeed - rs.Value.fd[currentFrameIdx].animationSpeed) < 0.2) { }
-                    else
-                    {
-                        if (newAnimeSpeed <= 0.2f)
-                        {
-                            rs.Value.model.GetComponent<Animator>().SetFloat("speed", 0.2f, 0.01f, Time.deltaTime);
-                            rs.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", 1);
-                        }
-                        else
-                        {
-                            rs.Value.model.GetComponent<Animator>().SetFloat("speed", 1f, 0.01f, Time.deltaTime);
-                            rs.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", newAnimeSpeed);
-                        }
-                    }
-
-                } // is visible
-                else
-                {
-                    rs.Value.model.SetActive(false);
-                }
-            }
-            currentFrameIdx++;
-            if (currentFrameIdx == totalFrameCount)
+            if (currentFrameIdx > totalFrameCount)
             {
                 Run = false;
+                FinishPlay();
                 return;
             }
+            ShowFrameInfo();
+            PlayEachFrame(currentFrameIdx);
+            ChangeFrameSliderValue();
+            currentFrameIdx++;
         }
     }
 
     public void LoadReplayData()
     {
         string defaultFolder = Application.streamingAssetsPath + "/Simulation_Result";
-        var path = EditorUtility.OpenFilePanel("Load exhibitions information",
+        var path = EditorUtility.OpenFilePanel("Load Replay information",
                                                 defaultFolder,
                                                "json");
         if (path.Length != 0)
         {
             string tmpJsonDataStr = File.ReadAllText(path);
-
+            hasReplayFile = true;
             //get file name
             string[] frac = path.Split('/');
             filename.text = frac[frac.Length - 2];
-
+            ReplaySimulationInfo.Clear();
             simulationReplayData = JsonMapper.ToObject<SimulationReplayData>(tmpJsonDataStr);
 
             //
             visitorNumber = simulationReplayData.visitorsReplayData.Count;
-            totalFrameCount = simulationReplayData.visitorsReplayData[0].replayData.Count;
-
+            totalFrameCount = simulationReplayData.visitorsReplayData[0].replayData.Count - 1; // start from 0
+            
             // set scene
             ChangeScene(simulationReplayData.sceneOption);
 
@@ -118,24 +116,16 @@ public class ReplayMode : MonoBehaviour
             // load character
             LoadCharacter();
 
-            
+            // initialize frame slider
+            FrameSliderInitialize();
+        }
+        else
+        {
+            hasReplayFile = false;
+            filename.text = "No File";
         }
     }
-
-    void Play()
-    {
-        Run = true;
-    }
-
-    void HandleRotation()
-    {
-
-    }
-
-    void HandleAnimation()
-    {
-
-    }
+    #region Loading
 
     void ChangeScene(string sceneName)
     {
@@ -159,6 +149,12 @@ public class ReplayMode : MonoBehaviour
             GameObject model = Instantiate(Resources.Load<GameObject>("CharactersPrefab/" + type + "/" + modelName), Vector3.zero, Quaternion.identity);
             model.transform.parent = peopleParent.transform;
             model.name = simulationReplayData.visitorsReplayData[i].name;
+            //remove children camera gameobject -> avoid camera bug
+            foreach(Transform child in model.transform)
+            {
+                if (child.name.Contains("Camera")) Destroy(child.gameObject);
+            }
+
             //get start pos
             Vector3 startPos = new Vector3(
                 (float)simulationReplayData.visitorsReplayData[i].replayData[0].posX,
@@ -186,7 +182,6 @@ public class ReplayMode : MonoBehaviour
             ReplaySimulationInfo.Add(model.name, rs);
         }
     }
-
 
     string GetType(int gender, int age)
     {
@@ -257,4 +252,129 @@ public class ReplayMode : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region Play
+    void ShowFrameInfo()
+    {
+        frameInfoText.text = "Time : " + (currentFrameIdx / 50.0f).ToString("f2") + " / " + (totalFrameCount / 50.0f).ToString("f2");
+    }
+    void PlayEachFrame(int currentFrameIdx)
+    {
+        foreach (KeyValuePair<string, ReplaySimulation> rs in ReplaySimulationInfo)
+        {
+            if (rs.Value.fd[currentFrameIdx].isVisible)
+            {
+                rs.Value.model.SetActive(true);
+                Vector3 pos = new Vector3((float)rs.Value.fd[currentFrameIdx].posX,
+                                          (float)rs.Value.fd[currentFrameIdx].posY,
+                                          (float)rs.Value.fd[currentFrameIdx].posZ
+                                         );
+                Quaternion rot = Quaternion.Euler((float)rs.Value.fd[currentFrameIdx].rotX,
+                                                  (float)rs.Value.fd[currentFrameIdx].rotY,
+                                                  (float)rs.Value.fd[currentFrameIdx].rotZ
+                                                 );
+                rs.Value.model.transform.position = pos;
+                rs.Value.model.transform.rotation = rot;
+
+                //handle animation
+                rs.Value.model.GetComponent<Animator>().SetBool("walk", rs.Value.fd[currentFrameIdx].animationWalk);
+
+                //handle animation speed
+                /* set animation Speed (idle ~ walk) */
+                float newAnimeSpeed = (float)rs.Value.fd[currentFrameIdx].navAgentVelocity / 1.05f;
+                if (Math.Abs(newAnimeSpeed - 0.2) < 0.1 && Math.Abs(newAnimeSpeed - rs.Value.fd[currentFrameIdx].animationSpeed) < 0.2) { }
+                else
+                {
+                    if (newAnimeSpeed <= 0.2f)
+                    {
+                        rs.Value.model.GetComponent<Animator>().SetFloat("speed", 0.2f, 0.01f, Time.deltaTime);
+                        rs.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", 1);
+                    }
+                    else
+                    {
+                        rs.Value.model.GetComponent<Animator>().SetFloat("speed", 1f, 0.01f, Time.deltaTime);
+                        rs.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", newAnimeSpeed);
+                    }
+                }
+
+            } // is visible
+            else
+            {
+                rs.Value.model.SetActive(false);
+            }
+        }
+    }
+
+    void HandleRotation()
+    {
+
+    }
+
+    void HandleAnimation()
+    {
+
+    }
+    #endregion
+
+    #region Buttons & Slider
+    void Play()
+    {
+        Run = true;
+    }
+
+    void Pause()
+    {
+        Run = false;
+        foreach (KeyValuePair<string, ReplaySimulation> rs in ReplaySimulationInfo)
+        {
+            rs.Value.model.GetComponent<Animator>().SetBool("walk", false);
+        }
+    }
+
+
+    void End()
+    {
+        Run = false;
+        currentFrameIdx = totalFrameCount;
+        FinishPlay();
+        ChangeFrameSliderValue();
+        ShowFrameInfo(); 
+    }
+
+    void Replay()
+    {
+        Run = true;
+        currentFrameIdx = 0;
+    }
+
+    void FinishPlay()
+    {
+        foreach(Transform person in peopleParent.transform)
+        {
+            person.gameObject.SetActive(false);
+        }
+    }
+    
+    void FrameSliderOnValuedChanged()
+    {
+        int value = (int)frameSlider.value;
+        currentFrameIdx = value;
+        ShowFrameInfo();
+        PlayEachFrame(value);
+        if (!Run) Pause();
+    }
+
+    void FrameSliderInitialize()
+    {
+        frameSlider.maxValue = totalFrameCount;
+        frameSlider.value = 0;
+        ShowFrameInfo();
+    }
+
+    void ChangeFrameSliderValue()
+    {
+        frameSlider.value = currentFrameIdx;
+    }
+    #endregion
 }

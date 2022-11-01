@@ -71,11 +71,8 @@ public partial class UIController : PersistentSingleton<UIController>
     public GameObject simpleUISettingPanel;
     public GameObject menuPanel;
     public GameObject replayPanel;
-    bool openSaveLoadPanel;
-    public bool modifyScene;
-    bool openHeatmapSettingPanel;
-    bool openSimpleUISettingPanel;
-    bool openReplayPanel;
+    public GameObject replayMode;
+    public Dictionary<string, bool> isPanelUsing = new Dictionary<string, bool>();
     public bool isOriginalScene;
 
     public List<string> allScene;
@@ -98,14 +95,17 @@ public partial class UIController : PersistentSingleton<UIController>
     /*camera detail setting info*/
     public Dictionary<string, cameraSetting> camerasSetting;
 
+    /*buttom board buttons*/
+    public Button oriButton, aButton, bButton;
+
     void Start()
     {
         //ui setting
-        openSaveLoadPanel = false;
-        modifyScene = false;
-        openHeatmapSettingPanel = false;
-        openSimpleUISettingPanel = true;
-        openReplayPanel = false;
+        isPanelUsing.Add("modifyScene", false);
+        isPanelUsing.Add("saveload", false);
+        isPanelUsing.Add("heatmapSetting", false);
+        isPanelUsing.Add("simpleUISetting", true); //basic Setting
+        isPanelUsing.Add("replayMode", false);
 
         //camera setting
         cameras = new Dictionary<string, cameraPerScene>
@@ -162,8 +162,8 @@ public partial class UIController : PersistentSingleton<UIController>
     #region Panel Open Function
     public void ModifySceneButton()
     {
-        modifyScene = !modifyScene;
-        if (modifyScene)
+        isPanelUsing["modifyScene"] = !isPanelUsing["modifyScene"];
+        if (isPanelUsing["modifyScene"])
         {
             if (!curOption.Contains("A") && !curOption.Contains("B"))
             {
@@ -178,14 +178,10 @@ public partial class UIController : PersistentSingleton<UIController>
             }
             int childCount = simulationModeUI.transform.childCount;
             modifyController.transform.SetSiblingIndex(childCount - 1);
-            openSaveLoadPanel = false;
-            openHeatmapSettingPanel = false;
-            openReplayPanel = false;
+            CloseOtherPanelOperation("modifyScene");
         }
         else
         {
-            //int childCount = simulationModeUI.transform.childCount;
-            //settingUIBoard.transform.SetSiblingIndex(childCount - 1);
             BackToSetting();
 
         }
@@ -202,7 +198,7 @@ public partial class UIController : PersistentSingleton<UIController>
         mainCamera = cameras[sceneHeadName].mainCamera.GetComponent<Camera>();
         minimapCamera = cameras[sceneHeadName].minimapCamera.GetComponent<Camera>();
         Debug.Log(idx);
-        if (modifyScene)
+        if (isPanelUsing["modifyScene"])
         {
             DashBoard.SetActive(false);
             cameras[sceneHeadName].mainCamera.tag = "Untagged";
@@ -284,25 +280,16 @@ public partial class UIController : PersistentSingleton<UIController>
     //Save/Load Button Functions
     public void SaveLoadButton()
     {
-        openSaveLoadPanel = !openSaveLoadPanel;
-        if (openSaveLoadPanel)
+        isPanelUsing["saveload"] = !isPanelUsing["saveload"];
+        if (isPanelUsing["saveload"])
         {
             int childCount = simulationModeUI.transform.childCount;
             saveLoadPanel.transform.SetSiblingIndex(childCount - 1);
-            if (modifyScene)
-            {
-                modifyScene = false;
-                ModifySceneCameraSwap();  
-            }
-            //openSimpleUISettingPanel = false;
-            openHeatmapSettingPanel = false;
-            openReplayPanel = false;
+            CloseOtherPanelOperation("saveload");
 
         }
         else
         {
-            //int childCount = simulationModeUI.transform.childCount;
-            //settingUIBoard.transform.SetSiblingIndex(childCount - 1);
             BackToSetting();
         }
         menuPanel.SetActive(false);
@@ -311,24 +298,15 @@ public partial class UIController : PersistentSingleton<UIController>
     //Heatmap Setting Panel
     public void HeatmapSettningPanel()
     {
-        openHeatmapSettingPanel = !openHeatmapSettingPanel;
-        if (openHeatmapSettingPanel)
+        isPanelUsing["heatmapSetting"] = !isPanelUsing["heatmapSetting"];
+        if (isPanelUsing["heatmapSetting"])
         {
             int childCount = simulationModeUI.transform.childCount;
             heatmapSettingPanel.transform.SetSiblingIndex(childCount - 1);
-            if (modifyScene)
-            {
-                modifyScene = false;
-                ModifySceneCameraSwap();
-            }
-            openSaveLoadPanel = false;
-            //openSimpleUISettingPanel = false;
-            openReplayPanel = false;
+            CloseOtherPanelOperation("heatmapSetting");
         }
         else
         {
-            //int childCount = simulationModeUI.transform.childCount;
-            //settingUIBoard.transform.SetSiblingIndex(childCount - 1);
             BackToSetting();
         }
         menuPanel.SetActive(false);
@@ -337,40 +315,26 @@ public partial class UIController : PersistentSingleton<UIController>
     //replay panel
     public void ReplayPanel()
     {
-        openReplayPanel = !openReplayPanel;
-        if (openReplayPanel)
+        isPanelUsing["replayMode"] = !isPanelUsing["replayMode"];
+        if (isPanelUsing["replayMode"])
         {
             int childCount = simulationModeUI.transform.childCount;
             replayPanel.transform.SetSiblingIndex(childCount - 1);
-            if (modifyScene)
-            {
-                modifyScene = false;
-                ModifySceneCameraSwap();
-            }
-            openSaveLoadPanel = false;
-            openHeatmapSettingPanel = false;
-            //openSimpleUISettingPanel = false;
+            CloseOtherPanelOperation("replayMode");
+            DashBoard.SetActive(false);
+            replayMode.SetActive(true);
         }
         else
         {
-            //int childCount = simulationModeUI.transform.childCount;
-            //settingUIBoard.transform.SetSiblingIndex(childCount - 1);
             BackToSetting();
         }
         menuPanel.SetActive(false);
     }
     public void BackToSetting()
     {
-        if (modifyScene)
-        {
-            modifyScene = false;
-            ModifySceneCameraSwap();
-        }
-        openSaveLoadPanel = false;
-        openReplayPanel = false;
-        openHeatmapSettingPanel = false;
-        replayPanel.transform.SetSiblingIndex(0);
-        if (openSimpleUISettingPanel)
+        CloseOtherPanelOperation("UISetting");
+        DashBoard.SetActive(true);
+        if (isPanelUsing["simpleUISetting"])
         {
             GoToBasicSetting();
         }
@@ -383,14 +347,14 @@ public partial class UIController : PersistentSingleton<UIController>
     //Go To Advanced Setting & Go To Basic Setting
     public void GoToAdvancedSetting() 
     {
-        openSimpleUISettingPanel = false;
+        isPanelUsing["simpleUISetting"] = false;
         int childCount = simulationModeUI.transform.childCount;
         settingUIBoard.transform.SetSiblingIndex(childCount - 1);
     }
 
     public void GoToBasicSetting()
     {
-        openSimpleUISettingPanel = true;
+        isPanelUsing["simpleUISetting"] = true;
         int childCount = simulationModeUI.transform.childCount;
         simpleUISettingPanel.transform.SetSiblingIndex(childCount - 1);
     }
@@ -403,6 +367,30 @@ public partial class UIController : PersistentSingleton<UIController>
     public void CloseMenuPanel()
     {
         menuPanel.SetActive(false);
+    }
+
+    public void CloseOtherPanelOperation(string currentMode)
+    {
+        for (int i = 0; i < isPanelUsing.Count; i++)
+        {
+            if (isPanelUsing.ElementAt(i).Key != currentMode) PanelCloseOperation(isPanelUsing.ElementAt(i).Key);
+        }
+    }
+
+    public void PanelCloseOperation(string panelName)
+    {
+        if (panelName == "simpleUISetting") return;
+        if (panelName == "modifyScene" && isPanelUsing["modifyScene"])
+        {
+            isPanelUsing["modifyScene"] = false;
+            ModifySceneCameraSwap();
+        }
+        if(panelName == "replayMode")
+        {
+            replayPanel.transform.SetSiblingIndex(0);
+            replayMode.SetActive(false);
+        }
+        isPanelUsing[panelName] = false;
     }
     #endregion
     /* update when mode or scene change*/
@@ -479,12 +467,32 @@ public partial class UIController : PersistentSingleton<UIController>
 
     public void changeOption(int index)
     {
-        if (!modifyScene)
+        if (!isPanelUsing["modifyScene"])
         {
             // original : 0, A: 1, B: 2
             curOption = curSceneOptions[index];
             cameras[currentScene].mainCamera.transform.position = cameraPos[index];
             cameras[currentScene].minimapCamera.transform.position = miniCameraPos[index];
+
+            switch (index) 
+            {
+                case 0:
+                    oriButton.GetComponent<Image>().color = selectedColor;
+                    aButton.GetComponent<Image>().color = unSelectedColor;
+                    bButton.GetComponent<Image>().color = unSelectedColor;
+                    break;
+                case 1:
+                    oriButton.GetComponent<Image>().color = unSelectedColor;
+                    aButton.GetComponent<Image>().color = selectedColor;
+                    bButton.GetComponent<Image>().color = unSelectedColor;
+                    break;
+                case 2:
+                    oriButton.GetComponent<Image>().color = unSelectedColor;
+                    aButton.GetComponent<Image>().color = unSelectedColor;
+                    bButton.GetComponent<Image>().color = selectedColor;
+                    break;
+            }
+
 
             if (currentMode == "RealDataVisualization")
             {
@@ -494,6 +502,10 @@ public partial class UIController : PersistentSingleton<UIController>
             {
                 dynamicSystem.instance.cleanPeopleBeforeGenerate();
             }
+        }
+        else
+        {
+            ShowMsgPanel("Warning", "Cannot change layout in modify scene function!");
         }
     }
 

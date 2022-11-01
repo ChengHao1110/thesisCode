@@ -17,7 +17,7 @@ public class minimapCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (UIController.instance.modifyScene)
+        if (UIController.instance.isPanelUsing["modifyScene"])
         {
             //wheel
             transform.GetComponent<Camera>().orthographicSize -= Input.GetAxis("Mouse ScrollWheel");

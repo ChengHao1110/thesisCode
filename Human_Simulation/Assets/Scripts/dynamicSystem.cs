@@ -218,9 +218,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 RecordVisitorStatusTime();
                 Debug.Log("analyze finish");
 
-                 SaveReplayDataToLocal();
+                SaveReplayDataToLocal();
                 Debug.Log("replay save");
                 UIController.instance.ShowMsgPanel("Success", "Finish saving simulation analysis data.");
+                UIController.instance.DashBoard.SetActive(true);
             }
             
             //average speed
@@ -846,9 +847,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 analysis_updatePosition.Add(dif);
 
 
-                //store replay data
-                person.Value.SaveReplayFrameData(); 
-            }   
+
+            }
+            //store replay data
+            person.Value.SaveReplayFrameData();
         }        
     }
 
@@ -1328,6 +1330,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             return;
         }
         UIController.instance.NormalizeInfluenceValue();
+        UIController.instance.DashBoard.SetActive(false);
         //store analysis data
         //create directory
         
