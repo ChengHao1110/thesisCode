@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using LitJson;
 using UnityEditor;
 using TMPro;
+using AnotherFileBrowser.Windows;
 
 public class cameraPerScene
 {
@@ -94,6 +95,7 @@ public partial class UIController : PersistentSingleton<UIController>
 
     /*camera detail setting info*/
     public Dictionary<string, cameraSetting> camerasSetting;
+    public RenderTexture minimapRT;
 
     /*buttom board buttons*/
     public Button oriButton, aButton, bButton;
@@ -193,7 +195,7 @@ public partial class UIController : PersistentSingleton<UIController>
     {
         Camera mainCamera;
         Camera minimapCamera;
-        RenderTexture minimapRT = (RenderTexture)AssetDatabase.LoadAssetAtPath("Assets/Resources/Materials/miniMapRenderTexture.renderTexture", typeof(RenderTexture));
+        //RenderTexture minimapRT = (RenderTexture)AssetDatabase.LoadAssetAtPath("Assets/Resources/Materials/miniMapRenderTexture.renderTexture", typeof(RenderTexture));
         Vector3 zOffset = new Vector3(0, 0, 50 * idx);
         mainCamera = cameras[sceneHeadName].mainCamera.GetComponent<Camera>();
         minimapCamera = cameras[sceneHeadName].minimapCamera.GetComponent<Camera>();
@@ -891,12 +893,28 @@ public partial class UIController : PersistentSingleton<UIController>
             System.DateTime dt = System.DateTime.Now;
             string date = dt.Year + "-" + dt.Month + "-" + dt.Day + "_" + dt.Hour + "-" + dt.Minute + "-" + dt.Second;
             defaultFileName = "UISetting_" + currentScene + "_" + date;
+            /*
             var path = EditorUtility.SaveFilePanel("Save UI setting as JSON",
                                                     defaultFolder,
                                                     defaultFileName + ".json",
                                                     "json");
+            */
+            string path = "";
+            var bp = new BrowserProperties();
+            bp.title = "Save UI Setting";
+            bp.initialDir = defaultFolder;
+            bp.filter = "json files (*.json)|*.json";
+            bp.filterIndex = 0;
 
-            if(path.Length != 0)
+            new FileBrowser().SaveFileBrowser(bp, defaultFileName, ".json", filepath =>
+            {
+                //Do something with path(string)
+                Debug.Log(filepath);
+                path = filepath;
+            });
+
+
+            if (path.Length != 0)
             {
                 StringBuilder sb = new StringBuilder();
                 JsonWriter writer = new JsonWriter(sb);
@@ -924,12 +942,27 @@ public partial class UIController : PersistentSingleton<UIController>
 
     public void LoadUISettings()
     {
+        /*
         string defaultFolder = Application.streamingAssetsPath + "/UISetting";
         var path = EditorUtility.OpenFilePanel("Load UI Setting",
                                                 defaultFolder,
                                                "json");
-        
-        if(path.Length != 0)
+        */
+        string path = "";
+        var bp = new BrowserProperties();
+        bp.title = "Load UI Setting File";
+        bp.initialDir = Application.streamingAssetsPath + "/UISetting";
+        bp.filter = "json files (*.json)|*.json";
+        bp.filterIndex = 0;
+
+        new FileBrowser().OpenFileBrowser(bp, filepath =>
+        {
+            //Do something with path(string)
+            Debug.Log(filepath);
+            path = filepath;
+        });
+
+        if (path.Length != 0)
         {
             string tmpJsonDataStr = File.ReadAllText(path);
             UISettings uiSettings = new UISettings();
@@ -962,10 +995,27 @@ public partial class UIController : PersistentSingleton<UIController>
         System.DateTime dt = System.DateTime.Now;
         string date = dt.Year + "-" + dt.Month + "-" + dt.Day + "_" + dt.Hour + "-" + dt.Minute + "-" + dt.Second;
         defaultFileName = "ExSetting_" + curOption + "_" + date;
+        /*
         var path = EditorUtility.SaveFilePanel("Save exhibitions information as JSON",
                                                 defaultFolder,
                                                 defaultFileName + ".json",
                                                 "json");
+        */
+        string path = "";
+        var bp = new BrowserProperties();
+        bp.title = "Save Exhibition Setting";
+        bp.initialDir = defaultFolder;
+        bp.filter = "json files (*.json)|*.json";
+        bp.filterIndex = 0;
+
+        new FileBrowser().SaveFileBrowser(bp, defaultFileName, ".json", filepath =>
+        {
+            //Do something with path(string)
+            Debug.Log(filepath);
+            path = filepath;
+        });
+
+
         if (path.Length != 0)
         {
             //get each exhibition
@@ -1038,10 +1088,27 @@ public partial class UIController : PersistentSingleton<UIController>
 
     public void LoadExhibitionInfo()
     {
+        string path = "";
+        var bp = new BrowserProperties();
+        bp.title = "Load Exhibition Setting File";
+        bp.initialDir = Application.streamingAssetsPath + "/ExhibitionSetting";
+        bp.filter = "json files (*.json)|*.json";
+        bp.filterIndex = 0;
+
+        new FileBrowser().OpenFileBrowser(bp, filepath =>
+        {
+            //Do something with path(string)
+            Debug.Log(filepath);
+            path = filepath;
+        });
+
+        /*
         string defaultFolder = Application.streamingAssetsPath + "/ExhibitionSetting";
         var path = EditorUtility.OpenFilePanel("Load exhibitions information",
                                                 defaultFolder,
                                                "json");
+        */
+
         if (path.Length != 0)
         {
             string tmpJsonDataStr = File.ReadAllText(path);

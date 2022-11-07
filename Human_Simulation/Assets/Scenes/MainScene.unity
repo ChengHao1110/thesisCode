@@ -5912,7 +5912,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 95783193}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 352890136}
+        m_TargetAssemblyTypeName: ReplayMode, Assembly-CSharp
+        m_MethodName: End
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &95783193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10924,7 +10936,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 216303276}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 352890136}
+        m_TargetAssemblyTypeName: ReplayMode, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &216303276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18355,11 +18379,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   peopleParent: {fileID: 1851590040}
-  loadReplayDataButton: {fileID: 442906535}
-  playButton: {fileID: 216303275}
-  pauseButton: {fileID: 719413126}
-  endButton: {fileID: 95783192}
-  replayButton: {fileID: 866519136}
   frameSlider: {fileID: 498963221}
   filename: {fileID: 238532569}
   frameInfoText: {fileID: 2095655743}
@@ -22695,7 +22714,7 @@ GameObject:
   - component: {fileID: 442906536}
   - component: {fileID: 442906535}
   m_Layer: 0
-  m_Name: Choose
+  m_Name: Browse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22743,7 +22762,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 442906536}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 352890136}
+        m_TargetAssemblyTypeName: ReplayMode, Assembly-CSharp
+        m_MethodName: LoadReplayData
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &442906536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25133,7 +25164,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 352890136}
+        m_TargetAssemblyTypeName: ReplayMode, Assembly-CSharp
+        m_MethodName: FrameSliderOnValuedChanged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &500632475
 GameObject:
   m_ObjectHideFlags: 0
@@ -34789,7 +34832,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 719413127}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 352890136}
+        m_TargetAssemblyTypeName: ReplayMode, Assembly-CSharp
+        m_MethodName: Pause
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &719413127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40797,7 +40852,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 866519137}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 352890136}
+        m_TargetAssemblyTypeName: ReplayMode, Assembly-CSharp
+        m_MethodName: Replay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &866519137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83994,6 +84061,7 @@ MonoBehaviour:
   miniCameraPos: []
   realVideoSelector_content: {fileID: 454478879}
   realVideoSelector_contentPrefab: {fileID: 7775902485095302231, guid: 1884687cbadd84140b911b7c177c7e17, type: 3}
+  minimapRT: {fileID: 8400000, guid: 3305b4a151cb49d4f910a39bbbdad3e9, type: 2}
   oriButton: {fileID: 1010668997}
   aButton: {fileID: 1652553025}
   bButton: {fileID: 1621220261}

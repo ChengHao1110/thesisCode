@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.srejonkhan.another-file-browser": {
+      "version": "https://github.com/SrejonKhan/AnotherFileBrowser.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f1168bb2258ef9bb41981b6367d1877b2197dd06"
+    },
     "com.unity.animation.rigging": {
       "version": "0.3.4-preview",
       "depth": 0,

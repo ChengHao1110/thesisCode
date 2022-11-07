@@ -10,6 +10,7 @@ using UnityEngine.AI;
 using LitJson;
 using UnityEditor;
 using UnityEngine.Animations.Rigging;
+using AnotherFileBrowser.Windows;
 
 public class desiredListStatus
 {
@@ -3106,10 +3107,26 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             System.DateTime dt = System.DateTime.Now;
             string date = dt.Year + "-" + dt.Month + "-" + dt.Day + "_" + dt.Hour + "-" + dt.Minute + "-" + dt.Second;
             defaultFileName = "VisitorSetting_" + UIController.instance.currentScene + "_" + date;
+            /*
             var path = EditorUtility.SaveFilePanel("Save UI setting as JSON",
                                         defaultFolder,
                                         defaultFileName + ".json",
                                         "json");
+            */
+            string path = "";
+            var bp = new BrowserProperties();
+            bp.title = "Save Visitor Initial Setting";
+            bp.initialDir = defaultFolder;
+            bp.filter = "json files (*.json)|*.json";
+            bp.filterIndex = 0;
+
+            new FileBrowser().SaveFileBrowser(bp, defaultFileName, ".json", filepath =>
+            {
+                //Do something with path(string)
+                Debug.Log(filepath);
+                path = filepath;
+            });
+
             if (path.Length != 0)
             {
                 saveVISFilename = path;
@@ -3150,11 +3167,26 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         string msg = "";
         if (loadVIS)
         {
+            string path = "";
+            var bp = new BrowserProperties();
+            bp.title = "Load Visitor Initial Setting File";
+            bp.initialDir = Application.streamingAssetsPath + "/VisitorSetting";
+            bp.filter = "json files (*.json)|*.json";
+            bp.filterIndex = 0;
+
+            new FileBrowser().OpenFileBrowser(bp, filepath =>
+            {
+                //Do something with path(string)
+                Debug.Log(filepath);
+                path = filepath;
+            });
+            /*
             string defaultFolder = Application.streamingAssetsPath + "/VisitorSetting";
             var path = EditorUtility.OpenFilePanel("Load Visitor Initial Setting",
                                                     defaultFolder,
                                                    "json");
-            if(path.Length != 0)
+            */
+            if (path.Length != 0)
             {
                 if (!CheckVIS(path)) 
                 {

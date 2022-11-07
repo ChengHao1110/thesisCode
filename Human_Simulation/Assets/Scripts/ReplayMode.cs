@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using AnotherFileBrowser.Windows;
 
 public class ReplaySimulation{
     public GameObject model;
@@ -21,7 +22,6 @@ public class ReplayMode : MonoBehaviour
     int currentFrameIdx = 0;
     int totalFrameCount = 0;
     public GameObject peopleParent; // 放people
-    public Button loadReplayDataButton, playButton, pauseButton, endButton, replayButton;
     public Slider frameSlider;
     public TextMeshProUGUI filename, frameInfoText;
     public Dictionary<string, ReplaySimulation> ReplaySimulationInfo = new Dictionary<string, ReplaySimulation>();
@@ -29,36 +29,26 @@ public class ReplayMode : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
-        loadReplayDataButton.onClick.AddListener(delegate { LoadReplayData(); });
-        playButton.onClick.AddListener(delegate { Play(); });
-        pauseButton.onClick.AddListener(delegate { Pause(); });
-        endButton.onClick.AddListener(delegate { End(); });
-        replayButton.onClick.AddListener(delegate { Replay(); });
-        frameSlider.onValueChanged.AddListener(delegate { FrameSliderOnValuedChanged(); });
         visitorNumber = 0;
         currentFrameIdx = 0;
         totalFrameCount = 0;
         ReplaySimulationInfo.Clear();
         frameInfoText.text = "Time : - / -";
         filename.text = "No File";
+        hasReplayFile = false;
         Run = false;
         frameSlider.value = 0;
         frameSlider.maxValue = 0;
     }
     void OnDisable()
     {
-        loadReplayDataButton.onClick.RemoveListener(delegate { LoadReplayData(); });
-        playButton.onClick.RemoveListener(delegate { Play(); });
-        pauseButton.onClick.RemoveListener(delegate { Pause(); });
-        endButton.onClick.RemoveListener(delegate { End(); });
-        replayButton.onClick.RemoveListener(delegate { Replay(); });
-        frameSlider.onValueChanged.RemoveListener(delegate { FrameSliderOnValuedChanged(); });
         visitorNumber = 0;
         currentFrameIdx = 0;
         totalFrameCount = 0;
         ReplaySimulationInfo.Clear();
         frameInfoText.text = "Time : - / -";
         filename.text = "No File";
+        hasReplayFile = false;
         Run = false;
         frameSlider.value = 0;
         frameSlider.maxValue = 0;
@@ -89,16 +79,32 @@ public class ReplayMode : MonoBehaviour
 
     public void LoadReplayData()
     {
+        string path = "";
+        var bp = new BrowserProperties();
+        bp.title = "Load Replay File";
+        bp.initialDir = Application.streamingAssetsPath + "/Simulation_Result";
+        bp.filter = "json files (*.json)|*.json";
+        bp.filterIndex = 0;
+
+        new FileBrowser().OpenFileBrowser(bp, filepath =>
+        {
+            //Do something with path(string)
+            Debug.Log(filepath);
+            path = filepath;
+        });
+
+        /*
         string defaultFolder = Application.streamingAssetsPath + "/Simulation_Result";
         var path = EditorUtility.OpenFilePanel("Load Replay information",
                                                 defaultFolder,
                                                "json");
+        */
         if (path.Length != 0)
         {
             string tmpJsonDataStr = File.ReadAllText(path);
             hasReplayFile = true;
             //get file name
-            string[] frac = path.Split('/');
+            string[] frac = path.Split('\\');
             filename.text = frac[frac.Length - 2];
             ReplaySimulationInfo.Clear();
             simulationReplayData = JsonMapper.ToObject<SimulationReplayData>(tmpJsonDataStr);
@@ -118,11 +124,6 @@ public class ReplayMode : MonoBehaviour
 
             // initialize frame slider
             FrameSliderInitialize();
-        }
-        else
-        {
-            hasReplayFile = false;
-            filename.text = "No File";
         }
     }
     #region Loading
@@ -318,34 +319,43 @@ public class ReplayMode : MonoBehaviour
     #endregion
 
     #region Buttons & Slider
-    void Play()
+    public void Play()
     {
-        Run = true;
+        if(hasReplayFile) Run = true;
     }
 
-    void Pause()
+    public void Pause()
     {
-        Run = false;
-        foreach (KeyValuePair<string, ReplaySimulation> rs in ReplaySimulationInfo)
+        if (hasReplayFile)
         {
-            rs.Value.model.GetComponent<Animator>().SetBool("walk", false);
+            Run = false;
+            foreach (KeyValuePair<string, ReplaySimulation> rs in ReplaySimulationInfo)
+            {
+                rs.Value.model.GetComponent<Animator>().SetBool("walk", false);
+            }
         }
     }
 
 
-    void End()
+    public void End()
     {
-        Run = false;
-        currentFrameIdx = totalFrameCount;
-        FinishPlay();
-        ChangeFrameSliderValue();
-        ShowFrameInfo(); 
+        if (hasReplayFile)
+        {
+            Run = false;
+            currentFrameIdx = totalFrameCount;
+            FinishPlay();
+            ChangeFrameSliderValue();
+            ShowFrameInfo();
+        }
     }
 
-    void Replay()
+    public void Replay()
     {
-        Run = true;
-        currentFrameIdx = 0;
+        if (hasReplayFile)
+        {
+            Run = true;
+            currentFrameIdx = 0;
+        }
     }
 
     void FinishPlay()
@@ -356,7 +366,7 @@ public class ReplayMode : MonoBehaviour
         }
     }
     
-    void FrameSliderOnValuedChanged()
+    public void FrameSliderOnValuedChanged()
     {
         int value = (int)frameSlider.value;
         currentFrameIdx = value;
