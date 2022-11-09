@@ -941,7 +941,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             //var angle = Quaternion.Angle(OriginalRot, NewRot);
             //Debug.Log("angle: " + angle);
             //Debug.Log("time: " + (deltaTimeCounter - person.lastTimeStamp_rotate));
-            person.model.transform.rotation = Quaternion.Slerp(OriginalRot, NewRot, /*(deltaTimeCounter - person.lastTimeStamp_rotate) / 30*/ 0.1f);
+            person.model.transform.rotation = Quaternion.Slerp(OriginalRot, NewRot, (deltaTimeCounter - person.lastTimeStamp_rotate) / 30);
             
             if (deltaTimeCounter - person.lastTimeStamp_rotate > 1)
             {
@@ -997,8 +997,9 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     void changeStateWithProbability(human_single person, float personNeededTimeToExit, float personDistanceWithExit)
     {
-        //System.Random random = new System.Random(person.randomSeed);
-        System.Random random = new System.Random((int)DateTime.Now.Millisecond);
+        // System.Random random = new System.Random(person.randomSeed);
+        // System.Random random = new System.Random((int)DateTime.Now.Millisecond);
+        System.Random random = new System.Random();
         // the last 10 second should totally be walking
         float num = random.Next(0, 101);
         num /= 100f;
@@ -1256,7 +1257,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     // delete old
                     peopleGathers.Remove(person.gatherIndex);
                     person.gatherIndex = findNearGatherIndex; // update gatherIndex
-                }                
+                }
+                else
+                {
+                    tmpEvent.curState = "alone";
+                }
             }
             // else : stay alone, don't do any change
             else
@@ -2509,7 +2514,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
                 bool capacityThreshold = (pickExhibition.capacity_cur < pickExhibition.capacity_max * currentSceneSettings.customUI.UI_Exhibit.capacityLimitTimes);
                 // Debug.Log(pickExhibition.crowdedTime);
-                capacityThreshold = capacityThreshold || (pickExhibition.crowdedTime > currentSceneSettings.customUI.UI_Exhibit.crowdedTimeLimit);
+                //capacityThreshold = capacityThreshold || (pickExhibition.crowdedTime > currentSceneSettings.customUI.UI_Exhibit.crowdedTimeLimit);
+                capacityThreshold = capacityThreshold && (pickExhibition.crowdedTime < currentSceneSettings.customUI.UI_Exhibit.crowdedTimeLimit);
 
                 if (capacityThreshold && takeTimeAttraction > 0) // threshold
                 {
@@ -2617,9 +2623,14 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     /* influence Map update component */
     // float threshold_popular = 50f, threshold_crowded = 90f;  // %       
     float maxAttraction_A = 30f, maxAttraction_B = 50f;
-    float maxAttraction_C; // = 100f - maxAttraction_A - maxAttraction_B;
+    float maxAttraction_C = 0f;
+    float slopeB = 0f, slopeC = 0f;
+    /*
+    float maxAttraction_C; //= 100f - maxAttraction_A - maxAttraction_B;
     float slopeB; // = ((maxAttractionA + maxAttraction_B) - maxAttraction_A) / (threshold_crowded - threshold_popular);
-    float slopeC; // = (0 - maxAttraction_C) / (100 - threshold_crowded);
+    float slopeC; // = (0 - maxAttraction_C) / (100 - threshold_crowded);    
+    */
+
     float computeCapacityAttraction(float capacity_cur, float capacity_max)
     {
         /* if a exhibition gather more the % of the capacity,
@@ -2630,6 +2641,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         float popularThreshold = (float)currentSceneSettings.customUI.UI_Exhibit.popularThreshold * 100f;
         float crowdedThreshold = (float)currentSceneSettings.customUI.UI_Exhibit.crowdedThreshold * 100f;
         float outputAttraction;
+
+        maxAttraction_C = 100f - maxAttraction_A - maxAttraction_B;
+        slopeB = ((maxAttraction_A + maxAttraction_B) - maxAttraction_A) / (crowdedThreshold - popularThreshold);
+        slopeC = (0 - maxAttraction_C) / (100 - crowdedThreshold);
 
         /* A: attraction = 0 ~ maxAttraction_A if capacityPercent < threshold_popular.
          * B: attraction = maxAttraction_C ~ 0 if capacityPercent > threshold_crowded, -> crowd is not able to go in 
@@ -2650,7 +2665,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             outputAttraction = maxAttraction_C + slopeC * (capacityPercent - crowdedThreshold);
         }
 
-        // Debug.Log("<Capacity> " + (float)capacity_cur + " / " + (float)capacity_max + " = "+ capacityPercent + "% > " + outputAttraction.ToString("F2")); // debug.check
+        //Debug.Log("<Capacity> " + (float)capacity_cur + " / " + (float)capacity_max + " = "+ capacityPercent + "% > " + outputAttraction.ToString("F2")); // debug.check
+        Debug.Log("outputAttraction:" + outputAttraction);
         return outputAttraction;
     }
 
