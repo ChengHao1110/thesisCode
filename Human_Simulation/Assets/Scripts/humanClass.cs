@@ -68,6 +68,7 @@ public class human_single// List<human_single> humanCrowd;
     public float freeTime_stayInNextExhibit_copy;
     public float freeTime_totalLeft;
     public string walkStopState = "walk"; // for simulating the walk and stop behavior
+    public float stopStateContinuedTime = 0f;
     public string status = "";
     public bool goToExit = false;
     // save new influence map and update after all computation

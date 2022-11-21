@@ -224,79 +224,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 UIController.instance.ShowMsgPanel("Success", "Finish saving simulation analysis data.");
                 UIController.instance.DashBoard.SetActive(true);
             }
-            
-            //average speed
-            /*
-            string person_velocity_filename;
-            person_velocity_filename = UIController.instance.curOption + "_" + currentSceneSettings.customUI.UI_Global.agentCount + "agent_" + date + "_person_velocity.txt";
-            FileStream pvFile = new FileStream(path + "average_velocity/" + person_velocity_filename, FileMode.OpenOrCreate);
-            StreamWriter pvWriter = new StreamWriter(pvFile);
-            foreach (KeyValuePair<string, human_single> person in people)
-            {
-                int count = 0;
-                float sum_velocity = 0, average_velocity;
-                for(int i = 0; i < person.Value.velocity_Trajectory.Count(); i++)
-                {
-                    if(person.Value.velocity_Trajectory[i] > 0.01f)
-                    {
-                        sum_velocity += person.Value.velocity_Trajectory[i];
-                        count++;
-                    }   
-                }
-                average_velocity = sum_velocity / count;
-                pvWriter.Write(person.Key + ": " + average_velocity + "\n");
-            }
-            pvWriter.Flush();
-            pvWriter.Close();
-            Debug.Log("average velocity done");
-            //exhibition
-            string ex_filename;
-            string ex_grid_filename;
-            ex_filename = UIController.instance.curOption + "_" + currentSceneSettings.customUI.UI_Global.agentCount + "agent_" + date + "_exhibition.txt";
-            ex_grid_filename = UIController.instance.curOption + "_" + currentSceneSettings.customUI.UI_Global.agentCount + "agent_" + date + "_ex_grid.txt";
-            FileStream exFile = new FileStream(path + "exhibition/" + ex_filename, FileMode.OpenOrCreate);
-            StreamWriter exWriter = new StreamWriter(exFile);
-            FileStream exgFile = new FileStream(path + "exhibition_grid/" + ex_grid_filename, FileMode.OpenOrCreate);
-            StreamWriter exgWriter = new StreamWriter(exgFile);
-            
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    ex_grid[i, j] = 0;
-                }
-            }
-
-            foreach (KeyValuePair<string, exhibitionRecord> exh in exhibitRec)
-            {
-                exWriter.Write(exh.Key + ":\n");
-                foreach(KeyValuePair<string, int> bvc in exh.Value.bestViewCount)
-                {
-                    exWriter.Write("     " + bvc.Key + ": " + bvc.Value + "\n");
-                }
-                exWriter.Write("    Human Count: " + exh.Value.humanCount +"\n");
-
-                List<List<double>> pos = new List<List<double>>();
-                pos.Add(scalePosBackTo2D(exhibitions[exh.Key].centerPosition));
-                int pos_x = (int)Math.Floor(mag * (pos[0][0] + radius)); //col
-                int pos_y = (int)Math.Floor(mag * (radius - pos[0][1])); //row
-                ex_grid[pos_y, pos_x] = exh.Value.humanCount;
-            }
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    exgWriter.Write(ex_grid[i, j] + " ");
-                }
-                exgWriter.Write("\n");
-            }
-
-            exWriter.Flush();
-            exWriter.Close();
-            exgWriter.Flush();
-            exgWriter.Close();
-            Debug.Log("exhibition done");
-            */
         }
 
         //NavMeshBake();
@@ -337,6 +264,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         }
                     }
                     */
+                    /* calculate stopStateContinuedTime*/
+                    if (person.Value.walkStopState == "stop") person.Value.stopStateContinuedTime += Time.fixedDeltaTime;
+                    else person.Value.stopStateContinuedTime = 0f;
+
                     /* gather state machine */
                     if (deltaTimeCounter - person.Value.lastTimeStamp_recomputeGathers > currentSceneSettings.customUI.UI_Global.UpdateRate["gathers"])
                     {
@@ -846,9 +777,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 updatePosition_endTime = Time.realtimeSinceStartup;
                 float dif = (updatePosition_endTime - updatePosition_startTime) * 1000f;
                 analysis_updatePosition.Add(dif);
-
-
-
             }
             //store replay data
             person.Value.SaveReplayFrameData();
@@ -905,7 +833,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             }
             else
             {
-                person.wanderStayTime -= Time.deltaTime;
+                person.wanderStayTime -= Time.fixedDeltaTime;
 
                 if(person.wanderStayTime <= 0)
                 {
@@ -997,13 +925,20 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     void changeStateWithProbability(human_single person, float personNeededTimeToExit, float personDistanceWithExit)
     {
+        if(person.stopStateContinuedTime >= 5.0f)
+        {
+            person.walkStopState = "walk";
+            person.stopStateContinuedTime = 0f;
+            person.ifMoveNavMeshAgent(true);
+            return;
+        }
+
         // System.Random random = new System.Random(person.randomSeed);
-        // System.Random random = new System.Random((int)DateTime.Now.Millisecond);
-        System.Random random = new System.Random();
+        System.Random random = new System.Random((int)DateTime.Now.Millisecond + person.randomSeed);
+        //System.Random random = new System.Random();
         // the last 10 second should totally be walking
         float num = random.Next(0, 101);
         num /= 100f;
-        
         if (person.walkStopState == "walk")
         {
             bool transitionRate = num < currentSceneSettings.humanTypes[person.humanType].walkToStopRate;
@@ -1023,6 +958,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 // Debug.Log("stop → walk: " + num + " < " + currentSceneSettings.humanTypes[person.humanType].walkToStopRate);
                 person.walkStopState = "walk";
                 person.ifMoveNavMeshAgent(true);
+                person.stopStateContinuedTime = 0f;
             } // else keep stopping
         }
     }
@@ -2817,7 +2753,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 //calculate exhibition crowded time
                 if (exhibit.capacity_cur >= exhibit.capacity_max)
                 {
-                    exhibit.crowdedTime += Time.deltaTime;
+                    exhibit.crowdedTime += Time.fixedDeltaTime;
                 }
                 else
                 {
@@ -3994,12 +3930,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         //write file
         FileStream fs = new FileStream(directory + "status_time.txt", FileMode.OpenOrCreate);
         StreamWriter sw = new StreamWriter(fs);
+
         foreach (KeyValuePair<string, human_single> person in people)
         {
-            for (int i = 0; i < person.Value.statusTime.Length; i++)
-            {
-                sw.Write(person.Value.statusTime[i] + " ");
-            }
+            sw.Write("go " + person.Value.statusTime[0] + " " + person.Value.name + " " + person.Value.humanType + '\n');
+            sw.Write("close " + person.Value.statusTime[1] + " " + person.Value.name + " " + person.Value.humanType + '\n');
+            sw.Write("at " + person.Value.statusTime[2] + " " + person.Value.name + " " + person.Value.humanType + '\n');
         }
         sw.Flush();
         sw.Close();

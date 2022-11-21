@@ -275,11 +275,14 @@ public class ReplayMode : MonoBehaviour
                                                   (float)rs.Value.fd[currentFrameIdx].rotY,
                                                   (float)rs.Value.fd[currentFrameIdx].rotZ
                                                  );
-                rs.Value.model.transform.position = pos;
-                rs.Value.model.transform.rotation = rot;
 
+                //rs.Value.model.transform.position = pos;
+                //rs.Value.model.transform.rotation = rot;
+                rs.Value.model.transform.position = Vector3.MoveTowards(rs.Value.model.transform.position, pos, Time.fixedDeltaTime);
+                rs.Value.model.transform.rotation = Quaternion.Slerp(rs.Value.model.transform.rotation, rot, Time.fixedDeltaTime);
                 //handle animation
                 rs.Value.model.GetComponent<Animator>().SetBool("walk", rs.Value.fd[currentFrameIdx].animationWalk);
+                
 
                 //handle animation speed
                 /* set animation Speed (idle ~ walk) */
@@ -289,12 +292,12 @@ public class ReplayMode : MonoBehaviour
                 {
                     if (newAnimeSpeed <= 0.2f)
                     {
-                        rs.Value.model.GetComponent<Animator>().SetFloat("speed", 0.2f, 0.01f, Time.deltaTime);
+                        rs.Value.model.GetComponent<Animator>().SetFloat("speed", 0.2f, 0.01f, Time.fixedDeltaTime);
                         rs.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", 1);
                     }
                     else
                     {
-                        rs.Value.model.GetComponent<Animator>().SetFloat("speed", 1f, 0.01f, Time.deltaTime);
+                        rs.Value.model.GetComponent<Animator>().SetFloat("speed", 1f, 0.01f, Time.fixedDeltaTime);
                         rs.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", newAnimeSpeed);
                     }
                 }

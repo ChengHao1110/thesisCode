@@ -53,7 +53,8 @@ public class computeCapacity : MonoBehaviour
                 thisExhibit.capacity_cur = thisExhibit.currentHumanInside.Count;
                 thisExhibit.updateInformationBoard();
                 
-                if(dynamicSystem.instance.people[humanName].nextTarget_name == exhibitName && dynamicSystem.instance.people[humanName].lastLookExhibitionName != exhibitName)
+                if(dynamicSystem.instance.people[humanName].nextTarget_name == exhibitName && dynamicSystem.instance.people[humanName].nextTarget_name.StartsWith("p")
+                   && dynamicSystem.instance.people[humanName].lastLookExhibitionName != exhibitName)
                 {
                     dynamicSystem.instance.people[humanName].justIn = true;
                     //Debug.Log(dynamicSystem.instance.people[humanName].name + " in " + exhibitName);
