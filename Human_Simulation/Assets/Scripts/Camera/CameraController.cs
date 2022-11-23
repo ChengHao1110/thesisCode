@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class CameraSetting 
 {
@@ -14,25 +16,26 @@ public class CameraSetting
 
 public class CameraController : MonoBehaviour
 {
-    Dictionary<string, List<CameraSetting>> cameras;
+    public Dictionary<string, List<CameraSetting>> cameras;
     string number;
     int idx = 0;
     int cameraId;
     float cameraRotSpeed = 2.0f;
     float cameraTranSpeed = 0.01f;
+    public List<CameraSetting> cameraList = new List<CameraSetting>();
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         cameras = new Dictionary<string, List<CameraSetting>>();
         cameraId = 0;
-
+        cameras.Clear();
+        cameraList.Clear();
         number = transform.name.Substring(11, 3);
         switch (number)
         {
             case "119":
                 {
-                    List<CameraSetting> cameraList = new List<CameraSetting>();
                     //original
                     cameraList.Add(AddCamera(transform.position, transform.rotation, transform.GetComponent<Camera>().fieldOfView, false, 0));
                     //add new camera
@@ -49,14 +52,13 @@ public class CameraController : MonoBehaviour
                                              Quaternion.Euler(39.7f, 139.85f, 0f),
                                              70, false, 0));
                     cameraList.Add(AddCamera(new Vector3(-0.4f, 7f, -0.2f),
-                                             Quaternion.Euler(90f, 180f, -4.22f),
+                                             Quaternion.Euler(90f, 180f, -0.96f),
                                              75, true, 7.71f));
                     cameras.Add(number, cameraList);
                 }
                 break;
             case "120":
                 {
-                    List<CameraSetting> cameraList = new List<CameraSetting>();
                     //original
                     cameraList.Add(AddCamera(transform.position, transform.rotation, transform.GetComponent<Camera>().fieldOfView, false, 0));
                     //add new camera
@@ -83,7 +85,6 @@ public class CameraController : MonoBehaviour
                 break;
             case "225":
                 {
-                    List<CameraSetting> cameraList = new List<CameraSetting>();
                     //original
                     cameraList.Add(AddCamera(transform.position, transform.rotation, transform.GetComponent<Camera>().fieldOfView, false, 0));
                     //add new camera
@@ -100,9 +101,9 @@ public class CameraController : MonoBehaviour
                 }
                 break;
         }
-        
-
-
+        if (UIController.instance.curOption.Contains("A")) idx = 1;
+        else if (UIController.instance.curOption.Contains("B")) idx = 2;
+        else idx = 0;
     }
 
     // Update is called once per frame
@@ -138,7 +139,6 @@ public class CameraController : MonoBehaviour
         
         FreeControl();
     }
-
     CameraSetting AddCamera(Vector3 pos, Quaternion rot, float fov, bool orthographic, float size)
     {
         CameraSetting cs = new CameraSetting();
@@ -150,8 +150,9 @@ public class CameraController : MonoBehaviour
         return cs;
     }
 
-    void SetCamera(CameraSetting cs, int idx)
+    public void SetCamera(CameraSetting cs, int idx)
     {
+
         Vector3 zOffset = new Vector3(0, 0, 50 * idx);
         transform.position = cs.pos + zOffset;
         transform.rotation = cs.rot;
@@ -165,10 +166,25 @@ public class CameraController : MonoBehaviour
             transform.GetComponent<Camera>().orthographic = cs.orthographic;
             transform.GetComponent<Camera>().fieldOfView = cs.fov;
         }
-        
-
     }
 
+    public void SetCameraByBtn(CameraSetting cs, int idx, int camId)
+    {
+        cameraId = camId;
+        Vector3 zOffset = new Vector3(0, 0, 50 * idx);
+        transform.position = cs.pos + zOffset;
+        transform.rotation = cs.rot;
+        if (cs.orthographic)
+        {
+            transform.GetComponent<Camera>().orthographic = cs.orthographic;
+            transform.GetComponent<Camera>().orthographicSize = cs.size;
+        }
+        else
+        {
+            transform.GetComponent<Camera>().orthographic = cs.orthographic;
+            transform.GetComponent<Camera>().fieldOfView = cs.fov;
+        }
+    }
     void FreeControl()
     {
         if (Input.GetMouseButton(1))

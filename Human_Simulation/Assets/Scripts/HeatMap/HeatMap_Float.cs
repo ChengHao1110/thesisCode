@@ -69,6 +69,7 @@ public class HeatMap_Float : MonoBehaviour
         heatmapCamera.SetActive(true);
         int resWidth = 1200, resHeight = 1200;
         Camera camera = heatmapCamera.GetComponent<Camera>();
+        SetCameraCullingMask(camera, UIController.instance.currentScene);
         RenderTexture rt = new RenderTexture(resWidth, resHeight, 24);
         camera.targetTexture = rt;
         Texture2D screenShot = new Texture2D(resWidth, resHeight, TextureFormat.RGB24, false);
@@ -85,7 +86,12 @@ public class HeatMap_Float : MonoBehaviour
         //DestroyVisualPrefab();
         heatmapCamera.SetActive(false);
     }
-
+    void SetCameraCullingMask(Camera cam, string sceneHeadName)
+    {
+        int defaultLayer = LayerMask.NameToLayer("Default");
+        int scene = LayerMask.NameToLayer(sceneHeadName);
+        cam.cullingMask = (1 << defaultLayer) | (1 << scene);
+    }
     public static string ScreenShotName(int width, int height)
     {
         return string.Format("{0}/screenshots/screen_{1}x{2}_{3}.png",

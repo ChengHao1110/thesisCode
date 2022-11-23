@@ -26,7 +26,14 @@ def HideXYAxisTicks(fig):
     fig.update_layout(width = 600, height = 600)
     return fig
 
-#%% get move/stay heatmap png file in the directory
+#%% get move/stay heatmap png & layout file in the directory
+def PngToPlotlyFigure(filePath):
+    img = np.array(Image.open(filePath))
+    fig = px.imshow(img)
+    fig = SetFigureTemplate(fig)
+    fig = HideXYAxisTicks(fig)
+    return fig
+
 def GetFigure_HeapMap():
     # get suitable heat map files
     suitableFilename = []
@@ -48,18 +55,12 @@ def GetFigure_HeapMap():
     print("moveHeatMap_" + str(moveIndex) + ".png")
     print("stayHeatMap_" + str(stayIndex) + ".png")
     '''
-    
-    moveFilename = path + "moveHeatMap_" + str(moveIndex) + ".png"
-    stayFilename = path +"stayHeatMap_" + str(stayIndex) + ".png"
-    img = np.array(Image.open(moveFilename))
-    moveHeatMap = px.imshow(img)
-    moveHeatMap = SetFigureTemplate(moveHeatMap)
-    moveHeatMap = HideXYAxisTicks(moveHeatMap)
-    img = np.array(Image.open(stayFilename))
-    stayHeatMap = px.imshow(img)
-    stayHeatMap = SetFigureTemplate(stayHeatMap)
-    stayHeatMap = HideXYAxisTicks(stayHeatMap)
-    return moveHeatMap, stayHeatMap
+    moveHeatMap = PngToPlotlyFigure(path + "moveHeatMap_" + str(moveIndex) + ".png")
+    stayHeatMap = PngToPlotlyFigure(path +"stayHeatMap_" + str(stayIndex) + ".png")
+    layout = PngToPlotlyFigure(path + "layout_screenshot.png")
+
+
+    return moveHeatMap, stayHeatMap, layout
 
 #%% get visitor visiting time  
 def GetFigure_VistorVisitingTimeInEachExhibit():
@@ -95,7 +96,7 @@ def GetFigure_ExhibitionRealtimeVisitorCount():
     [columnNames.append('p' + str(j + 1)) for j in range(len(df.columns))]
     df.columns = columnNames
     fig = px.line(df, title = "Real-time visitor number in the exhibit")
-    fig.update_layout(xaxis_title = "time", yaxis_title = "number of visitor")
+    fig.update_layout(xaxis_title = "time", yaxis_title = "number of visitor", legend = dict(title = "exhibit"))
     fig = SetFigureTemplate(fig)
     return fig
 
@@ -124,7 +125,7 @@ def GetFigure_VisitorStatusTime():
     return fig
 
 #%% convert dash content to html
-def ConvertDashToHtml(filePath, fig_moveHeatMap, fig_stayHeatMap, fig_exhibitionRealtimeVisitorCount, \
+def ConvertDashToHtml(filePath, fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount, \
                       fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, descriptions, PDF = False):
     frac = filePath.split('\\')
     dirName = frac[-2]
@@ -136,12 +137,14 @@ def ConvertDashToHtml(filePath, fig_moveHeatMap, fig_stayHeatMap, fig_exhibition
         htmlStart, htmlEnd = HtmlSetUp()
         f.write(htmlStart)
         f.write("<div> <h1>Analysis Data DashBoard: " + dirName +"</h1> </div>")
-        FigureToHtml(f, "展廳移動熱區", descriptions[0], fig_moveHeatMap, 'cdn')
+        FigureToHtml(f, "展品佈局圖", "", fig_layout, 'cdn')
+        FigureToHtml(f, "轉移機率", descriptions[5], fig_chord, False)
+        FigureToHtml(f, "展廳移動熱區", descriptions[0], fig_moveHeatMap, False)
         FigureToHtml(f, "展廳停留熱區", descriptions[1], fig_stayHeatMap, False)
         FigureToHtml(f, "展品及時人數", descriptions[2], fig_exhibitionRealtimeVisitorCount, False)
         FigureToHtml(f, "遊客移動狀態", descriptions[3], fig_visitorStatusTime, False)
         FigureToHtml(f, "遊客觀看時間", descriptions[4], fig_visitorVisitingTimeInEachExhibit, False)
-        FigureToHtml(f, "轉移機率", descriptions[5], fig_chord, False)
+        
         f.write(htmlEnd)
         f.close()
         

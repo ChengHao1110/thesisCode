@@ -24,17 +24,18 @@ myPath = os.path.abspath(myPath)
 
 #%% get all simulation result directory
 #simFileDirectory = "D:/ChengHao/thesisCode/Human_Simulation/Assets/StreamingAssets/Simulation_Result/"
+#db_fnc.path = "D:/ChengHao/thesisCode/Human_Simulation/Assets/StreamingAssets/Simulation_Result/sample3/"
 simFileDirectory = myPath + '\\'
 allDirectory = []
 for dirName in os.listdir(simFileDirectory):
     # .meta is for unity directory
     if ".meta" not in dirName:
         allDirectory.append(simFileDirectory + dirName + '\\')
-#db_fnc.path = "D:/ChengHao/thesisCode/Human_Simulation/Assets/StreamingAssets/Simulation_Result/sample3/"
 
 #%% get all figures in the selected directory
 fig_moveHeatMap = ''
 fig_stayHeatMap = ''
+fig_layout = ''
 fig_exhibitionRealtimeVisitorCount = ''
 fig_visitorStatusTime = ''
 fig_visitorVisitingTimeInEachExhibit = '' 
@@ -42,18 +43,24 @@ fig_chord = ''
 
 def GetFigures(path):
     db_fnc.path = path
-    fig_moveHeatMap, fig_stayHeatMap = db_fnc.GetFigure_HeapMap()
+    fig_moveHeatMap, fig_stayHeatMap, fig_layout = db_fnc.GetFigure_HeapMap()
     fig_visitorVisitingTimeInEachExhibit = db_fnc.GetFigure_VistorVisitingTimeInEachExhibit()
     fig_exhibitionRealtimeVisitorCount = db_fnc.GetFigure_ExhibitionRealtimeVisitorCount()
     fig_chord = db_fnc.GetFigure_ChordDiagram()
     fig_visitorStatusTime = db_fnc.GetFigure_VisitorStatusTime()
-    return fig_moveHeatMap, fig_stayHeatMap, fig_exhibitionRealtimeVisitorCount, fig_visitorStatusTime\
-        ,fig_visitorVisitingTimeInEachExhibit, fig_chord
+    return fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount, \
+    fig_visitorStatusTime ,fig_visitorVisitingTimeInEachExhibit, fig_chord
 
-fig_moveHeatMap, fig_stayHeatMap, fig_exhibitionRealtimeVisitorCount, \
+fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount, \
 fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord = GetFigures(allDirectory[0])
 
 #%% get all description
+# 0: 展廳移動熱區
+# 1: 展廳停留熱區
+# 2: 展品及時人數
+# 3: 遊客移動狀態
+# 4: 遊客觀看時間
+# 5: 轉移機率
 with open('data/figure_description.txt', 'r', encoding='utf-8') as f:
     descriptions = f.readlines()
 
@@ -91,7 +98,26 @@ app.layout = dbc.Container([
             ],justify = "start", align = "center"),
             
             # figures
-            # 1 row start
+
+            # 1 Row start
+            dbc.Row([
+                # layout figure
+                dbc.Col([
+                    db_lt.DrawFigure(title = "展品佈局圖",
+                                     description = "",
+                                     figId = "layout_figure",
+                                     fig = fig_layout)
+                ], width = 6), # (1, 1)
+                # chord diagram
+                dbc.Col([
+                    db_lt.DrawFigure(title = "轉移機率",
+                                     description = descriptions[5],
+                                     figId = "chord_diagram",
+                                     fig = fig_chord)
+                ], width = 6) # (1, 2)
+            ], align = "center"),# 1 Row end
+
+            # 2 row start
             dbc.Row([
                 # move heat map
                 dbc.Col([
@@ -99,17 +125,17 @@ app.layout = dbc.Container([
                                      description = descriptions[0],
                                      figId = "move_heatmap_figure",
                                      fig = fig_moveHeatMap)
-                ], width = 6), # 1 col (1, 1)
+                ], width = 6), # (2, 1)
                 #stay heat map
                 dbc.Col([
                     db_lt.DrawFigure(title = "展廳停留熱區",
                                      description = descriptions[1],
                                      figId = "stay_heatmap_figure",
                                      fig = fig_stayHeatMap)
-                ], width = 6) # 2 col (1, 2)
-            ], align = "center"), # 1 row end
+                ], width = 6) # (2, 2)
+            ], align = "center"), # 2 row end
             
-            # 2 row start
+            # 3 row start
             dbc.Row([
                 # real time visitor count in each exhibit
                 dbc.Col([
@@ -117,10 +143,21 @@ app.layout = dbc.Container([
                                      description = descriptions[2],
                                      figId = "realtime_visitor_count",
                                      fig = fig_exhibitionRealtimeVisitorCount)
-                ]) # 1 col (2, 1)
-            ], align = "center"), # 2 Row end
+                ]) # (3, 1)
+            ]), # 3 Row end
             
-            # 3 row start
+            # 4 row start
+            dbc.Row([
+                # visitor watch time in each exhibit
+                dbc.Col([
+                    db_lt.DrawFigure(title = "遊客觀看時間",
+                                     description = descriptions[4],
+                                     figId = "visitor_visit_time",
+                                     fig = fig_visitorVisitingTimeInEachExhibit)
+                ]) # (4, 1)
+            ]), # 4 Row end
+
+            # 5 row start
             dbc.Row([
                 # visitor status time
                 dbc.Col([
@@ -128,26 +165,8 @@ app.layout = dbc.Container([
                                      description = descriptions[3],
                                      figId = "visitor_status",
                                      fig = fig_visitorStatusTime)
-                ], width = 6), # 1 col (3, 1)
-                # visitor watch time in each exhibit
-                dbc.Col([
-                    db_lt.DrawFigure(title = "遊客觀看時間",
-                                     description = descriptions[4],
-                                     figId = "visitor_visit_time",
-                                     fig = fig_visitorVisitingTimeInEachExhibit)
-                ], width = 6) # 2 col (3, 2)
-            ], align = "center"), # 3 Row end
-            
-            # 4 Row start
-            dbc.Row([
-                # chord diagram
-                dbc.Col([
-                    db_lt.DrawFigure(title = "轉移機率",
-                                     description = descriptions[5],
-                                     figId = "chord_diagram",
-                                     fig = fig_chord)
-                ], width = 6) # 1 col (4, 1)
-            ]),# 4 Row end
+                ], width = 6) # (5, 1)
+            ]),
             
             # buttons
             dbc.Row([
@@ -166,6 +185,7 @@ times = 1
 @app.callback(
     Output(component_id = 'move_heatmap_figure', component_property ='figure'),
     Output(component_id = 'stay_heatmap_figure', component_property ='figure'),
+    Output(component_id = 'layout_figure', component_property ='figure'),
     Output(component_id = 'realtime_visitor_count', component_property ='figure'),
     Output(component_id = 'visitor_status', component_property ='figure'),
     Output(component_id = 'visitor_visit_time', component_property ='figure'),
@@ -177,15 +197,15 @@ times = 1
 def UpdatePath(selected_path, html_clicks):
     global times
     msg = ""
-    fig_moveHeatMap, fig_stayHeatMap, fig_exhibitionRealtimeVisitorCount, \
+    fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount, \
     fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord = GetFigures(selected_path)
     if html_clicks >= times:
         times = times + 1
-        db_fnc.ConvertDashToHtml(selected_path, fig_moveHeatMap, fig_stayHeatMap, fig_exhibitionRealtimeVisitorCount \
+        db_fnc.ConvertDashToHtml(selected_path, fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount \
                                  , fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, descriptions, False)
         filename = (selected_path.split('\\'))[-2]
         msg = "The {filename}.html was downloaded in the directory!".format(filename = filename)
-    return fig_moveHeatMap, fig_stayHeatMap, fig_exhibitionRealtimeVisitorCount, \
+    return fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount, \
            fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, msg
 
 if __name__ == '__main__':

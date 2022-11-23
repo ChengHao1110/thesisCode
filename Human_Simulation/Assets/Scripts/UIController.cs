@@ -100,6 +100,9 @@ public partial class UIController : PersistentSingleton<UIController>
     /*buttom board buttons*/
     public Button oriButton, aButton, bButton;
 
+    List<GameObject> cameraOptionsBtns = new List<GameObject>();
+    public GameObject cameraOptionsBtnPrefab;
+    public GameObject cameraOptionsBtnsParent;
     void Start()
     {
         //ui setting
@@ -463,7 +466,6 @@ public partial class UIController : PersistentSingleton<UIController>
                 break;
         }
         
-
         changeOption(0);
     }
 
@@ -473,8 +475,11 @@ public partial class UIController : PersistentSingleton<UIController>
         {
             // original : 0, A: 1, B: 2
             curOption = curSceneOptions[index];
-            cameras[currentScene].mainCamera.transform.position = cameraPos[index];
+            //cameras[currentScene].mainCamera.transform.position = cameraPos[index];
+            CameraController cc = Camera.main.GetComponent<CameraController>();
+            cc.SetCamera(cc.cameras[currentScene][0], index);
             cameras[currentScene].minimapCamera.transform.position = miniCameraPos[index];
+            
 
             switch (index) 
             {
@@ -494,8 +499,8 @@ public partial class UIController : PersistentSingleton<UIController>
                     bButton.GetComponent<Image>().color = selectedColor;
                     break;
             }
-
-
+            SetCameraOptionsButtons(index);
+            ChangeCameraOptionBtnColor(0);
             if (currentMode == "RealDataVisualization")
             {
                 realDataDrawTest.instance.cleanBeforeRead();
@@ -511,6 +516,40 @@ public partial class UIController : PersistentSingleton<UIController>
         }
     }
 
+    public void SetCameraOptionsButtons(int index)
+    {
+        if (cameraOptionsBtns.Count > 0)
+        {
+            for(int i = 0; i < cameraOptionsBtns.Count; i++)
+            {
+                Destroy(cameraOptionsBtns[i]);
+            }
+            cameraOptionsBtns.Clear();
+        }
+        CameraController cc = Camera.main.GetComponent<CameraController>();
+        for (int i = 0; i < cc.cameraList.Count; i++)
+        {
+            GameObject go = (GameObject)Instantiate(cameraOptionsBtnPrefab);
+            go.transform.SetParent(cameraOptionsBtnsParent.transform);
+            Button btn = go.GetComponent<Button>();
+            TextMeshProUGUI text = go.GetComponentInChildren<TextMeshProUGUI>();
+            text.text = (i + 1).ToString();
+            int id = i;
+            btn.onClick.AddListener(() => { cc.SetCameraByBtn(cc.cameras[currentScene][id], index, id);
+                                            ChangeCameraOptionBtnColor(id);
+                                          });
+            cameraOptionsBtns.Add(go);
+        }
+    }
+    void ChangeCameraOptionBtnColor(int id)
+    {
+        for(int i = 0; i < cameraOptionsBtns.Count; i++)
+        {
+            Button btn = cameraOptionsBtns[i].GetComponent<Button>();
+            if (i == id) btn.GetComponent<Image>().color = selectedColor;
+            else btn.GetComponent<Image>().color = unSelectedColor;
+        }
+    }
     public void changeSettings()
     {
         tmpSaveUISettings = allSceneSettings[currentScene].customUI.copy();
