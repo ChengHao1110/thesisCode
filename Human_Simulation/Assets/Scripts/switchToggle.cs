@@ -9,7 +9,7 @@ public class switchToggle : MonoBehaviour
 
     public Image img;
     public Sprite switchOn, switchOff;
-    Toggle toggle;
+    public Toggle toggle;
     void Awake()
     {
         toggle = GetComponent<Toggle>();
@@ -17,7 +17,7 @@ public class switchToggle : MonoBehaviour
         if (toggle.isOn) SwitchOn(toggle.isOn);
     }
 
-    void SwitchOn(bool on)
+    public void SwitchOn(bool on)
     {
         if (on)
         {

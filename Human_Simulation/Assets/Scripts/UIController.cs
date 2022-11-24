@@ -63,6 +63,7 @@ public partial class UIController : PersistentSingleton<UIController>
     public GameObject cameraPos_119, cameraPos_120, cameraPos_225;
     public GameObject miniCameraPos_119, miniCameraPos_120, miniCameraPos_225;
     public GameObject DashBoard;
+    public GameObject DashBoardSwitch;
 
     /*right panel in simulation mode UI*/
     public GameObject settingUIBoard;
@@ -103,6 +104,8 @@ public partial class UIController : PersistentSingleton<UIController>
     List<GameObject> cameraOptionsBtns = new List<GameObject>();
     public GameObject cameraOptionsBtnPrefab;
     public GameObject cameraOptionsBtnsParent;
+
+    
     void Start()
     {
         //ui setting
@@ -205,7 +208,9 @@ public partial class UIController : PersistentSingleton<UIController>
         Debug.Log(idx);
         if (isPanelUsing["modifyScene"])
         {
-            DashBoard.SetActive(false);
+            //DashBoard.SetActive(false);
+            DashBoardSwitch.GetComponent<switchToggle>().toggle.isOn = false;
+            DashBoardSwitch.GetComponent<switchToggle>().SwitchOn(false);
             cameras[sceneHeadName].mainCamera.tag = "Untagged";
             cameras[sceneHeadName].minimapCamera.tag = "MainCamera";
             mainCamera.targetTexture = minimapRT;
@@ -221,7 +226,9 @@ public partial class UIController : PersistentSingleton<UIController>
         }
         else
         {
-            DashBoard.SetActive(true);
+            //DashBoard.SetActive(true);
+            DashBoardSwitch.GetComponent<switchToggle>().toggle.isOn = true;
+            DashBoardSwitch.GetComponent<switchToggle>().SwitchOn(true);
             //reset to default
             cameras[sceneHeadName].mainCamera.tag = "MainCamera";
             cameras[sceneHeadName].minimapCamera.tag = "Untagged";
@@ -291,7 +298,8 @@ public partial class UIController : PersistentSingleton<UIController>
             int childCount = simulationModeUI.transform.childCount;
             saveLoadPanel.transform.SetSiblingIndex(childCount - 1);
             CloseOtherPanelOperation("saveload");
-
+            DashBoardSwitch.GetComponent<switchToggle>().toggle.isOn = true;
+            DashBoardSwitch.GetComponent<switchToggle>().SwitchOn(true);
         }
         else
         {
@@ -309,6 +317,8 @@ public partial class UIController : PersistentSingleton<UIController>
             int childCount = simulationModeUI.transform.childCount;
             heatmapSettingPanel.transform.SetSiblingIndex(childCount - 1);
             CloseOtherPanelOperation("heatmapSetting");
+            DashBoardSwitch.GetComponent<switchToggle>().toggle.isOn = true;
+            DashBoardSwitch.GetComponent<switchToggle>().SwitchOn(true);
         }
         else
         {
@@ -326,7 +336,9 @@ public partial class UIController : PersistentSingleton<UIController>
             int childCount = simulationModeUI.transform.childCount;
             replayPanel.transform.SetSiblingIndex(childCount - 1);
             CloseOtherPanelOperation("replayMode");
-            DashBoard.SetActive(false);
+            //DashBoard.SetActive(false);
+            DashBoardSwitch.GetComponent<switchToggle>().toggle.isOn = false;
+            DashBoardSwitch.GetComponent<switchToggle>().SwitchOn(false);
             replayMode.SetActive(true);
         }
         else
@@ -401,6 +413,11 @@ public partial class UIController : PersistentSingleton<UIController>
     /* update when mode or scene change*/
     public void setScene(string sceneName)
     {
+        if (isPanelUsing["modifyScene"])
+        {
+            ShowMsgPanel("Warning", "Cannot change mode & scene in modify scene operation!");
+            return;
+        }
         /* single selection of UI */
         Vector3 cameraPosition = Vector3.zero, miniCameraPosition = Vector3.zero;
         foreach (KeyValuePair<string, cameraPerScene> camera in cameras)
@@ -558,6 +575,11 @@ public partial class UIController : PersistentSingleton<UIController>
     
     public void switchMode(string mode)
     {
+        if (isPanelUsing["modifyScene"])
+        {
+            ShowMsgPanel("Warning", "Cannot change mode & scene in modify scene operation!");
+            return;
+        }
         if (mode == "RealDataVisualization")
         {
             changeOption(0);

@@ -51979,6 +51979,7 @@ MonoBehaviour:
   img: {fileID: 1581481286}
   switchOn: {fileID: -5791533861771406970, guid: a823e8dd08de03f44b0c9b1015057b94, type: 3}
   switchOff: {fileID: 1971089474277950741, guid: a823e8dd08de03f44b0c9b1015057b94, type: 3}
+  toggle: {fileID: 0}
 --- !u!114 &1092727589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84416,6 +84417,7 @@ MonoBehaviour:
   miniCameraPos_120: {fileID: 878300289}
   miniCameraPos_225: {fileID: 1074717948}
   DashBoard: {fileID: 2082815025}
+  DashBoardSwitch: {fileID: 1092727586}
   settingUIBoard: {fileID: 957583144}
   modifyController: {fileID: 720273582}
   saveLoadPanel: {fileID: 513471307}

@@ -24,7 +24,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             var ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
             RaycastHit hit;
