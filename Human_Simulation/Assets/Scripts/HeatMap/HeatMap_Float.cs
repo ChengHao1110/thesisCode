@@ -21,6 +21,7 @@ public class HeatMap_Float : MonoBehaviour
         if(debugMode == true)
         {
             DebugHeatMap();
+            //TakeScreenShotDebug();
             return;
         }
         if (dynamicSystem.instance.heatmapMode == "realtime") // for debug
@@ -67,7 +68,7 @@ public class HeatMap_Float : MonoBehaviour
         GameObject heatmapCamera = GameObject.Find("heatmapCamera_" + UIController.instance.currentScene);
         */
         heatmapCamera.SetActive(true);
-        int resWidth = 1200, resHeight = 1200;
+        int resWidth = 1600, resHeight = 1080;
         Camera camera = heatmapCamera.GetComponent<Camera>();
         SetCameraCullingMask(camera, UIController.instance.currentScene);
         RenderTexture rt = new RenderTexture(resWidth, resHeight, 24);
@@ -82,6 +83,32 @@ public class HeatMap_Float : MonoBehaviour
         byte[] bytes = screenShot.EncodeToPNG();
         //string filename = ScreenShotName(resWidth, resHeight);
         string filename = dynamicSystem.instance.heatmapFilename;
+        System.IO.File.WriteAllBytes(filename, bytes);
+        //DestroyVisualPrefab();
+        heatmapCamera.SetActive(false);
+    }
+
+    void TakeScreenShotDebug()
+    {
+        /*
+        GameObject heatmapCamera = GameObject.Find("heatmapCamera_" + UIController.instance.currentScene);
+        */
+        heatmapCamera.SetActive(true);
+        int resWidth = 1600, resHeight = 1080;
+        Camera camera = heatmapCamera.GetComponent<Camera>();
+        SetCameraCullingMask(camera, UIController.instance.currentScene);
+        RenderTexture rt = new RenderTexture(resWidth, resHeight, 24);
+        camera.targetTexture = rt;
+        Texture2D screenShot = new Texture2D(resWidth, resHeight, TextureFormat.RGB24, false);
+        camera.Render();
+        RenderTexture.active = rt;
+        screenShot.ReadPixels(new Rect(0, 0, resWidth, resHeight), 0, 0);
+        camera.targetTexture = null;
+        RenderTexture.active = null; // JC: added to avoid errors
+        Destroy(rt);
+        byte[] bytes = screenShot.EncodeToPNG();
+        string filename = ScreenShotName(resWidth, resHeight);
+        //string filename = dynamicSystem.instance.heatmapFilename;
         System.IO.File.WriteAllBytes(filename, bytes);
         //DestroyVisualPrefab();
         heatmapCamera.SetActive(false);
@@ -441,35 +468,10 @@ public class HeatMap_Float : MonoBehaviour
         {
             maxLimit = dynamicSystem.instance.stayMaxLimit;
         }
-         
-        //string input = File.ReadAllText(@"E:\ChengHao\Lab707\thesisCode\ChengHao\thesisCode\Human_Simulation\Assets\StreamingAssets\Simulation_Result\test37\space_usage.txt");
-
-        //float[,] matrix = new float[size, size];
+        
         float[,] matrix = dynamicSystem.instance.staticMatrix;
         int i = 0, j = 0;
         float max = -1;
-        /*
-        foreach (var row in input.Split('\n'))
-        {
-            j = 0;
-            foreach (var col in row.Split(' '))
-            {
-                if (col == "") break;
-
-                float value = float.Parse(col);
-                if (value > max && value <= maxLimit) max = value;
-                if (value > maxLimit)
-                {
-                    value = maxLimit;
-                    max = maxLimit;
-                }
-                matrix[i, j] = value;
-
-                j++;
-            }
-            i++;
-        }
-        */
         float[,] matrixAfterRotation = new float[size, size];
 
         //counterclockwise 90
@@ -531,16 +533,7 @@ public class HeatMap_Float : MonoBehaviour
                 }
             }
         }
-        /*
-       max = -1;
-       for (i = 0; i < size; i++)
-       {
-           for (j = 0; j < size; j++)
-           {
-               if (matrix[i, j] > max) max = matrix[i, j];
-           }
-       }
-       */
+
         max = -1;
         for (i = 0; i < size; i++)
         {
@@ -554,16 +547,34 @@ public class HeatMap_Float : MonoBehaviour
                 }
             }
         }
+
+        Debug.Log("Max: " + max);
+        if (maxLimit > max && !dynamicSystem.instance.firstGenerateHeatmap)
+        {
+            max = maxLimit;
+        }
+
+        //change Heatmap Setting UI Max Value
         if (dynamicSystem.instance.heatmapFilename.Contains("move"))
         {
+            if (dynamicSystem.instance.firstGenerateHeatmap)
+            {
+                HeatmapSetting.instance.originalMoveHeatmapValue.text = max.ToString("f2");
+            }
             HeatmapSetting.instance.moveMaxValueInput.text = max.ToString("f2");
         }
         else
         {
+            if (dynamicSystem.instance.firstGenerateHeatmap)
+            {
+                HeatmapSetting.instance.originalStayHeatmapValue.text = max.ToString("f2");
+            }
             HeatmapSetting.instance.stayMaxValueInput.text = max.ToString("f2");
         }
+
         
-        
+
+
         //set grid
         int edgeMeshCount = size / defaultSize;
         int totalMeshCount = edgeMeshCount * edgeMeshCount;
@@ -600,7 +611,7 @@ public class HeatMap_Float : MonoBehaviour
             offset += new Vector3(0, 0, 0);
         }
 
-        Debug.Log("Max: " + max);
+
         for (i = 0; i < edgeMeshCount; i++)
         {
             for (j = 0; j < edgeMeshCount; j++)
@@ -642,7 +653,7 @@ public class HeatMap_Float : MonoBehaviour
         switch (UIController.instance.currentScene)
         {
             case "119":
-                heatmapCameraOriginPos = new Vector3(-0.5f, 15, 0);
+                heatmapCameraOriginPos = new Vector3(0f, 15, -2.3f);
                 heatmapCamera.GetComponent<Camera>().orthographicSize = 10.48f;
                 break;
             case "120":
@@ -658,16 +669,17 @@ public class HeatMap_Float : MonoBehaviour
         heatmapCameraOriginPos += offset;
         heatmapCamera.transform.position = heatmapCameraOriginPos;
         TakeScreenShot();
-        
+        //do it once for original text
+        if (dynamicSystem.instance.heatmapFilename.Contains("stay") && dynamicSystem.instance.firstGenerateHeatmap) dynamicSystem.instance.firstGenerateHeatmap = false;
     }
 
     public void DebugHeatMap()
     {
         int size = 500;
         float sceneSize = dynamicSystem.instance.sceneSize;
-        //float maxLimit = 0;
-        string path = "D:\\ChengHao\\thesisCode\\Human_Simulation\\Assets\\StreamingAssets\\Simulation_Result\\sample3\\";
-        string input = File.ReadAllText(@"D:\ChengHao\thesisCode\Human_Simulation\Assets\StreamingAssets\Simulation_Result\sample3\moveHeatMap.txt");
+        float maxLimit = 332;
+        string path = "D:\\ChengHao\\thesisCode\\Human_Simulation\\Assets\\StreamingAssets\\Simulation_Result\\sample14\\";
+        string input = File.ReadAllText(@"D:\ChengHao\thesisCode\Human_Simulation\Assets\StreamingAssets\Simulation_Result\sample14\moveHeatMap.txt");
 
         float[,] matrix = new float[size, size];
         int i = 0, j = 0;
@@ -823,6 +835,7 @@ public class HeatMap_Float : MonoBehaviour
         }
 
         Debug.Log("Max: " + max);
+        if (maxLimit > max) max = maxLimit;
         for (i = 0; i < edgeMeshCount; i++)
         {
             for (j = 0; j < edgeMeshCount; j++)

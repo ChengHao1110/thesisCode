@@ -350,7 +350,7 @@ public partial class UIController : PersistentSingleton<UIController>
     public void BackToSetting()
     {
         CloseOtherPanelOperation("UISetting");
-        DashBoard.SetActive(true);
+        //DashBoard.SetActive(true);
         if (isPanelUsing["simpleUISetting"])
         {
             GoToBasicSetting();
@@ -467,17 +467,17 @@ public partial class UIController : PersistentSingleton<UIController>
         switch (sceneName)
         {
             case "119":
-                dynamicSystem.instance.matrixSize = 400;
+                dynamicSystem.instance.matrixSize = 500;
                 dynamicSystem.instance.gaussianFilterSize = 10;
                 dynamicSystem.instance.sceneSize = 22;
                 break;
             case "120":
-                dynamicSystem.instance.matrixSize = 400;
+                dynamicSystem.instance.matrixSize = 500;
                 dynamicSystem.instance.gaussianFilterSize = 10;
-                dynamicSystem.instance.sceneSize = 22;
+                dynamicSystem.instance.sceneSize = 26;
                 break;
             case "225":
-                dynamicSystem.instance.matrixSize = 400;
+                dynamicSystem.instance.matrixSize = 500;
                 dynamicSystem.instance.gaussianFilterSize = 10;
                 dynamicSystem.instance.sceneSize = 20;
                 break;

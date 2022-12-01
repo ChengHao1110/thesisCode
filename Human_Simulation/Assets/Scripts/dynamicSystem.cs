@@ -174,6 +174,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public int matrixSize = 500, gaussianFilterSize = 10, sceneSize = 22;
     public float moveMaxLimit = 5000, stayMaxLimit = 5000;
     public bool useGaussian = false;
+    public bool firstGenerateHeatmap = true;
     public GameObject Heatmap;
     public int gaussian_rate = 4;
     float[] gaussianValue;
@@ -566,7 +567,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             
                         }
                     }
-
+                    /*
                     Vector3 fwd = person.Value.model.transform.TransformDirection(Vector3.forward);
                     Debug.DrawRay(person.Value.model.transform.position, fwd * 2.0f, Color.green);
                     RaycastHit objectHit;
@@ -590,7 +591,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     {
                         person.Value.agent.speed = person.Value.navSpeed;
                     }
-                    
+                    */
                     #region SFM
                     /*SFM 排斥力*/
                     /*
@@ -1718,6 +1719,65 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         string curScene = UIController.instance.currentScene;
         string curOption = UIController.instance.curOption;
 
+        // GameObject curEnvironRoot = EnvironmentsRoot.transform.Find(curScene).GetComponent<GameObject>();
+        GameObject environRoot = GameObject.Find("/[EnvironmentsOfEachScene]/" + curOption + "/");
+        foreach (Transform child in environRoot.transform)
+        {
+            if (child.name.StartsWith(curScene + "_ExitDoor"))
+            {
+                string exitName = "exit" + child.name.Replace(curScene + "_ExitDoor", "");
+                string objectPathRoot = "/[EnvironmentsOfEachScene]/" + curOption + "/";
+                objectPathRoot += child.name;
+
+                exhibition_single newExit = new exhibition_single();
+                newExit.name = exitName;
+                newExit.model = child.gameObject;
+                newExit.centerPosition = GameObject.Find(objectPathRoot + "/center").transform.position; // newExit.model.transform.position;
+                newExit.centerPosition.y = 0;
+                newExit.enterPosition = GameObject.Find(objectPathRoot + "/enterPos").transform.position; // newExit.model.transform.position;
+                newExit.enterPosition.y = 0;
+                newExit.leavePosition = GameObject.Find(objectPathRoot + "/leavePos").transform.position; // newExit.model.transform.position;
+                newExit.leavePosition.y = 0;
+                newExit.range.Add(GameObject.Find(objectPathRoot + "/range"));
+                GameObject range1 = GameObject.Find(objectPathRoot + "/range1");
+                if (range1 != null) newExit.range.Add(range1);
+
+                newExit.stayTimeSetting.min = 1;
+                newExit.stayTimeSetting.max = 60; // 1 mins
+                newExit.stayTimeSetting.mean = 1;
+                newExit.stayTimeSetting.std = 0;
+                newExit.capacity_max = 10000;
+                newExit.chosenProbabilty = 0; // for not affecting the popular level
+                newExit.repeatChosenProbabilty = 0;
+
+                Vector3 boardPos = newExit.centerPosition;
+                boardPos.y = 3;
+                newExit.informationBoard = (GameObject)Instantiate(informationBoardPrefab_exhibit, boardPos, Quaternion.identity);
+                newExit.informationBoard.name = "informationBoard";
+                newExit.informationBoard.transform.SetParent(newExit.model.transform);
+                newExit.informationText = newExit.informationBoard.transform.Find("Text").GetComponent<TextMesh>();
+                string fixedText = exitName + "\n";
+                fixedText += "chosenProb: " + newExit.chosenProbabilty + "\n";
+                fixedText += "AvgStayTime: " + newExit.stayTimeSetting.mean + "\n";
+                newExit.fixedText = fixedText;
+                newExit.updateInformationBoard();
+                newExit.informationBoard.SetActive(false);
+
+                /* for influence Map */
+                Vector3 markerPos = newExit.centerPosition;
+                markerPos.y = 7.5f;
+                GameObject marker = Instantiate(markerPrefab_exhibit, markerPos, Quaternion.identity);
+                marker.layer = 8;
+                marker.name = "marker_" + exitName;
+                marker.transform.parent = markersParent.transform;
+                marker.transform.Find("Text").GetComponent<TextMesh>().fontSize = 36;
+                marker.transform.Find("Text").GetComponent<TextMesh>().text = exitName;
+                influenceMapVisualize.instance.markers.Add(exitName, marker);
+
+                exits.Add(exitName, newExit);
+            }
+        }
+
         foreach (KeyValuePair<string, settings_exhibition> exhibit in currentSceneSettings.Exhibitions)
         {
             if (exhibit.Key != "walkableArea")
@@ -1793,64 +1853,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             
         }
 
-        // GameObject curEnvironRoot = EnvironmentsRoot.transform.Find(curScene).GetComponent<GameObject>();
-        GameObject environRoot = GameObject.Find("/[EnvironmentsOfEachScene]/" + curOption + "/");
-        foreach (Transform child in environRoot.transform)
-        {
-            if(child.name.StartsWith(curScene + "_ExitDoor"))
-            {
-                string exitName = "exit" + child.name.Replace(curScene + "_ExitDoor", "");
-                string objectPathRoot = "/[EnvironmentsOfEachScene]/" + curOption + "/";
-                objectPathRoot += child.name;
-                
-                exhibition_single newExit = new exhibition_single();
-                newExit.name = exitName;
-                newExit.model = child.gameObject;
-                newExit.centerPosition = GameObject.Find(objectPathRoot + "/center").transform.position; // newExit.model.transform.position;
-                newExit.centerPosition.y = 0;
-                newExit.enterPosition = GameObject.Find(objectPathRoot + "/enterPos").transform.position; // newExit.model.transform.position;
-                newExit.enterPosition.y = 0;
-                newExit.leavePosition = GameObject.Find(objectPathRoot + "/leavePos").transform.position; // newExit.model.transform.position;
-                newExit.leavePosition.y = 0;
-                newExit.range.Add(GameObject.Find(objectPathRoot + "/range"));
-                GameObject range1 = GameObject.Find(objectPathRoot + "/range1");
-                if (range1 != null) newExit.range.Add(range1);
-
-                newExit.stayTimeSetting.min = 1;
-                newExit.stayTimeSetting.max = 60; // 1 mins
-                newExit.stayTimeSetting.mean = 1;
-                newExit.stayTimeSetting.std = 0;
-                newExit.capacity_max = 10000;
-                newExit.chosenProbabilty = 0; // for not affecting the popular level
-                newExit.repeatChosenProbabilty = 0;
-
-                Vector3 boardPos = newExit.centerPosition;
-                boardPos.y = 3;
-                newExit.informationBoard = (GameObject)Instantiate(informationBoardPrefab_exhibit, boardPos, Quaternion.identity);
-                newExit.informationBoard.name = "informationBoard";
-                newExit.informationBoard.transform.SetParent(newExit.model.transform);
-                newExit.informationText = newExit.informationBoard.transform.Find("Text").GetComponent<TextMesh>();
-                string fixedText = exitName + "\n";
-                fixedText += "chosenProb: " + newExit.chosenProbabilty + "\n";
-                fixedText += "AvgStayTime: " + newExit.stayTimeSetting.mean + "\n";
-                newExit.fixedText = fixedText;
-                newExit.updateInformationBoard();
-                newExit.informationBoard.SetActive(false);
-
-                /* for influence Map */
-                Vector3 markerPos = newExit.centerPosition;
-                markerPos.y = 7.5f;
-                GameObject marker = Instantiate(markerPrefab_exhibit, markerPos, Quaternion.identity);
-                marker.layer = 8;
-                marker.name = "marker_" + exitName;
-                marker.transform.parent = markersParent.transform;
-                marker.transform.Find("Text").GetComponent<TextMesh>().fontSize = 36;
-                marker.transform.Find("Text").GetComponent<TextMesh>().text = exitName;
-                influenceMapVisualize.instance.markers.Add(exitName, marker);
-
-                exits.Add(exitName, newExit);
-            }
-        }
+        
     }
 
     void generateBestViewByStatisticDistance(exhibition_single ex, string exName)
@@ -1914,7 +1917,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
         
         GameObject rangeCopy = ex.range[0];
-        float rate = 0.7f;
+        float rate = 0.65f;
         rangeCopy.transform.localScale *= rate;
         Mesh meshCopy = rangeCopy.GetComponent<MeshFilter>().mesh;
         Vector3[] verticesCopy = meshCopy.vertices;
@@ -2014,11 +2017,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     float a1, a2, b1, b2, c1, c2;
                     // first line : 2 points -> center to (_x, 0, _z)
                     //according to the origin point
-                    
+                    /*
                     a1 = center.z - signPos.z;
                     b1 = signPos.x - center.x;
                     c1 = center.x * signPos.z - signPos.x * center.z;
-                    
+                    */
                     float angle = Vector3.Angle(Vector3.left, _direct - center);
                     //Debug.DrawLine(center, _direct, Color.yellow, 200);
                     //Debug.Log(angle);
@@ -2027,11 +2030,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     //Debug.Log(exName + " " + direction + " " + afterRot);
                     //Debug.DrawLine(center, center + afterRot * 2, Color.green, 200);
                     //Vector3 afterRot = Quaternion.AngleAxis(-15 - direction * 30, Vector3.up) * Vector3.right;
-                    /*
+                    
                     a1 = -afterRot.z;
                     b1 = afterRot.x;
                     c1 = center.x * (center.z + afterRot.z) - (center.x + afterRot.x) * center.z;
-                    */
+                    
                     // second line : 2 points -> useVerticesCopy[i] to useVerticesCopy[i + 1] 
                     int next = 0;
                     switch (i) {
@@ -2064,15 +2067,15 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
 
                     //check cross point is reasonable
-
                     //in line 
+                    Vector2 v1, v2;
                     if ( (crossX - useVerticesCopy[i].x) * (useVerticesCopy[next].z - useVerticesCopy[i].z) - (useVerticesCopy[next].x - useVerticesCopy[i].x) * (crossY - useVerticesCopy[i].z) < 0.01f &&
                          Math.Min(useVerticesCopy[i].x, useVerticesCopy[next].x) <= crossX && crossX <= Math.Max(useVerticesCopy[i].x, useVerticesCopy[next].x) &&
                          Math.Min(useVerticesCopy[i].z, useVerticesCopy[next].z) <= crossY && crossY <= Math.Max(useVerticesCopy[i].z, useVerticesCopy[next].z))
                     {
-                        Vector2 v1 = new Vector2(crossX - center.x, crossY - center.z);
+                        v1 = new Vector2(crossX - center.x, crossY - center.z);
                         //Vector2 v2 = new Vector2(afterRot.x, afterRot.z);
-                        Vector2 v2 = new Vector2(_direct.x - center.x, _direct.z - center.z);
+                        v2 = new Vector2(_direct.x - center.x, _direct.z - center.z);
                         if ( Math.Abs(Vector2.Dot(v1, v2) / (v1.magnitude * v2.magnitude) - 1) < 0.0001f)
                         {
                             finalPoint.x = crossX;
@@ -2084,11 +2087,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     {
                         continue;
                     }
-
-                    /*
+                    
+                    
                     Vector3 dist = new Vector3(crossX - signPos.x, 0, crossY - signPos.z);
-                    Vector2 v1 = new Vector2(crossX - center.x, crossY - center.z);
-                    Vector2 v2 = new Vector2(signPos.x - center.x, signPos.z - center.z);
+                    v1 = new Vector2(crossX - center.x, crossY - center.z);
+                    v2 = new Vector2(signPos.x - center.x, signPos.z - center.z);
                     //Debug.Log(Vector2.Dot(v1, v2) / (v1.magnitude * v2.magnitude));
                     if ( Vector2.Dot(v1, v2) / (v1.magnitude * v2.magnitude) - 1 < 0.0001f && dist.magnitude <= minDistance)
                     {
@@ -2096,13 +2099,19 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         finalPoint.x = crossX;
                         finalPoint.z = crossY;
                     }
-                    */
+                    
                 }
 
                 //check if touchable by the agents
+                if(finalPoint == Vector3.zero)
+                {
+                    finalPoint = signPos;
+                }
                 _direct_onNavMesh = finalPoint;
                 path = new NavMeshPath();
-                NavMesh.CalculatePath(planeCenter, finalPoint, walkableMask, path);
+                NavMesh.CalculatePath(exits["exit1"].model.transform.position, finalPoint, walkableMask, path);
+                Debug.Log(sign_test.name + " path status: " + path.status);
+                print(_direct_onNavMesh);
                 if (path.status != NavMeshPathStatus.PathComplete)
                 {
                     //Debug.Log(exName + " " + direction + " " + walkableMask);
@@ -2113,7 +2122,9 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     if (NavMesh.SamplePosition(finalPoint, out myNavHit, 5.0f, walkableMask))
                     {
                         _direct_touch = myNavHit.position;
-                        NavMesh.CalculatePath(planeCenter, _direct_touch, walkableMask, path);
+                        NavMesh.CalculatePath(exits["exit1"].model.transform.position, _direct_touch, walkableMask, path);
+                        print(_direct_touch);
+                        Debug.Log(sign_test.name + " path status: " + path.status);
                         if (path.status == NavMeshPathStatus.PathComplete)
                         {
                             _direct_onNavMesh = _direct_touch;
@@ -3883,6 +3894,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     {
                         secondId = exhibitionCount + (secondExhibition[4] - '0' - 1);
                     }
+                    print(firstId + " " + secondId);
                     exMatrix[firstId, secondId]++;
                 }
             }

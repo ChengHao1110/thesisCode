@@ -42,6 +42,7 @@ fig_visitorVisitingTimeInEachExhibit = ''
 fig_chord = ''
 
 def GetFigures(path):
+    print(path)
     db_fnc.path = path
     fig_moveHeatMap, fig_stayHeatMap, fig_layout = db_fnc.GetFigure_HeapMap()
     fig_visitorVisitingTimeInEachExhibit = db_fnc.GetFigure_VistorVisitingTimeInEachExhibit()

@@ -9,22 +9,29 @@ public class HeatmapSetting : PersistentSingleton<HeatmapSetting>
 {
     public Toggle useGaussianFilterToggle;
     public TMP_InputField filterRateInput, moveMaxValueInput, stayMaxValueInput, matrixSizeInput;
+    public TextMeshProUGUI originalMoveHeatmapValue, originalStayHeatmapValue;
     public GameObject heatmap;
 
+    
     // Start is called before the first frame update
     void Start()
     {
         //initial value
         filterRateInput.text = dynamicSystem.instance.gaussianFilterSize.ToString();
+        originalMoveHeatmapValue.text = dynamicSystem.instance.moveMaxLimit.ToString();
         moveMaxValueInput.text = dynamicSystem.instance.moveMaxLimit.ToString();
+        originalStayHeatmapValue.text = dynamicSystem.instance.stayMaxLimit.ToString();
         stayMaxValueInput.text = dynamicSystem.instance.stayMaxLimit.ToString();
         matrixSizeInput.text = dynamicSystem.instance.matrixSize.ToString();
         useGaussianFilterToggle.isOn = dynamicSystem.instance.useGaussian;
-        
-        
+
+        /*
         useGaussianFilterToggle.onValueChanged.AddListener(ifselect => {
             if (ifselect) UseGaussianFilterToggle();
         });
+        */
+        useGaussianFilterToggle.onValueChanged.AddListener(UseGaussianFilterToggle);
+
         filterRateInput.onValueChanged.AddListener(delegate { ChangeHeatmapFilterRateValue(); });
         moveMaxValueInput.onValueChanged.AddListener(delegate { ChangeMoveHeatmapMaxValue(); });
         stayMaxValueInput.onValueChanged.AddListener(delegate { ChangeStayHeatmapMaxValue(); });
@@ -37,20 +44,21 @@ public class HeatmapSetting : PersistentSingleton<HeatmapSetting>
         
     }
 
-    public void UseGaussianFilterToggle()
+    public void UseGaussianFilterToggle(bool on)
     {
-        dynamicSystem.instance.useGaussian = true;
-    }
+        dynamicSystem.instance.useGaussian = (on) ? true : false;
+        Debug.Log(dynamicSystem.instance.useGaussian);
 
+        //dynamicSystem.instance.useGaussian = true;
+    }
     public void ChangeMoveHeatmapMaxValue()
     {
         float value = float.Parse(moveMaxValueInput.text);
         dynamicSystem.instance.moveMaxLimit = value;
     }
-
     public void ChangeStayHeatmapMaxValue()
     {
-        float value = float.Parse(moveMaxValueInput.text);
+        float value = float.Parse(stayMaxValueInput.text);
         dynamicSystem.instance.stayMaxLimit = value;
     }
 

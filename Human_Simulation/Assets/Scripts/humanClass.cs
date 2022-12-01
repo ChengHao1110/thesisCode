@@ -479,7 +479,7 @@ public class human_single// List<human_single> humanCrowd;
 
     public bool checkIfArriveTarget()
     {
-        if (Vector3.Distance(this.currentPosition, this.nextTarget_pos) < 0.2f) // close enough means arrive
+        if (Vector3.Distance(this.currentPosition, this.nextTarget_pos) < 0.35f) // close enough means arrive
         {
             addTrajectory();
             return true;
