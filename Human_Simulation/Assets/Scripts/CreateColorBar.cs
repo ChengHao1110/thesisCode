@@ -27,44 +27,58 @@ public class CreateColorBar : MonoBehaviour
     Vector3 offset = Vector3.zero;
 
     // text
-    float textMaxValue, textValueInterval;
+    float textMaxValue, textStep, textOffsetTimes;
     public GameObject textPrefab;
     public GameObject textParent;
+    public HeatMap_Float heatMap_Float;
 
-
-    void OnEnable()
+    private void OnEnable()
     {
         InitializeParameters();
         SetColorBar();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
+        foreach(Transform text in textParent.transform)
+        {
+            Destroy(text.gameObject);
+        }
     }
+
     void InitializeParameters()
     {
-        colorbarLength = 10.0f; // z axis
         colorbarWidth = 0.5f; // x axis
         count = 10;
         colorValue = 1.0f / 3.0f;
         colorStep = colorValue / count;
+        textMaxValue = heatMap_Float.max;
+        textStep = textMaxValue / count;
         SetOffset();
     }
 
     void SetOffset()
     {
+        offset = Vector3.zero;
         switch (UIController.instance.currentScene)
         {
             case "119":
+                colorbarLength = 15.0f; // z axis
+                startPos = new Vector3(-12f, 7.5f, colorbarLength / 2.0f);
                 offset += new Vector3(0, 0, 0);
+                textOffsetTimes = 4.0f;
                 break;
             case "120":
+                colorbarLength = 20.0f; // z axis
+                startPos = new Vector3(-14f, 7.5f, colorbarLength / 2.0f);
                 offset += new Vector3(50, 0, 0);
+                textOffsetTimes = 5.0f;
                 break;
             case "225":
-                offset += new Vector3(100, 0, 4);
+                colorbarLength = 15.0f; // z axis
+                startPos = new Vector3(-12f, 7.5f, colorbarLength / 2.0f);
+                offset += new Vector3(101.2f, 0, 3.75f);
+                textOffsetTimes = 4.0f;
                 break;
         }
 
@@ -79,27 +93,11 @@ public class CreateColorBar : MonoBehaviour
         {
             CreateRectangle(i);
         }
-        CreateText(startPos - new Vector3(0, 0, colorbarLength) - 2 * new Vector3(colorbarWidth, 0, 0), 1.0f);
+        CreateText(startPos + offset - new Vector3(0, 0, colorbarLength) - textOffsetTimes * new Vector3(colorbarWidth, 0, 0), textMaxValue);
         var meshFilter = this.GetComponent<MeshFilter>();
         Mesh mesh = new Mesh();
         vh.FillMesh(mesh);
         meshFilter.mesh = mesh;
-        /*
-        VertexHelper vh = new VertexHelper();
-        vh.Clear();
-        vh.AddVert(new Vector3(0, 8, -10), Color.green, new Vector2(0, 0));
-        vh.AddVert(new Vector3(0, 8, -9.5f), Color.green, new Vector2(0, 1));
-        vh.AddVert(new Vector3(10, 8, -9.5f), Color.red, new Vector2(1, 1));
-        vh.AddVert(new Vector3(10, 8, -10), Color.red, new Vector2(1, 0));
-
-        vh.AddTriangle(0, 1, 2);
-        vh.AddTriangle(2, 3, 0);
-
-        var meshFilter = this.GetComponent<MeshFilter>();
-        Mesh mesh = new Mesh();
-        vh.FillMesh(mesh);
-        meshFilter.mesh = mesh;
-        */
     }
 
     void CreateRectangle(int idx)
@@ -127,19 +125,19 @@ public class CreateColorBar : MonoBehaviour
         verts[3].color = Color.HSVToRGB(colorValue - (idx + 1) * colorStep, 1, 1);
         verts[3].uv0 = Vector2.zero;
 
-        posOffset = idx * new Vector3(0, 0, -posStep) - 2 * new Vector3(colorbarWidth, 0, 0);
-        CreateText(startPos + posOffset, (float)idx / count);
+        posOffset = idx * new Vector3(0, 0, -posStep) - textOffsetTimes * new Vector3(colorbarWidth, 0, 0);
+        CreateText(startPos + offset + posOffset, idx * textStep);
 
         vh.AddUIVertexQuad(verts);
     }
 
-    void CreateText(Vector3 pos, float a)
+    void CreateText(Vector3 pos, float value)
     {
         GameObject markText = Instantiate(textPrefab);
         markText.transform.SetParent(textParent.transform);
         markText.transform.position = pos;
         markText.transform.rotation = Quaternion.Euler(90, 180, 0);
         markText.transform.localScale = new Vector3(1, 1, 1);
-        markText.GetComponent<TextMeshProUGUI>().text = "-" + a.ToString("f2");
+        markText.GetComponent<TextMeshProUGUI>().text = "-" + value.ToString("f2");
     }
 }

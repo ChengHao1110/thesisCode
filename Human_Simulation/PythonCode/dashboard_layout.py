@@ -14,7 +14,10 @@ def DrawFigure(title, description, figId, fig):
                         html.H5(description),
                         html.Div(
                             dcc.Graph(id = figId,
-                                      figure = fig
+                                      figure = fig,
+                                      style = {
+                                        "align" : "center"
+                                      }
                             )
                         )
                     ])

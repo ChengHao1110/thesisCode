@@ -9,12 +9,14 @@ public class HeatMap_Float : MonoBehaviour
     private GameObject[] visual;
     private HeatMapVisual_Float[] heatMapVisual;
     private Grid_Float[] grid;
+    public GameObject colorbar;
 
     //for screen shot
     [SerializeField] private GameObject heatmapCamera;
 
     static int defaultSize = 100;
     public bool debugMode = true;
+    public float maxLimit = 0, max = 0;
     
     void OnEnable()
     {
@@ -454,24 +456,13 @@ public class HeatMap_Float : MonoBehaviour
 
     public void StaticHeatmap()
     {
-        //int size = 500;
-        //float sceneSize = 22.0f;
-
         int size = dynamicSystem.instance.staticMatrix.GetLength(0);
         float sceneSize = dynamicSystem.instance.sceneSize;
-        float maxLimit = 0;
-        if (dynamicSystem.instance.heatmapFilename.Contains("move"))
-        {
-            maxLimit = dynamicSystem.instance.moveMaxLimit;
-        }
-        else
-        {
-            maxLimit = dynamicSystem.instance.stayMaxLimit;
-        }
+        if (dynamicSystem.instance.heatmapFilename.Contains("move")) maxLimit = dynamicSystem.instance.moveMaxLimit;
+        else maxLimit = dynamicSystem.instance.stayMaxLimit;
         
         float[,] matrix = dynamicSystem.instance.staticMatrix;
         int i = 0, j = 0;
-        float max = -1;
         float[,] matrixAfterRotation = new float[size, size];
 
         //counterclockwise 90
@@ -572,9 +563,6 @@ public class HeatMap_Float : MonoBehaviour
             HeatmapSetting.instance.stayMaxValueInput.text = max.ToString("f2");
         }
 
-        
-
-
         //set grid
         int edgeMeshCount = size / defaultSize;
         int totalMeshCount = edgeMeshCount * edgeMeshCount;
@@ -594,7 +582,7 @@ public class HeatMap_Float : MonoBehaviour
                 offset += new Vector3(50, 0, 0);
                 break;
             case "225":
-                offset += new Vector3(100, 0, 4);
+                offset += new Vector3(101.2f, 0, 3.75f);
                 break;
         }
 
@@ -653,22 +641,26 @@ public class HeatMap_Float : MonoBehaviour
         switch (UIController.instance.currentScene)
         {
             case "119":
-                heatmapCameraOriginPos = new Vector3(0f, 15, -2.3f);
+                heatmapCameraOriginPos = new Vector3(-0.5f, 15, 0f);
                 heatmapCamera.GetComponent<Camera>().orthographicSize = 10.48f;
                 break;
             case "120":
                 heatmapCameraOriginPos = new Vector3(-0.5f, 15, 0);
-                heatmapCamera.GetComponent<Camera>().orthographicSize = 10.9f;
+                heatmapCamera.GetComponent<Camera>().orthographicSize = 13f;
                 break;
             case "225":
                 heatmapCameraOriginPos = new Vector3(-0.5f, 15, 0f);
-                heatmapCamera.GetComponent<Camera>().orthographicSize = 8.58f;
+                heatmapCamera.GetComponent<Camera>().orthographicSize = 10.48f;
                 break;
         }
 
         heatmapCameraOriginPos += offset;
         heatmapCamera.transform.position = heatmapCameraOriginPos;
+
+        colorbar.SetActive(true);
         TakeScreenShot();
+        colorbar.SetActive(false);
+
         //do it once for original text
         if (dynamicSystem.instance.heatmapFilename.Contains("stay") && dynamicSystem.instance.firstGenerateHeatmap) dynamicSystem.instance.firstGenerateHeatmap = false;
     }
@@ -677,13 +669,12 @@ public class HeatMap_Float : MonoBehaviour
     {
         int size = 500;
         float sceneSize = dynamicSystem.instance.sceneSize;
-        float maxLimit = 332;
         string path = "D:\\ChengHao\\thesisCode\\Human_Simulation\\Assets\\StreamingAssets\\Simulation_Result\\sample14\\";
-        string input = File.ReadAllText(@"D:\ChengHao\thesisCode\Human_Simulation\Assets\StreamingAssets\Simulation_Result\sample14\moveHeatMap.txt");
+        string input = File.ReadAllText(@"D:\ChengHao\thesisCode\Human_Simulation\Assets\StreamingAssets\Simulation_Result\colorbar120\moveHeatMap.txt");
 
         float[,] matrix = new float[size, size];
         int i = 0, j = 0;
-        float max = -1;
+        max = -1;
         
         foreach (var row in input.Split('\n'))
         {
@@ -817,7 +808,7 @@ public class HeatMap_Float : MonoBehaviour
                 offset += new Vector3(50, 0, 0);
                 break;
             case "225":
-                offset += new Vector3(100, 0, 4);
+                offset += new Vector3(101.2f, 0, 3.75f);
                 break;
         }
 
@@ -877,24 +868,24 @@ public class HeatMap_Float : MonoBehaviour
         switch (UIController.instance.currentScene)
         {
             case "119":
-                heatmapCameraOriginPos = new Vector3(-0.5f, 15, 0);
+                heatmapCameraOriginPos = new Vector3(-0.5f, 15, 0f);
                 heatmapCamera.GetComponent<Camera>().orthographicSize = 10.48f;
                 break;
             case "120":
                 heatmapCameraOriginPos = new Vector3(-0.5f, 15, 0);
-                heatmapCamera.GetComponent<Camera>().orthographicSize = 10.9f;
+                heatmapCamera.GetComponent<Camera>().orthographicSize = 13f;
                 break;
             case "225":
                 heatmapCameraOriginPos = new Vector3(-0.5f, 15, 0f);
-                heatmapCamera.GetComponent<Camera>().orthographicSize = 8.58f;
+                heatmapCamera.GetComponent<Camera>().orthographicSize = 10.48f;
                 break;
         }
 
         heatmapCameraOriginPos += offset;
         heatmapCamera.transform.position = heatmapCameraOriginPos;
-
+        colorbar.SetActive(true);
         heatmapCamera.SetActive(true);
-        int resWidth = 1200, resHeight = 1200;
+        int resWidth = 1600, resHeight = 1080;
         Camera camera = heatmapCamera.GetComponent<Camera>();
         RenderTexture rt = new RenderTexture(resWidth, resHeight, 24);
         camera.targetTexture = rt;
@@ -906,11 +897,11 @@ public class HeatMap_Float : MonoBehaviour
         RenderTexture.active = null; // JC: added to avoid errors
         Destroy(rt);
         byte[] bytes = screenShot.EncodeToPNG();
-        //string filename = ScreenShotName(resWidth, resHeight);
-        string filename = dynamicSystem.instance.heatmapFilename;
-        System.IO.File.WriteAllBytes(path + "test.png", bytes);
+        string filename = ScreenShotName(resWidth, resHeight);
+        //string filename = dynamicSystem.instance.heatmapFilename;
+        System.IO.File.WriteAllBytes(filename, bytes);
         //DestroyVisualPrefab();
         heatmapCamera.SetActive(false);
-
+        colorbar.SetActive(false);
     }
 }

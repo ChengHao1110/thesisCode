@@ -16,22 +16,23 @@ path = ''
 def SetFigureTemplate(fig):
     fig.update_layout(template='plotly_dark',
                       plot_bgcolor= 'rgba(0, 0, 0, 0)',
-                      paper_bgcolor= 'rgba(0, 0, 0, 0)')
+                      paper_bgcolor= 'rgba(0, 0, 0, 0)',
+                      autosize = True)
     return fig
 
 #for heat map
-def HideXYAxisTicks(fig):
+def HideXYAxisTicks(fig, width, height):
     fig.update_xaxes(showticklabels = False)
     fig.update_yaxes(showticklabels = False)
-    fig.update_layout(width = 600, height = 600)
+    fig.update_layout(width = width, height = height)
     return fig
 
 #%% get move/stay heatmap png & layout file in the directory
-def PngToPlotlyFigure(filePath):
+def PngToPlotlyFigure(filePath, width, height):
     img = np.array(Image.open(filePath))
-    fig = px.imshow(img)
+    fig = px.imshow(img, aspect = "auto")
     fig = SetFigureTemplate(fig)
-    fig = HideXYAxisTicks(fig)
+    fig = HideXYAxisTicks(fig, width, height)
     return fig
 
 def GetFigure_HeapMap():
@@ -55,9 +56,9 @@ def GetFigure_HeapMap():
     print("moveHeatMap_" + str(moveIndex) + ".png")
     print("stayHeatMap_" + str(stayIndex) + ".png")
     '''
-    moveHeatMap = PngToPlotlyFigure(path + "moveHeatMap_" + str(moveIndex) + ".png")
-    stayHeatMap = PngToPlotlyFigure(path +"stayHeatMap_" + str(stayIndex) + ".png")
-    layout = PngToPlotlyFigure(path + "layout_screenshot.png")
+    moveHeatMap = PngToPlotlyFigure(path + "moveHeatMap_" + str(moveIndex) + ".png", 1200, 800)
+    stayHeatMap = PngToPlotlyFigure(path +"stayHeatMap_" + str(stayIndex) + ".png", 1200, 800)
+    layout = PngToPlotlyFigure(path + "layout_screenshot.png", 600, 600)
 
 
     return moveHeatMap, stayHeatMap, layout

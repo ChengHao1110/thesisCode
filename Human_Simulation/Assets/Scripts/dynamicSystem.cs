@@ -3668,6 +3668,14 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             }
         }
 
+        float offsetX = 0, offsetZ = 0;
+        if(UIController.instance.currentScene == "225")
+        {
+            offsetX = 1.2f;
+            offsetZ = 3.75f;
+        }
+
+
         //calculate
         foreach (KeyValuePair<string, human_single> person in people)
         {
@@ -3704,10 +3712,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
             for (int i = 0; i < person.Value.fullTrajectory.Count() - 1; i++)
             {
-                int sx = (int)Math.Floor( (1 + (person.Value.fullTrajectory[i][0] / scene_half_size)) * radius); //col
-                int sy = (int)Math.Floor( (1 - (person.Value.fullTrajectory[i][1] / scene_half_size)) * radius); //row
-                int dx = (int)Math.Floor( (1 + (person.Value.fullTrajectory[i + 1][0] / scene_half_size)) * radius); //col
-                int dy = (int)Math.Floor( (1 - (person.Value.fullTrajectory[i + 1][1] / scene_half_size)) * radius); //row
+                int sx = (int)Math.Floor( (1 + ( (person.Value.fullTrajectory[i][0] - offsetX) / scene_half_size)) * radius); //col
+                int sy = (int)Math.Floor( (1 - ( (person.Value.fullTrajectory[i][1] - offsetZ) / scene_half_size)) * radius); //row
+                int dx = (int)Math.Floor( (1 + ( (person.Value.fullTrajectory[i + 1][0] - offsetX) / scene_half_size)) * radius); //col
+                int dy = (int)Math.Floor( (1 - ( (person.Value.fullTrajectory[i + 1][1] - offsetZ) / scene_half_size)) * radius); //row
 
                 sx = CheckValidValue(sx, size);
                 sy = CheckValidValue(sy, size);

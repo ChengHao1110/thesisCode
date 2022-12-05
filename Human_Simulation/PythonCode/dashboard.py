@@ -105,7 +105,7 @@ app.layout = dbc.Container([
                 # layout figure
                 dbc.Col([
                     db_lt.DrawFigure(title = "展品佈局圖",
-                                     description = "",
+                                     description = "此為展品放置的俯視圖，給其他分析圖參考用",
                                      figId = "layout_figure",
                                      fig = fig_layout)
                 ], width = 6), # (1, 1)
@@ -118,7 +118,26 @@ app.layout = dbc.Container([
                 ], width = 6) # (1, 2)
             ], align = "center"),# 1 Row end
 
+            
             # 2 row start
+            #dbc.Row([
+            #    # move heat map
+            #    dbc.Col([
+            #        db_lt.DrawFigure(title = "展廳移動熱區",
+            #                         description = descriptions[0],
+            #                         figId = "move_heatmap_figure",
+            #                         fig = fig_moveHeatMap)
+            #    ], width = 6), # (2, 1)
+            #    #stay heat map
+            #    dbc.Col([
+            #        db_lt.DrawFigure(title = "展廳停留熱區",
+            #                         description = descriptions[1],
+            #                         figId = "stay_heatmap_figure",
+            #                         fig = fig_stayHeatMap)
+            #    ], width = 6) # (2, 2)
+            #], align = "center"), # 2 row end
+            
+
             dbc.Row([
                 # move heat map
                 dbc.Col([
@@ -126,15 +145,19 @@ app.layout = dbc.Container([
                                      description = descriptions[0],
                                      figId = "move_heatmap_figure",
                                      fig = fig_moveHeatMap)
-                ], width = 6), # (2, 1)
+                ]) # (2, 1)
+            ]), # 2 row end
+
+            dbc.Row([
                 #stay heat map
                 dbc.Col([
                     db_lt.DrawFigure(title = "展廳停留熱區",
                                      description = descriptions[1],
                                      figId = "stay_heatmap_figure",
                                      fig = fig_stayHeatMap)
-                ], width = 6) # (2, 2)
-            ], align = "center"), # 2 row end
+                ]) # (2, 2)
+            ]), # 2 row end
+
             
             # 3 row start
             dbc.Row([
