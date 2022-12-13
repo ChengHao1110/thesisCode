@@ -5,6 +5,7 @@ dahboard.py functions
 """
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import numpy as np
 import os
 from PIL import Image
@@ -16,8 +17,8 @@ path = ''
 def SetFigureTemplate(fig):
     fig.update_layout(template='plotly_dark',
                       plot_bgcolor= 'rgba(0, 0, 0, 0)',
-                      paper_bgcolor= 'rgba(0, 0, 0, 0)',
-                      autosize = True)
+                      paper_bgcolor= 'rgba(0, 0, 0, 0)'
+                     )
     return fig
 
 #for heat map
@@ -84,6 +85,7 @@ def GetFigure_VistorVisitingTimeInEachExhibit():
             new_df = pd.concat([new_df, add_df], ignore_index = True)
 
     fig = px.box(new_df, x="exhibition", y="time", color = "humantype", points = "all")
+    fig.update_layout(yaxis_title = "time (sec)")
     fig = SetFigureTemplate(fig)
     return fig
 
@@ -97,7 +99,7 @@ def GetFigure_ExhibitionRealtimeVisitorCount():
     [columnNames.append('p' + str(j + 1)) for j in range(len(df.columns))]
     df.columns = columnNames
     fig = px.line(df, title = "Real-time visitor number in the exhibit")
-    fig.update_layout(xaxis_title = "time", yaxis_title = "number of visitor", legend = dict(title = "exhibit"))
+    fig.update_layout(xaxis_title = "time (sec)", yaxis_title = "number of visitor", legend = dict(title = "exhibit"))
     fig = SetFigureTemplate(fig)
     return fig
 
@@ -122,12 +124,84 @@ def GetFigure_VisitorStatusTime():
     df = pd.read_csv(file, sep = ' ', header = None)
     df.columns = ["status", "time", "id", "humantype"]
     fig = px.box(df, x = "status", y = "time", color = "humantype", points = "all")
+    maxTime = df["time"].max()
+    ylabelArray = []
+    ylabelText = []
+    num = 0
+    while( num < maxTime):
+        ylabelArray.append(num)
+        ylabelText.append(str(num))
+        num = num + 10
+    ylabelArray.append(num)
+    ylabelText.append(str(num))
+    #fig.update_layout(yaxis = dict(tickmode = "linear", tick0 = 0, dtick = 20))
+    fig.update_layout(yaxis = dict(tickmode = "array", tickvals = ylabelArray, ticktext = ylabelText), yaxis_title = "time (sec)")
     fig = SetFigureTemplate(fig)
     return fig
 
+#%% visitor satisfiction pareto_chart
+def GetFigure_VisitorSatisfiction():
+    file = path + "satisfiction.txt"
+    try:
+        with open(file, 'r') as f:
+            rawData = f.readlines()
+            data = []
+            for i in rawData:
+                data.append(int(i))
+            df = pd.DataFrame(data, index = ["100%", "75~100%", "50~75%", "25~50%", "0~25%"], columns = ["count"])
+            total = df["count"].sum()
+            sum = 0
+            ratio = []
+            for i in range(len(data)):
+                print(i)
+                sum = sum + (data[i] / total)
+                ratio.append(sum)
+            df["ratio"] = ratio
+            # drop count value = 0
+            df = df[df["count"] != 0]
+            print(df)
+            '''
+            collection = pd.Series(data)
+            df = collection.value_counts().to_frame('counts').join(collection.value_counts(normalize=True).cumsum().to_frame('ratio'))
+            '''
+
+            # plot fig
+            fig = go.Figure([go.Bar(x=df.index, y=df['count'], yaxis='y1', name='visitor count'),
+                             go.Scatter(x=df.index, y=df['ratio'], yaxis='y2', name='cumulative ratio',
+                                        hovertemplate='%{y:.1%}', marker={'color': '#000000'})])
+
+            fig.update_layout(template='plotly_dark', showlegend=True, hovermode='x', bargap=.3,
+                      plot_bgcolor= 'rgba(0, 0, 0, 0)',
+                      paper_bgcolor= 'rgba(0, 0, 0, 0)',
+                      xaxis_title="satisfiction percentage",
+                      title= {'text': 'visitors\' satisfiction', 'x': .5}, 
+                      yaxis= {'title': 'visitor count'},
+                      yaxis2={'showgrid': False,
+                              'rangemode': "tozero", 
+                              'overlaying': 'y',
+                              'position': 1, 'side': 'right',
+                              'title': 'ratio',
+                              'tickvals': np.arange(0, 1.1, .2),
+                              'tickmode': 'array',
+                              'ticktext': [str(i) + '%' for i in range(0, 101, 20)]},
+                      legend= {'orientation': "h", 'yanchor': "bottom", 'y': 1.02, 'xanchor': "right", 'x': 1})
+            return fig
+    except Exception as ex:
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        print(message)
+        # return template fig
+        fig = dict({"data": [{"type": "bar",
+                              "x": [1, 2, 3],
+                              "y": [1, 3, 2]}],
+                    "layout": {"title": {"text": "A Figure Specified By Python Dictionary"}}
+                })
+        return fig
+
+
 #%% convert dash content to html
 def ConvertDashToHtml(filePath, fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount, \
-                      fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, descriptions, PDF = False):
+                      fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, fig_visitorSatisfiction, descriptions, PDF = False):
     frac = filePath.split('\\')
     dirName = frac[-2]
     if PDF:
@@ -145,6 +219,7 @@ def ConvertDashToHtml(filePath, fig_moveHeatMap, fig_stayHeatMap, fig_layout, fi
         FigureToHtml(f, "展品及時人數", descriptions[2], fig_exhibitionRealtimeVisitorCount, False)
         FigureToHtml(f, "遊客移動狀態", descriptions[3], fig_visitorStatusTime, False)
         FigureToHtml(f, "遊客觀看時間", descriptions[4], fig_visitorVisitingTimeInEachExhibit, False)
+        FigureToHtml(f, "遊客觀看時間", descriptions[6], fig_visitorSatisfiction, False)
         
         f.write(htmlEnd)
         f.close()

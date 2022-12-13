@@ -153,6 +153,7 @@ public partial class UIController : PersistentSingleton<UIController>
 
     private void Update()
     {
+        
         if(countDownTime > 0)
         {
             countDownTime -= Time.deltaTime;
@@ -161,6 +162,7 @@ public partial class UIController : PersistentSingleton<UIController>
         {
             //successLog.text = "";
         }
+        
     }
 
     //modifyScene Button Function
@@ -883,7 +885,7 @@ public partial class UIController : PersistentSingleton<UIController>
         }
         if (tmpSaveUISettings.UI_Human.freeTimeMin != -1 && tmpSaveUISettings.UI_Human.freeTimeMax != -1)
         {
-            if (tmpSaveUISettings.UI_Human.freeTimeMin >= tmpSaveUISettings.UI_Human.freeTimeMax)
+            if (tmpSaveUISettings.UI_Human.freeTimeMin > tmpSaveUISettings.UI_Human.freeTimeMax)
             {
                 errorMessage += "- freeTime Min should be <= to Max\n";
             }
@@ -895,15 +897,15 @@ public partial class UIController : PersistentSingleton<UIController>
 
         /** influence Map **/
         /* check exhibit influence total */
-        float total = 0f;
-        foreach (float value in tmpSaveUISettings.UI_InfluenceMap.exhibitInflence.Values)
+        double total = 0f;
+        foreach (double value in tmpSaveUISettings.UI_InfluenceMap.exhibitInflence.Values)
         {
             total += value;
         }
         if (total != 1) errorMessage += "- exhibit Influence total is "+ total + " not 100\n";
         /* check human influence total */
         total = 0f;
-        foreach (float value in tmpSaveUISettings.UI_InfluenceMap.exhibitInflence.Values)
+        foreach (double value in tmpSaveUISettings.UI_InfluenceMap.exhibitInflence.Values)
         {
             total += value;
         }
@@ -1448,6 +1450,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         int value = (int)timeScaleSlider.value;
         timeScaleText.text = value.ToString();
         Time.timeScale = value;
+        Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
     }
     #endregion
     /* Human */

@@ -184,6 +184,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public Dictionary<string, string> modelName = new Dictionary<string, string>();
 
     public bool generateAnalyzeData = true;
+    public bool quickSimulationMode = false;
+    public GameObject mainCamera, miniCamera;
 
     //exhibition target point isUse
     public Dictionary<string, bool> isTargetPointUse = new Dictionary<string, bool>();
@@ -197,6 +199,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             Run = false;
             if (generateAnalyzeData)
             {
+                if (quickSimulationMode)
+                {
+                    QuickSimulationModeQuit();
+                }
                 UIController.instance.ShowMsgPanel("Notice", "Wait for saving simulation analysis data.");
                 writeLog_fps("viewMode_fps", fpsList);
                 writeLog_fps("compute_influenceMap", analysis_influenceMap);
@@ -219,6 +225,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 RecordVisitingTimeInEachExhibition();
                 RecordSocialDistance();
                 RecordVisitorStatusTime();
+                RecordSatisfiction();
                 Debug.Log("analyze finish");
 
                 SaveReplayDataToLocal();
@@ -230,6 +237,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         //NavMeshBake();
         // system simulating
         UpdateIsTargetPointUseStatus();
+        print(Time.fixedDeltaTime);
         foreach (KeyValuePair<string, human_single> person in people)
         {
             if (person.Value.startSimulateTime <= deltaTimeCounter)
@@ -765,6 +773,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 }
 
                 /* Store trajectory */
+                
                 if (deltaTimeCounter - person.Value.lastTimeStamp_storeTrajectory > trajectoryRecordTime && person.Value.model.activeSelf == true)
                 {
                     //Debug.Log("x: " + scalePosBackTo2D(person.Value.currentPosition)[0]);
@@ -773,6 +782,15 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     person.Value.velocity_Trajectory.Add(person.Value.agent.velocity.magnitude);
                     person.Value.lastTimeStamp_storeTrajectory = deltaTimeCounter;
                 }
+                
+                /*
+                if (person.Value.model.activeSelf == true)
+                {
+                    //Debug.Log("x: " + scalePosBackTo2D(person.Value.currentPosition)[0]);
+                    //Debug.Log("z: " + scalePosBackTo2D(person.Value.currentPosition)[1]);
+                    person.Value.fullTrajectory.Add(scalePosBackTo2D(person.Value.currentPosition));
+                }
+                */
 
                 /* Store computation time */
                 updatePosition_endTime = Time.realtimeSinceStartup;
@@ -1295,6 +1313,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         cleanPeopleBeforeGenerate();
 
         //heatmap max value
+        firstGenerateHeatmap = true;
         moveMaxLimit = 5000;
         stayMaxLimit = 5000;
 
@@ -2733,6 +2752,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 {
     void Start()
     {
+        Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
         path = new NavMeshPath();
         matrixSize = 500;
         sceneSize = 22;
@@ -2782,66 +2802,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 CalculateSocialDistance();
                 updateSocialDistance = deltaTimeCounter;
             }
-
-            /* just test
-            //heatmap update
-            //calculate
-            foreach (KeyValuePair<string, human_single> person in people)
-            {
-                int radius = matrixSize / 2;
-                int gaussian_distance = (radius / sceneSize) / 2;
-                int gaussian_total_distance = gaussian_distance * gaussian_rate;
-                int scene_half_size = sceneSize / 2;
-                //calculate move and stay
-                //if (person.Value.fullTrajectory.Count() > 0)
-                //{
-                
-                //int last = person.Value.fullTrajectory.Count() - 1;
-                //int sx = (int)Math.Floor((1 + (person.Value.fullTrajectory[last][0] / scene_half_size)) * radius); //col
-                //int sy = (int)Math.Floor((1 - (person.Value.fullTrajectory[last][1] / scene_half_size)) * radius); //row
-                //sx = CheckValidValue(sx, matrixSize);
-                //sy = CheckValidValue(sy, matrixSize);
-                
-                if (person.Value.model.activeSelf)
-                {
-                    
-                    List<double> pos = scalePosBackTo2D(person.Value.currentPosition);
-
-                    int sx = (int)Math.Floor((1 + (pos[0] / scene_half_size)) * radius); //col
-                    int sy = (int)Math.Floor((1 - (pos[1] / scene_half_size)) * radius); //row
-                    sx = CheckValidValue(sx, matrixSize);
-                    sy = CheckValidValue(sy, matrixSize);
-                    //gaussian
-                    int rowBegin = sy - gaussian_total_distance;
-                    int rowEnd = sy + gaussian_total_distance;
-                    int colBegin = sx - gaussian_total_distance;
-                    int colEnd = sx + gaussian_total_distance;
-
-                    rowBegin = CheckValidValue(rowBegin, matrixSize);
-                    rowEnd = CheckValidValue(rowEnd, matrixSize);
-                    colBegin = CheckValidValue(colBegin, matrixSize);
-                    colEnd = CheckValidValue(colEnd, matrixSize);
-
-                    for (int j = rowBegin; j <= rowEnd; j++)
-                    {
-                        for (int k = colBegin; k <= colEnd; k++)
-                        {
-                            Vector2 diff = new Vector2(j - sy, k - sx);
-
-                            int level = (int)Math.Floor(diff.magnitude / gaussian_distance);
-
-                            if (level < gaussian_rate)
-                            {
-                                matrix[j, k] += gaussianValue[level];
-                            }
-                        }
-                    }
-                }
-                    
-
-                //}
-            }
-            */
 
             // show fps
             fps_deltaTime += (Time.unscaledDeltaTime - fps_deltaTime) * 0.1f;
@@ -3036,6 +2996,86 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             {
                 range.GetComponent<MeshRenderer>().enabled = ifVisible;
             }
+        }
+    }
+
+    public void QuickSimulationMode()
+    {
+        
+        quickSimulationMode = true;
+        Time.timeScale = 30;
+
+        mainCamera = UIController.instance.cameras[UIController.instance.currentScene].mainCamera;
+        miniCamera = UIController.instance.cameras[UIController.instance.currentScene].minimapCamera;
+        mainCamera.SetActive(false);
+        miniCamera.SetActive(false);
+        Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
+        
+        foreach (Transform p in peopleParent.transform) ShowVisitor(p, false);
+        // Get Environment
+        GameObject environment = GameObject.Find("/[EnvironmentsOfEachScene]/" + UIController.instance.curOption);
+        foreach (Transform exhibit in environment.transform) ShowExhibit(exhibit, false);
+        
+        startSimulate();
+    }
+
+    void QuickSimulationModeQuit()
+    {
+        mainCamera = UIController.instance.cameras[UIController.instance.currentScene].mainCamera;
+        miniCamera = UIController.instance.cameras[UIController.instance.currentScene].minimapCamera;
+        mainCamera.SetActive(true);
+        miniCamera.SetActive(true);
+
+        quickSimulationMode = false;
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
+
+
+        //foreach (Transform p in peopleParent.transform) ShowVisitor(p, true);
+        // Get Environment
+        GameObject environment = GameObject.Find("/[EnvironmentsOfEachScene]/" + UIController.instance.curOption);
+        foreach (Transform exhibit in environment.transform) ShowExhibit(exhibit, true);
+        
+    }
+
+    void ShowVisitor(Transform visitor, bool show)
+    {
+        Queue<Transform> components = new Queue<Transform>();
+        components.Enqueue(visitor);
+        while (components.Count > 0)
+        {
+            Transform component = components.Dequeue();
+            SkinnedMeshRenderer smr = component.GetComponent<SkinnedMeshRenderer>();
+            if (smr != null) smr.enabled = show;
+            MeshRenderer mr = component.gameObject.GetComponent<MeshRenderer>();
+            if (mr != null) mr.enabled = show;
+            if (component.childCount > 0) foreach (Transform child in component) components.Enqueue(child);
+        }
+        /*
+        foreach (Transform child in visitor)
+        {
+            SkinnedMeshRenderer smr = child.GetComponent<SkinnedMeshRenderer>();
+            if (smr != null) smr.enabled = show;
+            MeshRenderer mr = child.GetComponent<MeshRenderer>();
+            if (mr != null) mr.enabled = show;
+        }
+        */
+    }
+
+    void ShowExhibit(Transform exhibit, bool show)
+    {
+        Queue<Transform> components = new Queue<Transform>();
+        components.Enqueue(exhibit);
+        while(components.Count > 0)
+        {
+            Transform component = components.Dequeue();
+            if (component.name.Contains("Boundary")) continue;
+            if (show && (component.name == "BoundingBoxCube" || component.name == "ViewPoint")) continue;
+            
+            MeshRenderer mr = component.gameObject.GetComponent<MeshRenderer>();
+            if (mr != null) mr.enabled = show;
+
+            if (component.childCount > 0) foreach (Transform child in component) components.Enqueue(child);
         }
     }
 
@@ -3708,10 +3748,10 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             }
             */
 
-
-
             for (int i = 0; i < person.Value.fullTrajectory.Count() - 1; i++)
             {
+                float trueDistance = Vector3.Distance(new Vector3((float)person.Value.fullTrajectory[i][0], 0, (float)person.Value.fullTrajectory[i][1]),
+                                                      new Vector3((float)person.Value.fullTrajectory[i + 1][0], 0, (float)person.Value.fullTrajectory[i + 1][1]));
                 int sx = (int)Math.Floor( (1 + ( (person.Value.fullTrajectory[i][0] - offsetX) / scene_half_size)) * radius); //col
                 int sy = (int)Math.Floor( (1 - ( (person.Value.fullTrajectory[i][1] - offsetZ) / scene_half_size)) * radius); //row
                 int dx = (int)Math.Floor( (1 + ( (person.Value.fullTrajectory[i + 1][0] - offsetX) / scene_half_size)) * radius); //col
@@ -3727,6 +3767,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 float distance = Vector2.Distance(source, destination);
                 if (distance > 0.0f)
                 {
+                    /*
                     //gaussian
                     int rowBegin = dy - gaussian_total_distance;
                     int rowEnd = dy + gaussian_total_distance;
@@ -3750,9 +3791,49 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             {
                                 //space_usage[j, k]++;
                                 space_usage[j, k] += gaussianValue[level];
-                                time_usage[j, k] += (1.0f / distance) * gaussianValue[level];
+                                time_usage[j, k] += (trajectoryRecordTime / distance) * gaussianValue[level];
                                 count[j, k]++;
                                 //time_usage[j, k] += distance / 0.5f;
+                            }
+                        }
+                    }
+                    */
+                    int interpolateTimes = 1;
+                    if (Time.fixedDeltaTime > trajectoryRecordTime) interpolateTimes = Mathf.FloorToInt(Time.fixedDeltaTime / trajectoryRecordTime);
+
+                    print(interpolateTimes);
+                    for(int t = 1; t < interpolateTimes + 1; t++)
+                    {
+                        int midYPoint = Mathf.FloorToInt(sy + t * ( (dy - sy) / interpolateTimes));
+                        int midXPoint = Mathf.FloorToInt(sx + t * ((dx - sx) / interpolateTimes));
+
+                        //gaussian
+                        int rowBegin = midYPoint - gaussian_total_distance;
+                        int rowEnd = midYPoint + gaussian_total_distance;
+                        int colBegin = midXPoint - gaussian_total_distance;
+                        int colEnd = midXPoint + gaussian_total_distance;
+
+                        rowBegin = CheckValidValue(rowBegin, size);
+                        rowEnd = CheckValidValue(rowEnd, size);
+                        colBegin = CheckValidValue(colBegin, size);
+                        colEnd = CheckValidValue(colEnd, size);
+
+                        for (int j = rowBegin; j <= rowEnd; j++)
+                        {
+                            for (int k = colBegin; k <= colEnd; k++)
+                            {
+                                Vector2 diff = new Vector2(j - dy, k - dx);
+
+                                int level = (int)Math.Floor(diff.magnitude / gaussian_distance);
+
+                                if (level < gaussian_rate)
+                                {
+                                    //space_usage[j, k]++;
+                                    space_usage[j, k] += gaussianValue[level];
+                                    time_usage[j, k] += ( (trueDistance / interpolateTimes) / trajectoryRecordTime) * gaussianValue[level];
+                                    count[j, k]++;
+                                    //time_usage[j, k] += distance / 0.5f;
+                                }
                             }
                         }
                     }
@@ -3763,7 +3844,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             {
                 for (int k = 0; k < size; k++)
                 {
-                    if(count[j, k] != 0) time_usage[j, k] = time_usage[j, k] / count[j, k];
+                    if(count[j, k] != 0) time_usage[j, k] = (time_usage[j, k] / count[j, k]) / (1.0f / 0.0166667f) ;
                 }
             }
             
@@ -3878,11 +3959,37 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
             foreach (KeyValuePair<string, human_single> person in people)
             {
+                string curEx = "", nextEx = "";
+                int index = 1;
+                curEx = person.Value.trajectoryOrder[0];
+                while(index < person.Value.trajectoryOrder.Count)
+                {
+                    nextEx = person.Value.trajectoryOrder[index];
+                    if (nextEx.StartsWith("id"))
+                    {
+                        index++;
+                        continue;
+                    }
+
+                    int firstId, secondId;
+                    //get exhibitions id
+                    if (curEx.StartsWith("p")) firstId = curEx[1] - '0' - 1;
+                    else firstId = exhibitionCount + (curEx[4] - '0' - 1);
+
+                    if (nextEx.StartsWith("p")) secondId = nextEx[1] - '0' - 1;
+                    else secondId = exhibitionCount + (nextEx[4] - '0' - 1);
+
+                    exMatrix[firstId, secondId]++;
+                    curEx = nextEx;
+                    index++;
+                }
+                /*
                 for (int i = 0; i < person.Value.trajectoryOrder.Count - 1; i++)
                 {
                     string firstExhibition = person.Value.trajectoryOrder[i];
                     string secondExhibition = person.Value.trajectoryOrder[i + 1];
-
+                    
+                    print(firstExhibition + " " + secondExhibition);
                     int firstId, secondId;
                     //get exhibitions id
                     if (firstExhibition.StartsWith("p"))
@@ -3905,6 +4012,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     print(firstId + " " + secondId);
                     exMatrix[firstId, secondId]++;
                 }
+                */
             }
 
             //write file
@@ -4022,6 +4130,47 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         Debug.Log("Status Time complete");
     }
 
+    // satisfiction figure
+    void RecordSatisfiction()
+    {
+        int[] level = new int[5];
+        for (int i = 0; i < level.Length; i++) level[i] = 0;
+        foreach (KeyValuePair<string, human_single> person in people)
+        {
+            int allEx = 0, visEx = 0, satisfictionRate = 0;
+            for(int i = 0; i < person.Value.desireExhibitionList_copy.Count; i++)
+            {
+                string exName = person.Value.desireExhibitionList_copy[i];
+                for(int j = 0; j < person.Value.trajectoryOrder.Count; j++)
+                {
+                    if (exName == person.Value.trajectoryOrder[j])
+                    {
+                        visEx++;
+                        break;
+                    }
+                }
+                allEx++;
+            }
+            /*
+            satisfictionRate = Mathf.FloorToInt(((float)visEx / allEx ) / 0.25f) * 25; //以25為一級距
+            if(satisfictionRate < 100) sw.Write(satisfictionRate.ToString() + "% ~ " + (satisfictionRate + 25).ToString() + "%" + '\n');
+            else sw.Write("100%" + '\n');
+            */
+            satisfictionRate = Mathf.FloorToInt(((float)visEx / allEx) / 0.25f);
+            print("satisfictionRate: " + satisfictionRate);
+            level[satisfictionRate]++;
+        }
+        //write file
+        FileStream fs = new FileStream(directory + "satisfiction.txt", FileMode.OpenOrCreate);
+        StreamWriter sw = new StreamWriter(fs);
+        for (int i = level.Length - 1; i >= 0; i--)
+        {
+            sw.Write(level[i] + "\n");
+        }
+        sw.Flush();
+        sw.Close();
+        Debug.Log("Satisfiction complete");
+    }
 
     #region Replay Mode Function
     void SaveReplayDataToLocal()

@@ -646,6 +646,7 @@ public class human_single// List<human_single> humanCrowd;
 
         /* make the board move to current position and face to camera*/
         this.informationBoard.transform.position = new Vector3(this.currentPosition.x, 3.3f, this.currentPosition.z);
+        if (dynamicSystem.instance.quickSimulationMode) return;
         this.informationBoard.transform.LookAt(Camera.main.transform.position);
     }
 

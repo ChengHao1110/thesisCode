@@ -51,6 +51,7 @@ public class exhibition_single  // List<exhibition_single> exhibition_many
             this.informationText.text = this.fixedText + changeText;
 
             /* make the board face to camera*/
+            if (dynamicSystem.instance.quickSimulationMode) return;
             this.informationBoard.transform.LookAt(Camera.main.transform.position);
         }
     }
@@ -66,6 +67,11 @@ public class exhibition_single  // List<exhibition_single> exhibition_many
     {
         if(dynamicSystem.instance.deltaTimeCounter - this.timeCounter >= 1.0f)
         {
+            if(name == "p1")
+            {
+                Debug.Log("deltaTimeCounter: " + dynamicSystem.instance.deltaTimeCounter);
+                Debug.Log("timeCounter: " + timeCounter);
+            }
             realtimeHumanCount.Add(this.capacity_cur);
             this.timeCounter = dynamicSystem.instance.deltaTimeCounter;
         }

@@ -26,6 +26,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if (dynamicSystem.instance.quickSimulationMode) return;
             var ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
             RaycastHit hit;
 

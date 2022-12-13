@@ -40,6 +40,7 @@ fig_exhibitionRealtimeVisitorCount = ''
 fig_visitorStatusTime = ''
 fig_visitorVisitingTimeInEachExhibit = '' 
 fig_chord = ''
+fig_visitorSatisfiction = ''
 
 def GetFigures(path):
     print(path)
@@ -49,11 +50,12 @@ def GetFigures(path):
     fig_exhibitionRealtimeVisitorCount = db_fnc.GetFigure_ExhibitionRealtimeVisitorCount()
     fig_chord = db_fnc.GetFigure_ChordDiagram()
     fig_visitorStatusTime = db_fnc.GetFigure_VisitorStatusTime()
+    fig_visitorSatisfiction = db_fnc.GetFigure_VisitorSatisfiction()
     return fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount, \
-    fig_visitorStatusTime ,fig_visitorVisitingTimeInEachExhibit, fig_chord
+    fig_visitorStatusTime ,fig_visitorVisitingTimeInEachExhibit, fig_chord, fig_visitorSatisfiction
 
 fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount, \
-fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord = GetFigures(allDirectory[0])
+fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, fig_visitorSatisfiction = GetFigures(allDirectory[0])
 
 #%% get all description
 # 0: 展廳移動熱區
@@ -62,10 +64,11 @@ fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord = GetFigu
 # 3: 遊客移動狀態
 # 4: 遊客觀看時間
 # 5: 轉移機率
+# 6: 遊客滿意度
 with open('data/figure_description.txt', 'r', encoding='utf-8') as f:
     descriptions = f.readlines()
 
-#%% dashboard 
+#%% dashboard layout
 #app layout style
 #app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app = Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
@@ -183,6 +186,17 @@ app.layout = dbc.Container([
 
             # 5 row start
             dbc.Row([
+                dbc.Col([
+                    #visitor satisfiction
+                     db_lt.DrawFigure(title = "遊客滿意度",
+                                     description = descriptions[6],
+                                     figId = "visitor_satisfiction",
+                                     fig = fig_visitorSatisfiction)
+                ])
+            ]), # 5 row end
+
+            # 6 row start
+            dbc.Row([
                 # visitor status time
                 dbc.Col([
                     db_lt.DrawFigure(title = "遊客移動狀態",
@@ -205,6 +219,7 @@ app.layout = dbc.Container([
     ) # Card
 ]) # Container
 
+#%% app callback
 times = 1
 @app.callback(
     Output(component_id = 'move_heatmap_figure', component_property ='figure'),
@@ -214,6 +229,7 @@ times = 1
     Output(component_id = 'visitor_status', component_property ='figure'),
     Output(component_id = 'visitor_visit_time', component_property ='figure'),
     Output(component_id = 'chord_diagram', component_property ='figure'),
+    Output(component_id = 'visitor_satisfiction', component_property ='figure'),
     Output(component_id = 'download_msg', component_property ='children'),
     Input(component_id = 'selected_path', component_property = 'value'),
     Input(component_id = 'html_button', component_property = 'n_clicks')
@@ -222,15 +238,15 @@ def UpdatePath(selected_path, html_clicks):
     global times
     msg = ""
     fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount, \
-    fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord = GetFigures(selected_path)
+    fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, fig_visitorSatisfiction = GetFigures(selected_path)
     if html_clicks >= times:
         times = times + 1
         db_fnc.ConvertDashToHtml(selected_path, fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount \
-                                 , fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, descriptions, False)
+                                 , fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, fig_visitorSatisfiction, descriptions, False)
         filename = (selected_path.split('\\'))[-2]
         msg = "The {filename}.html was downloaded in the directory!".format(filename = filename)
     return fig_moveHeatMap, fig_stayHeatMap, fig_layout, fig_exhibitionRealtimeVisitorCount, \
-           fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, msg
+           fig_visitorStatusTime, fig_visitorVisitingTimeInEachExhibit, fig_chord, fig_visitorSatisfiction, msg
 
 if __name__ == '__main__':
     webbrowser.open_new('http://127.0.0.1:8049/')
