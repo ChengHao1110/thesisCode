@@ -184,6 +184,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public Dictionary<string, string> modelName = new Dictionary<string, string>();
 
     public bool generateAnalyzeData = true;
+
     public bool quickSimulationMode = false;
     public GameObject mainCamera, miniCamera;
 
@@ -534,14 +535,24 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             person.Value.agent.updatePosition = true;
                             person.Value.model.GetComponent<Animator>().SetBool("walk", true);
                         }
-                        person.Value.agent.SetDestination(person.Value.nextTarget_pos);
+
+                        if(deltaTimeCounter - person.Value.lastTimeStamp_rePath > 5.0f)
+                        {
+                            person.Value.agent.SetDestination(person.Value.nextTarget_pos);
+                            person.Value.lastTimeStamp_rePath = deltaTimeCounter;
+                        }
+                        
+                        
+                        
                         //draw path
+                        /*
                         Color c = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
                         path = person.Value.agent.path;
                         for (int i = 0; i < path.corners.Length - 1; i++)
                         {
                             Debug.DrawLine(path.corners[i], path.corners[i + 1], c, 10);
                         }
+                        */
                     }
 
                     
@@ -600,74 +611,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         person.Value.agent.speed = person.Value.navSpeed;
                     }
                     */
-                    #region SFM
-                    /*SFM 排斥力*/
-                    /*
-                    if (Vector3.Distance(person.Value.model.transform.position, person.Value.nextTarget_pos) < 2f)
-                    {
-                        Vector3 strangeForce = Vector3.zero;
-                        foreach (KeyValuePair<string, human_single> otherAgent in people)
-                        {
-                            if (otherAgent.Value.name == person.Value.name) continue;
-                            //calculate future position //wait
-                            strangeForce += person.Value.CalculateStrangeForce(otherAgent.Value);
-                        }
 
-                        if (strangeForce.magnitude > 0.0f)
-                        {
-                            person.Value.avoidCollision = true;
-                            //calculate the position
-                            Vector3 accel = strangeForce;
-                            Vector3 velocity = person.Value.agent.velocity + accel;
-                            Vector3 position = person.Value.model.transform.position + velocity;
-                            Debug.Log(person.Value.name + " Original Pos: " + person.Value.model.transform.position);
-                            Debug.Log(person.Value.name + " SFM Change Pos: " + position);
-                            NavMeshPath path = new NavMeshPath();
-                            NavMesh.CalculatePath(person.Value.model.transform.position, position, walkableMask, path);
-                            if (path.status != NavMeshPathStatus.PathComplete)
-                            {
-                                // Debug.Log(exName + " " + direction + " " + walkableMask);
-                                // GameObject st_ = Instantiate(signPrefab, planeCenter, Quaternion.identity);
-
-                                NavMeshHit myNavHit;
-                                Vector3 newPosition = new Vector3();
-                                if (NavMesh.SamplePosition(position, out myNavHit, 5.0f, walkableMask))
-                                {
-                                    newPosition = myNavHit.position;
-                                    NavMesh.CalculatePath(person.Value.model.transform.position, newPosition, walkableMask, path);
-                                    if (path.status == NavMeshPathStatus.PathComplete)
-                                    {
-                                        person.Value.tempDestination = newPosition;
-                                        person.Value.agent.SetDestination(newPosition);
-                                        // GameObject st = Instantiate(signPrefab, _direct_touch, Quaternion.identity);
-                                        // st.transform.Find("Text").GetComponent<TextMesh>().text = direction.ToString();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                person.Value.tempDestination = position;
-                                person.Value.agent.SetDestination(position);
-                            }
-                            //person.Value.agent.SetDestination(position);
-                            
-                            //Rigidbody rb = person.Value.model.GetComponent<Rigidbody>();
-                            //rb.AddForce(strangeForce);
-                            
-                        }
-
-                        //arrive
-                        
-                        if (Vector3.Distance(person.Value.model.transform.position, person.Value.tempDestination) < 0.01f)
-                        {
-                            person.Value.avoidCollision = false;
-                            person.Value.agent.SetDestination(person.Value.nextTarget_pos);
-                        }
-                    
-                        
-                    }
-                    */
-                    #endregion
                     //STUCK
                     /*
                     if (Vector3.Distance(person.Value.lastPos, person.Value.model.transform.position) <= 0.01f &&
@@ -764,12 +708,17 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     */
 
 
-
-                    person.Value.updateInformationBoard();
                     dealWithRotate(person.Value, person.Value.lookAt_pos);
+
+                    
+
                     //Handle Animation
                     //Look animation
-                    person.Value.animationStatusMachine();
+                    if (!quickSimulationMode) 
+                    {
+                        person.Value.updateInformationBoard();
+                        person.Value.animationStatusMachine();
+                    } 
                 }
 
                 /* Store trajectory */
@@ -952,8 +901,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             return;
         }
 
-        // System.Random random = new System.Random(person.randomSeed);
-        System.Random random = new System.Random((int)DateTime.Now.Millisecond + person.randomSeed);
+        System.Random random = new System.Random(person.randomSeed);
+        //System.Random random = new System.Random((int)DateTime.Now.Millisecond + person.randomSeed);
         //System.Random random = new System.Random();
         // the last 10 second should totally be walking
         float num = random.Next(0, 101);
@@ -1577,12 +1526,14 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             newPerson.model.transform.parent = peopleParent.transform;
             Animator animator = newPerson.model.GetComponent<Animator>();
             animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimationClips/ManPose");     
+            
             newPerson.model.AddComponent<Rigidbody>();
             Rigidbody rigid = newPerson.model.GetComponent<Rigidbody>();
             rigid.useGravity = false;
             rigid.isKinematic = false;
             rigid.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePosition;
             rigid.interpolation = RigidbodyInterpolation.Interpolate;
+            
             
             /*initialize animation rigging compoment*/
             newPerson.model.AddComponent<RigBuilder>();
@@ -2868,7 +2819,39 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         int chance = 0;
         while (!(min < returnValue && returnValue < max) && chance < 100) // not in a reasonable range
         {
+            //System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
             System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
+            //seedX = dynamicSystem.instance.random.Next(-100, 100);
+            seedX = random.Next(-100, 100);
+            seedX /= 100f; // -1 ~ 1
+            returnValue = mean * seedX + std;
+            chance++;
+        }
+
+        if (!(min < returnValue && returnValue < max)) return mean;
+
+        return returnValue;
+    }
+
+    public float generateByNormalDistributionForStayTime(float mean, float std, float min, float max, human_single person)
+    {
+        if (min > max)
+        {
+            // Debug.Log("wrong range");
+            return mean;
+        }
+        else if (min == max)
+        {
+            // Debug.Log("min = max");
+            return min;
+        }
+        /* y = mean* x + std; */
+        float seedX = 0, returnValue = -1;
+        int chance = 0;
+        while (!(min < returnValue && returnValue < max) && chance < 100) // not in a reasonable range
+        {
+            //System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
+            System.Random random = new System.Random(person.randomSeed);
             //seedX = dynamicSystem.instance.random.Next(-100, 100);
             seedX = random.Next(-100, 100);
             seedX /= 100f; // -1 ~ 1
@@ -3003,13 +2986,14 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     {
         
         quickSimulationMode = true;
-        Time.timeScale = 30;
+        Time.timeScale = 7;
 
         mainCamera = UIController.instance.cameras[UIController.instance.currentScene].mainCamera;
         miniCamera = UIController.instance.cameras[UIController.instance.currentScene].minimapCamera;
         mainCamera.SetActive(false);
         miniCamera.SetActive(false);
-        Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
+        //Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
+        Time.fixedDeltaTime = 0.0333333f;
         
         foreach (Transform p in peopleParent.transform) ShowVisitor(p, false);
         // Get Environment
@@ -3036,6 +3020,42 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         GameObject environment = GameObject.Find("/[EnvironmentsOfEachScene]/" + UIController.instance.curOption);
         foreach (Transform exhibit in environment.transform) ShowExhibit(exhibit, true);
         
+    }
+
+    public void QuickModeTest()
+    {
+        quickSimulationMode = true;
+        //disable something don't care
+        foreach (Transform p in peopleParent.transform) ShowVisitor(p, false);
+        GameObject environment = GameObject.Find("/[EnvironmentsOfEachScene]");
+        foreach(Transform subScene in environment.transform)
+        {
+            if (subScene.name != UIController.instance.curOption) subScene.gameObject.SetActive(false);
+        }
+        environment = GameObject.Find("/[EnvironmentsOfEachScene]/" + UIController.instance.curOption);
+        foreach (Transform exhibit in environment.transform) ShowExhibit(exhibit, false);
+
+        for(int i = 1; i <= 3; i++)
+        {
+            GameObject light = GameObject.Find("Area Light (" + i.ToString() + ")");
+            light.GetComponent<Light>().enabled = false;
+        }
+        
+        //GameObject UI = GameObject.Find("[UI]");
+        //UI.SetActive(false);
+        GameObject Visual = GameObject.Find("[Visualization]");
+        Visual.SetActive(false);
+
+        mainCamera = UIController.instance.cameras[UIController.instance.currentScene].mainCamera;
+        miniCamera = UIController.instance.cameras[UIController.instance.currentScene].minimapCamera;
+        mainCamera.SetActive(false);
+        miniCamera.SetActive(false);
+        //Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
+        Time.fixedDeltaTime = 0.03333333f;
+        Time.timeScale = 20;
+
+
+        //startSimulate();
     }
 
     void ShowVisitor(Transform visitor, bool show)

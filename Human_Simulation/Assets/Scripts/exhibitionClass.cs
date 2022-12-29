@@ -33,9 +33,9 @@ public class exhibition_single  // List<exhibition_single> exhibition_many
     public float timeCounter = 0f;
 
     /* random with statistic */
-    public float generateStayTime(float max)
+    public float generateStayTime(float max, human_single person)
     {
-        float stayTime = dynamicSystem.instance.generateByNormalDistribution((float)stayTimeSetting.mean, (float)stayTimeSetting.std, (float)stayTimeSetting.min, max);
+        float stayTime = dynamicSystem.instance.generateByNormalDistributionForStayTime((float)stayTimeSetting.mean, (float)stayTimeSetting.std, (float)stayTimeSetting.min, max, person);
         return stayTime;
     }
 

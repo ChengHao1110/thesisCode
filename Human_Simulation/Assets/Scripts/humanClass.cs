@@ -85,7 +85,7 @@ public class human_single// List<human_single> humanCrowd;
     /* time stamp for each person */
     public float lastTimeStamp_stopWalk = 0f;
     public float lastTimeStamp_recomputeMap = 0f;
-    public float lastTimeStamp_rePath = 0f;
+    public float lastTimeStamp_rePath = -5f;
     public float lastTimeStamp_recomputeGathers = 0f;
     public float lastTimeStamp_rotate = -1f;
     public float lastTimeStamp_storeTrajectory = -1f;
@@ -369,7 +369,7 @@ public class human_single// List<human_single> humanCrowd;
             // should use distribution to generate
             float maxTimeToStay = freeTime_totalLeft - arrivalTakingTime - arrivalExitTakeTime;
             maxTimeToStay = Mathf.Clamp(maxTimeToStay, (float)dynamicSystem.instance.exhibitions[targetName].stayTimeSetting.min + 10, (float)dynamicSystem.instance.exhibitions[targetName].stayTimeSetting.max);
-            float newStayTime = dynamicSystem.instance.exhibitions[targetName].generateStayTime(maxTimeToStay);
+            float newStayTime = dynamicSystem.instance.exhibitions[targetName].generateStayTime(maxTimeToStay, this);
             // Debug.Log("maxTimeToStay in " + targetName + ": " + maxTimeToStay + ", get: " + newStayTime);
             return newStayTime;
         }

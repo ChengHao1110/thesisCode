@@ -17,7 +17,14 @@ path = ''
 def SetFigureTemplate(fig):
     fig.update_layout(template='plotly_dark',
                       plot_bgcolor= 'rgba(0, 0, 0, 0)',
-                      paper_bgcolor= 'rgba(0, 0, 0, 0)'
+                      paper_bgcolor= 'rgba(0, 0, 0, 0)',
+                      margin={
+                          "pad": 0,
+                          "t": 0,
+                          "r": 10,
+                          "l": 10,
+                          "b": 0,
+                      },
                      )
     return fig
 
@@ -25,13 +32,14 @@ def SetFigureTemplate(fig):
 def HideXYAxisTicks(fig, width, height):
     fig.update_xaxes(showticklabels = False)
     fig.update_yaxes(showticklabels = False)
-    fig.update_layout(width = width, height = height)
+    #fig.update_layout(width = width, height = height)
+    fig.update_layout(autosize=True)
     return fig
 
 #%% get move/stay heatmap png & layout file in the directory
 def PngToPlotlyFigure(filePath, width, height):
     img = np.array(Image.open(filePath))
-    fig = px.imshow(img, aspect = "auto")
+    fig = px.imshow(img)
     fig = SetFigureTemplate(fig)
     fig = HideXYAxisTicks(fig, width, height)
     return fig

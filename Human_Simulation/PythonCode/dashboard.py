@@ -15,7 +15,6 @@ import webbrowser
 
 #%% get file execute path
 myPath = ''
-#print(os.path.dirname(os.path.realpath(__file__)))
 for root, dirs, files in os.walk('..'):
     for dirName in dirs:
         if dirName == "Simulation_Result":
