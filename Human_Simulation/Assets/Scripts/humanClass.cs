@@ -47,6 +47,7 @@ public class human_single// List<human_single> humanCrowd;
     public float navSpeed = 0.0f;
     public bool animeWalk = false;
     public float animeSpeed = 1;
+    public float oldAnimeSpeed = 1;
     public float gatherDesire;
     public float startSimulateTime = 0;
     // personality
@@ -71,6 +72,7 @@ public class human_single// List<human_single> humanCrowd;
     public float stopStateContinuedTime = 0f;
     public string status = "";
     public bool goToExit = false;
+    public System.Random random;
     // save new influence map and update after all computation
     public Dictionary<string, float> influenceMap = new Dictionary<string, float>();
     public Dictionary<string, float> newInfluenceMap = new Dictionary<string, float>();
@@ -299,7 +301,8 @@ public class human_single// List<human_single> humanCrowd;
 
     public float generateWanderStayTime()
     {
-        System.Random random = new System.Random(this.randomSeed);
+        //System.Random random = new System.Random(this.randomSeed);
+        System.Random random = this.random; // new random change
         float outputTime = 0;
         if (this.freeTime_stayInNextExhibit < 5) outputTime = 5;
         else outputTime = random.Next(5, (int)this.freeTime_stayInNextExhibit);
@@ -348,7 +351,8 @@ public class human_single// List<human_single> humanCrowd;
         // Debug.Log("generate target stay time: " + targetName);
         if (targetName.StartsWith("id")) // a person
         {
-            System.Random random = new System.Random(this.randomSeed);
+            //System.Random random = new System.Random(this.randomSeed);
+            System.Random random = this.random; // new random change
             return random.Next(1, 6);
             //return dynamicSystem.instance.random.Next(1, 6); // stay 1~6 second, 亂給的
         }
@@ -379,7 +383,8 @@ public class human_single// List<human_single> humanCrowd;
     {
         /* Update desire list*/
         //System.Random random = new System.Random(this.randomSeed);
-        System.Random random = new System.Random();
+        //System.Random random = new System.Random();
+        System.Random random = this.random; // new random change
         float randomNum = (float)random.Next(101);
         //float randomNum = dynamicSystem.instance.random.Next(101);
         randomNum /= 100f;
@@ -673,7 +678,7 @@ public class human_single// List<human_single> humanCrowd;
             fd.rotZ = 0;
         }
         fd.animationWalk = animeWalk;
-        fd.animationSpeed = animeSpeed;
+        fd.animationSpeed = oldAnimeSpeed;
         fd.navAgentVelocity = (double)agent.velocity.magnitude;
         visitorFrameData.Add(fd);
     }

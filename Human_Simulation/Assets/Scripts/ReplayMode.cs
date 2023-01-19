@@ -29,6 +29,7 @@ public class ReplayMode : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
+        Time.fixedDeltaTime = 0.03333333333f;
         visitorNumber = 0;
         currentFrameIdx = 0;
         totalFrameCount = 0;
@@ -108,11 +109,11 @@ public class ReplayMode : MonoBehaviour
             filename.text = frac[frac.Length - 2];
             ReplaySimulationInfo.Clear();
             simulationReplayData = JsonMapper.ToObject<SimulationReplayData>(tmpJsonDataStr);
-
+            
             //
             visitorNumber = simulationReplayData.visitorsReplayData.Count;
             totalFrameCount = simulationReplayData.visitorsReplayData[0].replayData.Count - 1; // start from 0
-            
+            Debug.Log(totalFrameCount);
             // set scene
             ChangeScene(simulationReplayData.sceneOption);
 
@@ -148,28 +149,31 @@ public class ReplayMode : MonoBehaviour
             int gender = simulationReplayData.visitorsReplayData[i].gender;
             string type = GetType(gender, age);
             GameObject model = Instantiate(Resources.Load<GameObject>("CharactersPrefab/" + type + "/" + modelName), Vector3.zero, Quaternion.identity);
+            // Set first location
+            for(int j = 0; j < simulationReplayData.visitorsReplayData[i].replayData.Count; j++)
+            {
+                if (simulationReplayData.visitorsReplayData[i].replayData[j].isVisible)
+                {
+                    model.transform.position = new Vector3(
+                        (float)simulationReplayData.visitorsReplayData[i].replayData[j].posX,
+                        (float)simulationReplayData.visitorsReplayData[i].replayData[j].posY,
+                        (float)simulationReplayData.visitorsReplayData[i].replayData[j].posZ);
+                    model.transform.rotation = Quaternion.Euler(
+                        (float)simulationReplayData.visitorsReplayData[i].replayData[j].rotX,
+                        (float)simulationReplayData.visitorsReplayData[i].replayData[j].rotY,
+                        (float)simulationReplayData.visitorsReplayData[i].replayData[j].rotZ);
+                    model.transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
+                    break;
+                }
+            }
+
             model.transform.parent = peopleParent.transform;
             model.name = simulationReplayData.visitorsReplayData[i].name;
             //remove children camera gameobject -> avoid camera bug
             foreach(Transform child in model.transform)
             {
                 if (child.name.Contains("Camera")) Destroy(child.gameObject);
-            }
-
-            //get start pos
-            Vector3 startPos = new Vector3(
-                (float)simulationReplayData.visitorsReplayData[i].replayData[0].posX,
-                (float)simulationReplayData.visitorsReplayData[i].replayData[0].posY,
-                (float)simulationReplayData.visitorsReplayData[i].replayData[0].posZ
-                );
-            Quaternion startRot = Quaternion.Euler(
-                (float)simulationReplayData.visitorsReplayData[i].replayData[0].rotX,
-                (float)simulationReplayData.visitorsReplayData[i].replayData[0].rotY,
-                (float)simulationReplayData.visitorsReplayData[i].replayData[0].rotZ
-                );
-            model.transform.position = startPos;
-            model.transform.rotation = startRot;
-            model.transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
+            }            
 
             ReplaySimulation rs = new ReplaySimulation();
             rs.model = model;
@@ -275,17 +279,31 @@ public class ReplayMode : MonoBehaviour
                                                   (float)rs.Value.fd[currentFrameIdx].rotY,
                                                   (float)rs.Value.fd[currentFrameIdx].rotZ
                                                  );
-
+                /*
+                if (currentFrameIdx > 0)
+                {
+                    float speed = Vector3.Distance(pos, rs.Value.model.transform.position) / Time.fixedDeltaTime;
+                    if(rs.Key == "id_1") Debug.Log(speed);
+                    float newAnimeSpeed = speed / 1.05f;
+                    if (speed > 1)
+                    {
+                        rs.Value.model.GetComponent<Animator>().SetFloat("speed", 1f, 0.01f, Time.fixedDeltaTime);
+                        rs.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", 1.0f);
+                    }
+                    else
+                    {
+                        rs.Value.model.GetComponent<Animator>().SetFloat("speed", speed, 0.01f, Time.fixedDeltaTime);
+                        rs.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", 1.0f);
+                    }
+                }
+                */
                 //rs.Value.model.transform.position = pos;
                 //rs.Value.model.transform.rotation = rot;
                 rs.Value.model.transform.position = Vector3.MoveTowards(rs.Value.model.transform.position, pos, Time.fixedDeltaTime);
+                //rs.Value.model.transform.position = Vector3.Lerp(rs.Value.model.transform.position, pos, Time.fixedDeltaTime);
                 rs.Value.model.transform.rotation = Quaternion.Slerp(rs.Value.model.transform.rotation, rot, Time.fixedDeltaTime);
                 //handle animation
                 rs.Value.model.GetComponent<Animator>().SetBool("walk", rs.Value.fd[currentFrameIdx].animationWalk);
-                
-
-                //handle animation speed
-                /* set animation Speed (idle ~ walk) */
                 float newAnimeSpeed = (float)rs.Value.fd[currentFrameIdx].navAgentVelocity / 1.05f;
                 if (Math.Abs(newAnimeSpeed - 0.2) < 0.1 && Math.Abs(newAnimeSpeed - rs.Value.fd[currentFrameIdx].animationSpeed) < 0.2) { }
                 else

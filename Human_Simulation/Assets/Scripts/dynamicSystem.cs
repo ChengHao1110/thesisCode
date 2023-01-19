@@ -467,55 +467,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     }
 
                    
-                    /* save human new position */
-                    person.Value.currentPosition = person.Value.model.transform.position;
-
-                    /* set animation Speed (idle ~ walk) */
-                    float newAnimeSpeed = person.Value.agent.velocity.magnitude / 1.05f;
-                    //float newAnimeSpeed = person.Value.agent.speed / 1.05f;
-                    if (Math.Abs(newAnimeSpeed - 0.2) < 0.1 && Math.Abs(newAnimeSpeed - person.Value.animeSpeed) < 0.2){}
-                    else
-                    {
-                        if (newAnimeSpeed <= 0.2f)
-                        {
-                            person.Value.model.GetComponent<Animator>().SetFloat("speed", 0.2f, 0.01f, Time.fixedDeltaTime);
-                            person.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", 1);
-                        }
-                        else
-                        {
-                            person.Value.model.GetComponent<Animator>().SetFloat("speed", 1f, 0.01f, Time.fixedDeltaTime);
-                            person.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", newAnimeSpeed);
-                        }                                                
-                    }
-                    person.Value.animeSpeed = newAnimeSpeed;
-                    /*
-                    if (!person.Value.hasTempDestination)
-                    {
-                        person.Value.agent.SetDestination(person.Value.nextTarget_pos);
-                    }
-                    else
-                    {
-                        if(Vector3.Distance(person.Value.model.transform.position, person.Value.tempDestination) <= 0.2f)
-                        {
-                            person.Value.hasTempDestination = false;
-                            
-                        }
-                    }
-
-                    person.Value.CheckWhetherStuck();
-                    */
-                    /*
-                    if (person.Value.isStuck)
-                    {
-                        person.Value.tempDestination = Vector3.zero;
-                        person.Value.hasTempDestination = true;
-
-                    }
-                    else
-                    {
-                        person.Value.agent.updatePosition = true;
-                    }
-                    */
+                    
+                    
                     if (person.Value.agent.enabled)
                     {
                         if (person.Value.obstacleToAgent)
@@ -586,131 +539,31 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                             
                         }
                     }
-                    /*
-                    Vector3 fwd = person.Value.model.transform.TransformDirection(Vector3.forward);
-                    Debug.DrawRay(person.Value.model.transform.position, fwd * 2.0f, Color.green);
-                    RaycastHit objectHit;
-                    if (Physics.Raycast(person.Value.model.transform.position, fwd, out objectHit, 2.0f))
-                    {
-                        if(objectHit.transform.tag == "Visitor")
-                        {
-                            human_single hm = people[objectHit.transform.gameObject.name];
-                            if (hm.id < person.Value.id)
-                            {
-                                person.Value.agent.speed = person.Value.navSpeed * 0.5f;
-                            }
 
+                    /* save human new position */
+                    person.Value.currentPosition = person.Value.model.transform.position;
+
+                    /* set animation Speed (idle ~ walk) */
+                    float newAnimeSpeed = person.Value.agent.velocity.magnitude / 1.05f;
+                    //float newAnimeSpeed = person.Value.agent.speed / 1.05f;
+                    if (Math.Abs(newAnimeSpeed - 0.2) < 0.1 && Math.Abs(newAnimeSpeed - person.Value.animeSpeed) < 0.2) { }
+                    else
+                    {
+                        if (newAnimeSpeed <= 0.2f)
+                        {
+                            person.Value.model.GetComponent<Animator>().SetFloat("speed", 0.2f, 0.01f, Time.fixedDeltaTime);
+                            person.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", 1);
                         }
                         else
                         {
-                            person.Value.agent.speed = person.Value.navSpeed;
+                            person.Value.model.GetComponent<Animator>().SetFloat("speed", 1f, 0.01f, Time.fixedDeltaTime);
+                            person.Value.model.GetComponent<Animator>().SetFloat("walkSpeed", newAnimeSpeed);
                         }
                     }
-                    else
-                    {
-                        person.Value.agent.speed = person.Value.navSpeed;
-                    }
-                    */
+                    person.Value.oldAnimeSpeed = person.Value.animeSpeed;
+                    person.Value.animeSpeed = newAnimeSpeed;
 
-                    //STUCK
-                    /*
-                    if (Vector3.Distance(person.Value.lastPos, person.Value.model.transform.position) <= 0.01f &&
-                        person.Value.walkStopState == "walk" && person.Value.status != "at" && person.Value.justIn && !person.Value.isStuck)
-                    {
-                        //Debug.Log(person.Value.name + " stuck " + person.Value.stuckTimeCounter + " sec");
-                        person.Value.stuckTimeCounter += Time.fixedDeltaTime;
-                        if (person.Value.stuckTimeCounter >= 1.5f)
-                        {
-                            Debug.Log(person.Value.name + " stuck over 1.5 sec in exhibition");
-                            if (person.Value.nextTarget_name.StartsWith("p"))
-                            {
-                                
-                                if (isTargetPointUse[person.Value.targetPointName])
-                                {
-                                    string before = person.Value.targetPointName;
-                                    
-                                    person.Value.nextTarget_pos = findPosByObjName(person.Value.nextTarget_name, person.Value);
-                                    person.Value.agent.SetDestination(person.Value.nextTarget_pos);
-                                    person.Value.stuckTimeCounter = 0.0f;
-                                    Debug.Log("change view point " + before + " -> " + person.Value.targetPointName);
-                                }
-                                else
-                                {
-                                
-                                    //person.Value.agent.SetDestination(person.Value.nextTarget_pos);
-                                    
-                                    Vector3 agentToEx = (exhibitions[person.Value.nextTarget_name].centerPosition - person.Value.model.transform.position).normalized;
-                                    Vector3 agentMoveTo = (person.Value.nextTarget_pos - person.Value.model.transform.position).normalized;
-
-                                    float minDist = 100.0f, dist = 0;
-                                    Vector3 otherAgentPos = Vector3.zero;
-                                    foreach (KeyValuePair<string, human_single> otherPerson in people)
-                                    {
-                                        dist = Vector3.Distance(otherPerson.Value.model.transform.position, person.Value.model.transform.position);
-                                        if (dist < minDist)
-                                        {
-                                            minDist = dist;
-                                            otherAgentPos = otherPerson.Value.model.transform.position;
-                                        }
-                                    }
-                                    Vector3 agentToOtherAgent = (otherAgentPos - person.Value.model.transform.position).normalized;
-                                    float rateForEx = 1.0f, rateForAgent = 1.0f;
-
-                                    if(Vector3.Distance(exhibitions[person.Value.nextTarget_name].centerPosition, person.Value.model.transform.position) >= 3.0f)
-                                    {
-                                        rateForEx = 0.0f;
-                                    }
-
-                                    Vector3 combine = (0.5f * agentMoveTo - rateForEx * agentToEx - rateForAgent * agentToOtherAgent).normalized;
-                                    person.Value.tempDestination = person.Value.model.transform.position + 1.5f * combine;
-
-                                    NavMesh.CalculatePath(person.Value.model.transform.position, person.Value.tempDestination, walkableMask, path);
-                                    if (path.status != NavMeshPathStatus.PathComplete)
-                                    {
-                                        Debug.Log("Not NavMeshPathStatus.PathComplete");
-                                        NavMeshHit myNavHit;
-                                        Vector3 _direct_touch = new Vector3();
-                                        if (NavMesh.SamplePosition(person.Value.tempDestination, out myNavHit, 5.0f, walkableMask))
-                                        {
-                                            _direct_touch = myNavHit.position;
-                                            NavMesh.CalculatePath(person.Value.model.transform.position, _direct_touch, walkableMask, path);
-                                            if (path.status == NavMeshPathStatus.PathComplete)
-                                            {
-                                                person.Value.tempDestination = _direct_touch;
-                                                // GameObject st = Instantiate(signPrefab, _direct_touch, Quaternion.identity);
-                                                // st.transform.Find("Text").GetComponent<TextMesh>().text = direction.ToString();
-                                            }
-                                            else
-                                            {
-                                                Debug.Log(person.Value.name + " can't find pos!");
-                                            }
-                                        }
-                                    }
-                                    Debug.DrawLine(person.Value.model.transform.position, person.Value.tempDestination, Color.red, 5);
-                                    person.Value.agent.SetDestination(person.Value.tempDestination);
-                                    person.Value.isStuck = true;
-                                    //person.Value.agent.avoidancePriority = 0;
-                                }
-                            }
-                        }
-                    }
-
-                    if(person.Value.isStuck && Vector3.Distance(person.Value.tempDestination, person.Value.model.transform.position) <= 0.5f)
-                    {
-                        Debug.Log(person.Value.name + " stuck finish");
-                        person.Value.isStuck = false;
-                        person.Value.agent.SetDestination(person.Value.nextTarget_pos);
-                        person.Value.stuckTimeCounter = 0.0f;
-                        person.Value.agent.avoidancePriority = person.Value.avoidPriority;
-                    }
-
-                    person.Value.lastPos = person.Value.model.transform.position;
-                    */
-
-
-                    dealWithRotate(person.Value, person.Value.lookAt_pos);
-
-                    
+                    dealWithRotate(person.Value, person.Value.lookAt_pos);              
 
                     //Handle Animation
                     //Look animation
@@ -876,7 +729,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     Vector3 selectAnotherBestViewPos(Vector3 currentTargetPos, exhibition_single currentExhibit, human_single person)
     {
-        System.Random random = new System.Random(person.randomSeed);
+        //System.Random random = new System.Random(person.randomSeed);
+        System.Random random = person.random; // new random change
         int currentDirectionIndex = currentExhibit.bestViewDirection_vector3.IndexOf(currentTargetPos);
         
         int randomIndex = random.Next(currentExhibit.bestViewDirection_vector3.Count);
@@ -893,7 +747,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     void changeStateWithProbability(human_single person, float personNeededTimeToExit, float personDistanceWithExit)
     {
-        if(person.stopStateContinuedTime >= 5.0f)
+        if(person.stopStateContinuedTime >= 3.0f)
         {
             person.walkStopState = "walk";
             person.stopStateContinuedTime = 0f;
@@ -901,7 +755,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             return;
         }
 
-        System.Random random = new System.Random(person.randomSeed);
+        //System.Random random = new System.Random(person.randomSeed);
+        System.Random random = person.random; // new random change
         //System.Random random = new System.Random((int)DateTime.Now.Millisecond + person.randomSeed);
         //System.Random random = new System.Random();
         // the last 10 second should totally be walking
@@ -959,7 +814,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
         else // is a exhibition
         {
-            System.Random random = new System.Random(person.randomSeed);
+            //System.Random random = new System.Random(person.randomSeed);
+            System.Random random = person.random; // new random change
             List<int> indexList = new List<int>();
             for (int i = 0; i < exhibitions[objName].bestViewDirection_vector3.Count; i++) indexList.Add(i);
 
@@ -1103,7 +959,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     void changeGathersWithProbability(human_single person)
     {
-        System.Random random = new System.Random(person.randomSeed);
+        //System.Random random = new System.Random(person.randomSeed);
+        System.Random random = person.random; // new random change
         float num = random.Next(0, 101);
         num /= 100f;
         gatheringEvent tmpEvent = new gatheringEvent();
@@ -1318,7 +1175,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             /* for time stamp */
             person.Value.lastTimeStamp_stopWalk = 0;
             person.Value.lastTimeStamp_recomputeMap = random.Next(1, currentSceneSettings.customUI.UI_Global.UpdateRate["influenceMap"] * 2 + 1);
-            person.Value.lastTimeStamp_rePath = 0;
+            person.Value.lastTimeStamp_rePath = -5f;
             person.Value.lastTimeStamp_recomputeGathers = random.Next(1, currentSceneSettings.customUI.UI_Global.UpdateRate["gathers"] * 2 + 1);
 
             /* for influence Map */
@@ -1461,12 +1318,14 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             if (loadVIS)
             {
                 newPerson.randomSeed = humansInfo[idx].randomSeed;
+                newPerson.random = new System.Random(newPerson.randomSeed);
                 newPerson.name = humansInfo[idx].name;
                 newPerson.gender = humansInfo[idx].gender;
             }
             else
             {
                 newPerson.randomSeed = Guid.NewGuid().GetHashCode();
+                newPerson.random = new System.Random(newPerson.randomSeed);
                 newPerson.name = "id_" + i.ToString();
                 newPerson.gender = random.Next(2);
             }
@@ -2851,7 +2710,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         while (!(min < returnValue && returnValue < max) && chance < 100) // not in a reasonable range
         {
             //System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
-            System.Random random = new System.Random(person.randomSeed);
+            //System.Random random = new System.Random(person.randomSeed);
+            System.Random random = person.random; // new random change
             //seedX = dynamicSystem.instance.random.Next(-100, 100);
             seedX = random.Next(-100, 100);
             seedX /= 100f; // -1 ~ 1
@@ -3026,19 +2886,19 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     {
         quickSimulationMode = true;
         //disable something don't care
-        foreach (Transform p in peopleParent.transform) ShowVisitor(p, false);
+        //foreach (Transform p in peopleParent.transform) ShowVisitor(p, false);
         GameObject environment = GameObject.Find("/[EnvironmentsOfEachScene]");
         foreach(Transform subScene in environment.transform)
         {
             if (subScene.name != UIController.instance.curOption) subScene.gameObject.SetActive(false);
         }
         environment = GameObject.Find("/[EnvironmentsOfEachScene]/" + UIController.instance.curOption);
-        foreach (Transform exhibit in environment.transform) ShowExhibit(exhibit, false);
+        //foreach (Transform exhibit in environment.transform) ShowExhibit(exhibit, false);
 
         for(int i = 1; i <= 3; i++)
         {
             GameObject light = GameObject.Find("Area Light (" + i.ToString() + ")");
-            light.GetComponent<Light>().enabled = false;
+            light.SetActive(false);
         }
         
         //GameObject UI = GameObject.Find("[UI]");
@@ -3052,7 +2912,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         miniCamera.SetActive(false);
         //Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
         Time.fixedDeltaTime = 0.03333333f;
-        Time.timeScale = 20;
+        Time.timeScale = 15;
 
 
         //startSimulate();

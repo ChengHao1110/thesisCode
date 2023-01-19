@@ -42,6 +42,7 @@ public class exhibition_single  // List<exhibition_single> exhibition_many
     /* for debug and check */
     public void updateInformationBoard()
     {
+        if (dynamicSystem.instance.quickSimulationMode) return;
         /* update text on model */
         string changeText = "\n";
         changeText += "capacity: \n" + this.capacity_cur + " / " + this.capacity_max + "\n";
@@ -51,7 +52,6 @@ public class exhibition_single  // List<exhibition_single> exhibition_many
             this.informationText.text = this.fixedText + changeText;
 
             /* make the board face to camera*/
-            if (dynamicSystem.instance.quickSimulationMode) return;
             this.informationBoard.transform.LookAt(Camera.main.transform.position);
         }
     }
