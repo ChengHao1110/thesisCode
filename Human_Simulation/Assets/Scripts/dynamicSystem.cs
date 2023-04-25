@@ -73,6 +73,7 @@ public class humanInfo
     public int gender;
     public string humanType;
     public double freeTime_total;
+    public string modelName;
     public List<string> desireExhibitionList;
     public double walkSpeed;
     public double gatherDesire;
@@ -119,7 +120,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     // public string curOption;
 
     /* system use - */
-    bool Run = false;  // signal to start running result    
+    public bool Run = false;  // signal to start running result
+    public bool afterGenerate = false;
     public Dictionary<string, human_single> people = new Dictionary<string, human_single>();
     public Dictionary<string, human_gather> peopleGathers = new Dictionary<string, human_gather>();
     public Dictionary<string, exhibition_single> exhibitions = new Dictionary<string, exhibition_single>();
@@ -238,7 +240,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         //NavMeshBake();
         // system simulating
         UpdateIsTargetPointUseStatus();
-        print(Time.fixedDeltaTime);
+        //print(Time.fixedDeltaTime);
+        if (influenceMapVisualize.instance.showInfoPanel.activeSelf)
+        {
+            influenceMapVisualize.instance.ShowVisitorInfoOnRightTopPanel();
+            influenceMapVisualize.instance.ShowExhibitInfoOnRightTopPanel();
+        }
         foreach (KeyValuePair<string, human_single> person in people)
         {
             if (person.Value.startSimulateTime <= deltaTimeCounter)
@@ -600,7 +607,11 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 analysis_updatePosition.Add(dif);
             }
             //store replay data
-            person.Value.SaveReplayFrameData();
+            if (deltaTimeCounter - person.Value.lastStoreReplayInfoTime >= 0.03333333f)
+            {
+                person.Value.SaveReplayFrameData();
+                person.Value.lastStoreReplayInfoTime = deltaTimeCounter;
+            }
         }        
     }
 
@@ -1248,6 +1259,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 visitorInfo.age = person.Value.age;
                 visitorInfo.gender = person.Value.gender;
                 visitorInfo.humanType = person.Value.humanType;
+                visitorInfo.modelName = person.Value.modelName;
                 visitorInfo.desireExhibitionList = person.Value.desireExhibitionList;
                 visitorInfo.freeTime_total = (double)person.Value.freeTime_total;
                 visitorInfo.walkSpeed = (double)person.Value.walkSpeed;
@@ -1283,7 +1295,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         setVisibleAllRange_exhibit(exhibitRangeToggle.isOn);
 
         pauseSimulation(); // stop all
-
+        afterGenerate = true;
     }
 
     void generateHumans()
@@ -1368,8 +1380,17 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
             /* initialize human movement */
             newPerson.preTarget_name = "init";            
-            newPerson.nextTarget_name = "";            
-            newPerson.model = loadAllCharacterModels.instance.randomCreatePrefab(newPerson.gender, newPerson.age);
+            newPerson.nextTarget_name = "";
+            if (loadVIS)
+            {
+                string type = GetType(humansInfo[idx].gender, humansInfo[idx].age);
+                newPerson.model = Instantiate(Resources.Load<GameObject>("CharactersPrefab/" + type + "/" + humansInfo[idx].modelName), Vector3.zero, Quaternion.identity);
+            }
+            else
+            {
+                newPerson.model = loadAllCharacterModels.instance.randomCreatePrefab(newPerson.gender, newPerson.age);
+            }
+            
             newPerson.model.tag = "Visitor";
 
             //save model name for replay mode
@@ -2562,7 +2583,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 {
     void Start()
     {
-        Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
+        Time.fixedDeltaTime = 0.03333333f;
         path = new NavMeshPath();
         matrixSize = 500;
         sceneSize = 22;
@@ -2872,7 +2893,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
         quickSimulationMode = false;
         Time.timeScale = 1;
-        Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
+        Time.fixedDeltaTime = 0.03333333f;
 
 
         //foreach (Transform p in peopleParent.transform) ShowVisitor(p, true);
@@ -2913,7 +2934,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         //Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
         Time.fixedDeltaTime = 0.03333333f;
         Time.timeScale = 15;
-
 
         //startSimulate();
     }
@@ -4135,4 +4155,48 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     }
     #endregion
+
+    string GetType(int gender, int age)
+    {
+        string type = "";
+        if (gender == 0) // female
+        {
+            if (age == 0) // Girl
+            {
+                type = "Girl";
+            }
+            else if (age == 1) // young female
+            {
+                type = "Female_young";
+            }
+            else if (age == 4) // granny
+            {
+                type = "Female_old";
+            }
+            else  // 2 and 3
+            {
+                type = "Female";
+            }
+        }
+        else // male
+        {
+            if (age == 0) // Boy
+            {
+                type = "Boy";
+            }
+            else if (age == 1) // young male
+            {
+                type = "Male_young";
+            }
+            else if (age == 4) // grandpa
+            {
+                type = "Male_old";
+            }
+            else  // 2 and 3
+            {
+                type = "Male";
+            }
+        }
+        return type;
+    }
 }

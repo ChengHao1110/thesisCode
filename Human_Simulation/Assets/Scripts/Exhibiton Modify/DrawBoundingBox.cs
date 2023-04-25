@@ -55,9 +55,18 @@ public class DrawBoundingBox : MonoBehaviour
     public void DrawBox(Color color)
     {
         //Transform[] child = this.GetComponentsInChildren<Transform>();
-        if(this.transform.childCount != 4)
+        if (this.transform.childCount != 4)
         {
             Initialize();
+        }
+        else
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                lines[i] = this.transform.GetChild(i).gameObject;
+                lrs[i] = lines[i].GetComponent<LineRenderer>();
+                lrs[i].positionCount = 0;
+            }
         }
 
         CalcPositons();

@@ -67,11 +67,13 @@ public class exhibition_single  // List<exhibition_single> exhibition_many
     {
         if(dynamicSystem.instance.deltaTimeCounter - this.timeCounter >= 1.0f)
         {
+            /*
             if(name == "p1")
             {
                 Debug.Log("deltaTimeCounter: " + dynamicSystem.instance.deltaTimeCounter);
                 Debug.Log("timeCounter: " + timeCounter);
             }
+            */
             realtimeHumanCount.Add(this.capacity_cur);
             this.timeCounter = dynamicSystem.instance.deltaTimeCounter;
         }

@@ -13,6 +13,11 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
     public bool hasSelecetedExhibition;
     List<GameObject> allBoundingBox = new List<GameObject>();
 
+    Color32 selectedColor = new Color32(120, 194, 196, 200);
+    Color32 unSelectedColor = new Color32(255, 255, 255, 255);
+    public bool mode1 = true, mode2 = false;
+    public Button mode1Btn, mode2Btn;
+
     // Modify Controller UI
     public Toggle showAllBoundingBox;
     public Slider rotateSpeedSlider;
@@ -64,6 +69,12 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
                 bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo);
                 if (hit)
                 {
+                    //for mode2
+                    if (hasSelecetedExhibition && selectedExhibition.GetComponent<ModifyExhibition>().copyGO != null)
+                    {
+                        Debug.Log("has copy object");
+                        return; 
+                    }
                     Debug.Log("Hit " + hitInfo.transform.gameObject.name);
                     //select new exhibition
                     if (hitInfo.transform.gameObject.tag == "Exhibition" && !hasSelecetedExhibition)
@@ -167,6 +178,24 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
         rotateSpeedTime = realValue;
     }
 
+    public void Mode1BtnON()
+    {
+        if (hasSelecetedExhibition) return;
+        mode1 = true;
+        mode2 = false;
+        mode1Btn.GetComponent<Image>().color = selectedColor;
+        mode2Btn.GetComponent<Image>().color = unSelectedColor;
+    }
+
+    public void Mode2BtnON()
+    {
+        if (hasSelecetedExhibition) return;
+        mode1 = false;
+        mode2 = true;
+        mode1Btn.GetComponent<Image>().color = unSelectedColor;
+        mode2Btn.GetComponent<Image>().color = selectedColor;
+    }
+
     public void SetInfoToNULL(string name)
     {
         ExhibitionInfo.instance.Name.text = "Name: " + name;
@@ -180,6 +209,8 @@ public class ExhibitionMouseContrller : PersistentSingleton<ExhibitionMouseContr
         ExhibitionInfo.instance.chooseInput.text = "0";
         ExhibitionInfo.instance.reChooseInput.text = "0";
     }
+
+
 
     void SetInfo()
     {

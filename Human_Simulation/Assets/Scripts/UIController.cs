@@ -1450,7 +1450,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
         int value = (int)timeScaleSlider.value;
         timeScaleText.text = value.ToString();
         Time.timeScale = value;
-        Time.fixedDeltaTime = Time.timeScale * 0.01666667f;
+        Time.fixedDeltaTime = 0.03333333f;
     }
     #endregion
     /* Human */

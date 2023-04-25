@@ -262,7 +262,7 @@ public class ReplayMode : MonoBehaviour
     #region Play
     void ShowFrameInfo()
     {
-        frameInfoText.text = "Time : " + (currentFrameIdx / 50.0f).ToString("f2") + " / " + (totalFrameCount / 50.0f).ToString("f2");
+        frameInfoText.text = "Time : " + (currentFrameIdx / 30.0f).ToString("f2") + " / " + (totalFrameCount / 30.0f).ToString("f2");
     }
     void PlayEachFrame(int currentFrameIdx)
     {
@@ -299,8 +299,9 @@ public class ReplayMode : MonoBehaviour
                 */
                 //rs.Value.model.transform.position = pos;
                 //rs.Value.model.transform.rotation = rot;
-                rs.Value.model.transform.position = Vector3.MoveTowards(rs.Value.model.transform.position, pos, Time.fixedDeltaTime);
-                //rs.Value.model.transform.position = Vector3.Lerp(rs.Value.model.transform.position, pos, Time.fixedDeltaTime);
+                //rs.Value.model.transform.position = Vector3.MoveTowards(rs.Value.model.transform.position, pos, Time.fixedDeltaTime);
+                //rs.Value.model.transform.position = Vector3.MoveTowards(rs.Value.model.transform.position, pos, 2.0f);
+                rs.Value.model.transform.position = Vector3.Lerp(rs.Value.model.transform.position, pos, Time.fixedDeltaTime);
                 rs.Value.model.transform.rotation = Quaternion.Slerp(rs.Value.model.transform.rotation, rot, Time.fixedDeltaTime);
                 //handle animation
                 rs.Value.model.GetComponent<Animator>().SetBool("walk", rs.Value.fd[currentFrameIdx].animationWalk);

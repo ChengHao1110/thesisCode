@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
 {
@@ -20,6 +21,10 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
     Color textColor_main = new Color(134 / 255f, 34 / 255f, 43 / 255f);
     Color textColor_notActive = new Color(92 / 255f, 92 / 255f, 92 / 255f);
     /**/
+
+    public GameObject showInfoPanel;
+    public string mainExhibitName = "";
+
     string baseInformationText = "";
 
     void Update()
@@ -36,6 +41,19 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
                 {                    
                     // Debug.Log("focus on: " + hit.collider.transform.name);
                     changeMainHuman(hit.collider.transform.name);
+
+                    //show visitor info on right top
+                    mainHumanName = hit.collider.transform.name;
+                    mainExhibitName = "";
+                    
+                    ShowVisitorInfoOnRightTopPanel();
+                }
+                else if (hit.transform.gameObject.tag == "Exhibition" && !hit.transform.gameObject.name.Contains("x"))
+                {
+                    //show exhibit info
+                    mainExhibitName = hit.transform.gameObject.name;
+                    mainHumanName = "";
+                    ShowExhibitInfoOnRightTopPanel();
                 }
             }
         }
@@ -139,6 +157,71 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
             initializeVis();
         }
         nameText.text = "mainHuman:  " + mainHumanName;
+    }
+
+    public void ShowVisitorInfoOnRightTopPanel()
+    {
+        if (!dynamicSystem.instance.afterGenerate) return;
+        showInfoPanel.SetActive(true);
+        string showText = "";
+        // get visitor info 
+        if (mainHumanName == "") return;
+        human_single visitor = dynamicSystem.instance.people[mainHumanName];
+        // id
+        showText += "name: " + visitor.name + "\n";
+        string genderStr;
+        // feature
+        if (mainHuman.gender == 0) genderStr = "female";
+        else genderStr = "male";
+        showText += "feature: " + genderStr + " " + mainHuman.humanType + "\n";
+        //speed
+        //showText += "speed: " + mainHuman.walkSpeed.ToString("F2") + "\n";
+        // walk status
+        showText += "walk status: " + mainHuman.walkStopState + "\n";
+        // free time
+        showText += "free time: " + mainHuman.freeTime_totalLeft.ToString("F2") + " / " + mainHuman.freeTime_total.ToString("F2") + "\n";
+        // next target
+        string nextTargetText = "next target: " + mainHuman.nextTarget_name;
+        nextTargetText += " (stay: " + mainHuman.freeTime_stayInNextExhibit.ToString("F0") + "s)\n";
+        if (mainHuman.nextTarget_name.StartsWith("p")) nextTargetText += " (index: " + mainHuman.nextTarget_direction + ", stay: " + mainHuman.wanderStayTime.ToString("F2") + ")";
+        showText += nextTargetText + "\n";
+        // desire list 
+        showText += "desire List : " + mainHuman.desireExhibitionList.Count + "\n(" + string.Join(", ", mainHuman.desireExhibitionList) + ")\n";
+        // next update in : (sec)
+        /*
+        float nextUpdateTime = dynamicSystem.instance.deltaTimeCounter - mainHuman.lastTimeStamp_recomputeMap;
+        nextUpdateTime = dynamicSystem.instance.currentSceneSettings.customUI.UI_Global.UpdateRate["influenceMap"] - nextUpdateTime;
+        if (nextUpdateTime > dynamicSystem.instance.updateVisBoard) nextUpdateTime = dynamicSystem.instance.updateVisBoard;
+        string nextUpdateText = "Map next update in: " + nextUpdateTime.ToString("F2") + "s";
+        
+        showText += nextUpdateText;
+        */
+
+        // Get TMP
+        TextMeshProUGUI infoText = showInfoPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        infoText.text = showText;
+    }
+    public void CloseVisitorInfoOnRightTopPanel()
+    {
+        showInfoPanel.SetActive(false);
+    }
+
+    public void ShowExhibitInfoOnRightTopPanel()
+    {
+        if (!dynamicSystem.instance.afterGenerate) return;
+        showInfoPanel.SetActive(true);
+        string showText = "";
+        // get visitor info 
+        if (mainExhibitName == "") return;
+        //check exit or exhibit
+        string name = "p" + mainExhibitName.Replace(UIController.instance.currentScene + "_", "");
+        exhibition_single exhibit = dynamicSystem.instance.exhibitions[name];
+        string changeText = "\n";
+        changeText += "capacity: \n" + exhibit.capacity_cur + " / " + exhibit.capacity_max + "\n";
+        showText += exhibit.fixedText + changeText;
+        // Get TMP
+        TextMeshProUGUI infoText = showInfoPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        infoText.text = showText;
     }
 
     public void initializeVis()

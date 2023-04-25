@@ -48,6 +48,7 @@ public class human_single// List<human_single> humanCrowd;
     public bool animeWalk = false;
     public float animeSpeed = 1;
     public float oldAnimeSpeed = 1;
+    public float lastStoreReplayInfoTime = 0.0f;
     public float gatherDesire;
     public float startSimulateTime = 0;
     // personality
@@ -714,7 +715,7 @@ public class human_single// List<human_single> humanCrowd;
         Vector3 currentViewPos = viewPoint.transform.position;
         Vector3 targetViewPos = viewPoints[nextViewPointIdx].viewPoint.transform.position;
 
-        viewPoint.transform.position = Vector3.MoveTowards(currentViewPos, targetViewPos, 0.01f);
+        viewPoint.transform.position = Vector3.MoveTowards(currentViewPos, targetViewPos, 0.005f);
         if(Vector3.Distance(viewPoint.transform.position, targetViewPos) < 0.001f)
         {
             viewPointIdx++;
