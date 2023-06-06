@@ -32,12 +32,12 @@ public class ModifyExhibition : MonoBehaviour
             if (ExhibitionMouseContrller.instance.mode1) 
             {
                 //clockwise
-                if (Input.GetKey(KeyCode.Q))
+                if (Input.GetKey(KeyCode.E))
                 {
                     transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up, ExhibitionMouseContrller.instance.rotateSpeedTime * rotateSpeed * Time.deltaTime);
                 }
                 //counterclockwise
-                if (Input.GetKey(KeyCode.E))
+                if (Input.GetKey(KeyCode.Q))
                 {
                     transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up, ExhibitionMouseContrller.instance.rotateSpeedTime * -rotateSpeed * Time.deltaTime);
                 }

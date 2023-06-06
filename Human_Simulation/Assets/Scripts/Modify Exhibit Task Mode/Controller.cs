@@ -132,6 +132,16 @@ public class Controller : PersistentSingleton<Controller>
                     }
                 }
             }
+            else
+            {
+                if (hasSelecetedExhibition && mode1)
+                {
+                    //remove the previous bounding box
+                    boundingBox.GetComponent<DrawBoundingBox>().DeleteBoundingBox();
+                    selectedExhibition.GetComponent<ModifyExhibitForTask>().isSelected = false;
+                    hasSelecetedExhibition = false;
+                }
+            }
         }
     }
 

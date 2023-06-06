@@ -8,8 +8,6 @@ public class ModifyExhibitForTask : MonoBehaviour
     float rotateSpeed = 25f;
     public float rotateSpeedTime = 1f;
     public GameObject copyGO;
-    
-
 
     // double click
     float firstClickTime;
@@ -38,14 +36,14 @@ public class ModifyExhibitForTask : MonoBehaviour
             if (Controller.instance.mode1)
             {
                 //clockwise
-                if (Input.GetKey(KeyCode.Q))
-                {
-                    transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up, 5 * Controller.instance.rotateSpeedTime * rotateSpeed * Time.deltaTime);
-                }
-                //counterclockwise
                 if (Input.GetKey(KeyCode.E))
                 {
-                    transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up, 5 * Controller.instance.rotateSpeedTime * -rotateSpeed * Time.deltaTime);
+                    transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up, 1.7f * Controller.instance.rotateSpeedTime * rotateSpeed * Time.deltaTime);
+                }
+                //counterclockwise
+                if (Input.GetKey(KeyCode.Q))
+                {
+                    transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up, 1.7f * Controller.instance.rotateSpeedTime * -rotateSpeed * Time.deltaTime);
                 }
             }
 
@@ -64,6 +62,11 @@ public class ModifyExhibitForTask : MonoBehaviour
                     StartCoroutine(CheckDoubleClick());
                 }
 
+                //move
+                if (Input.GetMouseButton(1))
+                {
+                    AdjustExhibition();
+                }
 
                 //teleport exhibit
                 if (Input.GetMouseButtonDown(1))
@@ -89,7 +92,7 @@ public class ModifyExhibitForTask : MonoBehaviour
                     transform.rotation = copyGO.transform.rotation;
                     Destroy(copyGO);
                 }
-
+                /*
                 if (copyGO != null)
                 {
                     float var = 0;
@@ -101,6 +104,39 @@ public class ModifyExhibitForTask : MonoBehaviour
                     GameObject boundingBox = copyGO.transform.Find("BoundingBoxCube").gameObject;
                     boundingBox.GetComponent<DrawBoundingBox>().DrawBox(Color.cyan);
                 }
+                */
+                if (Input.GetAxisRaw("Mouse ScrollWheel") > 0) 
+                {
+                    float var = 10;
+                    if (copyGO == null)
+                    {
+                        copyGO = Instantiate(gameObject);
+                        copyGO.transform.rotation = transform.rotation;
+                        copyGO.transform.position = transform.position;
+                    }
+                    copyGO.transform.RotateAround(copyGO.transform.Find("BoundingBoxCube").position,
+                            Vector3.up,
+                            var * Controller.instance.rotateSpeedTime * -rotateSpeed * Time.deltaTime);
+                }
+                else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
+                {
+                    float var = -10;
+                    if (copyGO == null)
+                    {
+                        copyGO = Instantiate(gameObject);
+                        copyGO.transform.rotation = transform.rotation;
+                        copyGO.transform.position = transform.position;
+                    }
+                    copyGO.transform.RotateAround(copyGO.transform.Find("BoundingBoxCube").position,
+                            Vector3.up,
+                            var * Controller.instance.rotateSpeedTime * -rotateSpeed * Time.deltaTime);
+                }
+                if (copyGO != null)
+                {
+                    GameObject boundingBox = copyGO.transform.Find("BoundingBoxCube").gameObject;
+                    boundingBox.GetComponent<DrawBoundingBox>().DrawBox(Color.cyan);
+                }
+
             }
         }
     }
@@ -127,7 +163,11 @@ public class ModifyExhibitForTask : MonoBehaviour
             Vector3 lastPos = Camera.main.ScreenToWorldPoint(new Vector3(disX, disY, disZ));
             transform.position = new Vector3(lastPos.x, startPos.y, lastPos.z);
         }
-        /*
+        
+    }
+
+    void AdjustExhibition()
+    {
         if (Controller.instance.mode2 && isSelected && copyGO != null)
         {
             float disX = Input.mousePosition.x - posX;
@@ -136,7 +176,6 @@ public class ModifyExhibitForTask : MonoBehaviour
             Vector3 lastPos = Camera.main.ScreenToWorldPoint(new Vector3(disX, disY, disZ));
             copyGO.transform.position = new Vector3(lastPos.x, startPos.y, lastPos.z);
         }
-        */
     }
 
     private IEnumerator CheckDoubleClick()
@@ -146,10 +185,13 @@ public class ModifyExhibitForTask : MonoBehaviour
         {
             if (clickTimes == 2)
             {
-                Debug.Log("double click");
-                transform.position = copyGO.transform.position;
-                transform.rotation = copyGO.transform.rotation;
-                Destroy(copyGO);
+                if (copyGO != null)
+                {
+                    Debug.Log("double click");
+                    transform.position = copyGO.transform.position;
+                    transform.rotation = copyGO.transform.rotation;
+                    Destroy(copyGO);
+                }
                 break;
             }
             yield return new WaitForEndOfFrame();

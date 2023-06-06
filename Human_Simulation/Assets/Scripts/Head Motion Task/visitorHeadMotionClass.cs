@@ -21,9 +21,11 @@ public class visitorHeadMotionClass : MonoBehaviour
             targetPos = viewPoints[nextViewPointIdx].viewPoint.transform.position;
             isPointMoving = true;
             hasTarget = true;
-            float movingTime = RandomGaussian(3f, 2f, 1f, 5f);
+            //float movingTime = RandomGaussian(3f, 2f, 1f, 5f); //original
+            float movingTime = RandomGaussian(1.5f, 1f, 1f, 2f); //original
             movingDistance = Vector3.Distance(viewPoint.transform.position, targetPos) / movingTime / 150; //30fps 2 coeffecient
-            Debug.Log(movingDistance);
+            //Debug.Log(movingDistance);
+            if (movingDistance > 0.005f) movingDistance = 0.005f;
         }
 
         if (isWatching)
@@ -44,7 +46,8 @@ public class visitorHeadMotionClass : MonoBehaviour
             {
                 viewPointIdx++;
                 if (viewPointIdx == viewPoints.Count) viewPointIdx = 0;
-                watchingTime = RandomGaussian(2f, 3f, 0.5f, 8f);
+                //watchingTime = RandomGaussian(2f, 3f, 0.5f, 8f);
+                watchingTime = RandomGaussian(2f, 3f, 0.5f, 3f);
                 isPointMoving = false;
                 isWatching = true;
             }

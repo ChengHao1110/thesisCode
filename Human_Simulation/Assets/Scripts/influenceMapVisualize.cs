@@ -25,10 +25,20 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
     public GameObject showInfoPanel;
     public string mainExhibitName = "";
 
-    string baseInformationText = "";
+    /*show information position*/
+    Color32 selectedColor = new Color32(120, 194, 196, 200);
+    Color32 unSelectedColor = new Color32(255, 255, 255, 255);
+    bool visLower = true, visRight = false, visUpper = false, exRight = true, exUpper = false;
+    public Button visLowerBtn, visRightBtn, visUpperBtn, exRightBtn, exUpperBtn;
+    public GameObject visInfoAtLowerPanel;
 
+    /*select object*/
+
+
+    string baseInformationText = "";
     void Update()
     {
+        if (!dynamicSystem.instance.Run) return;
         if (Input.GetMouseButtonDown(0))
         {
             if (dynamicSystem.instance.quickSimulationMode) return;
@@ -37,6 +47,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
 
             if (Physics.Raycast(ray, out hit))
             {
+                //visitor
                 if (hit.collider != null && hit.collider.transform.name.StartsWith("id"))
                 {                    
                     // Debug.Log("focus on: " + hit.collider.transform.name);
@@ -46,21 +57,42 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
                     mainHumanName = hit.collider.transform.name;
                     mainExhibitName = "";
                     
-                    ShowVisitorInfoOnRightTopPanel();
+                    if(visRight) ShowVisitorInfoOnRightTopPanel();
                 }
+                //exhibit
                 else if (hit.transform.gameObject.tag == "Exhibition" && !hit.transform.gameObject.name.Contains("x"))
                 {
                     //show exhibit info
                     mainExhibitName = hit.transform.gameObject.name;
                     mainHumanName = "";
-                    ShowExhibitInfoOnRightTopPanel();
+                    if (exRight) ShowExhibitInfoOnRightTopPanel();
                 }
             }
+        }
+        if (visUpper)
+        {
+            dynamicSystem.instance.setActiveAllInformationBoard_human(true);
+        }
+        else
+        {
+            dynamicSystem.instance.setActiveAllInformationBoard_human(false);
+        }
+        if (exUpper)
+        {
+            dynamicSystem.instance.setActiveAllInformationBoard_exhibit(true);
+        }
+        else
+        {
+            dynamicSystem.instance.setActiveAllInformationBoard_exhibit(false);
         }
     }
 
     public void influenceMapUpdate()
     {
+        if (!visLower)
+        {
+            return;
+        }
         if (mainHumanName != "")
         {
             foreach (KeyValuePair<string, GameObject> marker in markers)
@@ -209,7 +241,6 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
     public void ShowExhibitInfoOnRightTopPanel()
     {
         if (!dynamicSystem.instance.afterGenerate) return;
-        showInfoPanel.SetActive(true);
         string showText = "";
         // get visitor info 
         if (mainExhibitName == "") return;
@@ -242,5 +273,65 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
                 text.color = textColor_exhibit;
             }
         }
+    }
+
+    //info position button
+    //Visitor
+    public void VisLowerButtton()
+    {
+        visLower = true;
+        visUpper = false;
+        visRight = false;
+        visInfoAtLowerPanel.SetActive(true);
+        showInfoPanel.SetActive(false);
+        visLowerBtn.GetComponent<Image>().color = selectedColor;
+        //change other button
+        visRightBtn.GetComponent<Image>().color = unSelectedColor;
+        visUpperBtn.GetComponent<Image>().color = unSelectedColor;
+    }
+    public void VisRightButtton()
+    {
+        visRight = true;
+        visUpper = false;
+        visLower = false;
+        visInfoAtLowerPanel.SetActive(false);
+        showInfoPanel.SetActive(true);
+        visRightBtn.GetComponent<Image>().color = selectedColor;
+        //change other button
+        visLowerBtn.GetComponent<Image>().color = unSelectedColor;
+        visUpperBtn.GetComponent<Image>().color = unSelectedColor;
+    }
+    public void VisUpperButtton()
+    {
+        visUpper = true;
+        visLower = false;
+        visRight = false;
+        visInfoAtLowerPanel.SetActive(false);
+        showInfoPanel.SetActive(false);
+        visUpperBtn.GetComponent<Image>().color = selectedColor;
+        //change other button
+        visRightBtn.GetComponent<Image>().color = unSelectedColor;
+        visLowerBtn.GetComponent<Image>().color = unSelectedColor;
+    }
+
+    //Exibit
+    public void ExRightButtton()
+    {
+        exRight = true;
+        exUpper = false;
+        exRightBtn.GetComponent<Image>().color = selectedColor;
+        showInfoPanel.SetActive(true);
+        //change other button
+        exUpperBtn.GetComponent<Image>().color = unSelectedColor;
+    }
+
+    public void ExUpperButtton()
+    {
+        exUpper = true;
+        exRight = false;
+        showInfoPanel.SetActive(false);
+        exUpperBtn.GetComponent<Image>().color = selectedColor;
+        //change other button
+        exRightBtn.GetComponent<Image>().color = unSelectedColor;
     }
 }

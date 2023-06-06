@@ -15,14 +15,19 @@ public class ModifyTaskRecord
 
 public class SystemTask : MonoBehaviour
 {
+    //beginner mode
+    public bool beginnerMode = false;
+    public GameObject beginnerPanel;
+    public TextMeshProUGUI beginnerModeText;
+
     /*save tasks*/
     bool saveCurrentTaskInfo = false;
     List<TaskContent> tasksInfoList = new List<TaskContent>();
 
-
     // objective measure
     List<ModifyTaskRecord> recordList = new List<ModifyTaskRecord>();
     public float observeTimeCounter = 0f, modifyTimeCounter = 0f;
+    public int userTestListNo = 0; // 0 -> 1 2 4 3 5 6 8 7 9 10, 1 -> 2 1 3 4 6 5 7 8 10 9
 
     // Task content
     int taskNo = 0;
@@ -32,6 +37,9 @@ public class SystemTask : MonoBehaviour
     List<GameObject> currentExhibitList = new List<GameObject>();
     Camera mCamera;
     List<GameObject> overlayExhibit = new List<GameObject>();
+    List<GameObject> idObject = new List<GameObject>();
+    public GameObject markPrefab;
+    public TextMeshProUGUI taskMsg;
 
     /*starting*/
     public GameObject startPanel;
@@ -40,10 +48,10 @@ public class SystemTask : MonoBehaviour
     /*taskPanel*/
     public GameObject taskPanel;
     public TextMeshProUGUI taskNOText, taskModeText;
-    public GameObject taskImg;
     public Button taskNextBtn;
 
     /*editting*/
+    public GameObject taskEditPanel;
     public TextMeshProUGUI editNOText, editModeText;
     public GameObject editImg;
     bool startModify = false;
@@ -51,19 +59,36 @@ public class SystemTask : MonoBehaviour
     /*successful panel*/
     public GameObject successPanel;
 
+    /*finish panel*/
+    public GameObject finishPanel;
+
     // Start is called before the first frame update
     void Start()
     {
-        startPanelNextBtn.onClick.AddListener(StartPanelNextBtnOnclick);
         mCamera = Camera.main;
-        LoadTaskJson();
-        GenerateTaskOrder();
+        if (beginnerMode)
+        {
+            beginnerPanel.SetActive(true);
+            mCamera.transform.position = new Vector3(-50, 15, 0);
+            mCamera.rect = new Rect(0, 0, 1, 1);
+        }
+        else
+        {
+            startPanel.SetActive(true);
+            taskEditPanel.SetActive(true);
+            startPanelNextBtn.onClick.AddListener(StartPanelNextBtnOnclick);
+            //LoadTaskJson();
+            GenerateTaskOrder();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (beginnerMode) return;
         Check();
+
+        //test
         if (Input.GetKeyDown(KeyCode.N))
         {
             OpenTaskPanel(taskOrder[testIdx]);
@@ -86,9 +111,12 @@ public class SystemTask : MonoBehaviour
         if (startModify)
         {
             bool pass = true;
-            
+
+            if (Controller.instance.mode1 && Controller.instance.hasSelecetedExhibition) return;
+            taskMsg.text = "Hint:\n";
             for (int i = 0; i < currentExhibitList.Count; i++)
             {
+                taskMsg.text += "[" + currentExhibitList[i].name + "] ";
                 int sceneIdx = Mathf.CeilToInt((float)taskNo / 2);
                 string sceneName = sceneIdx.ToString() + "b";
                 GameObject correctScene = GameObject.Find("[EnvironmentsOfEachScene]/" + sceneName);
@@ -108,25 +136,51 @@ public class SystemTask : MonoBehaviour
                             diffPos.y = currentExhibitList[i].transform.position.z - ex.transform.position.z;
                         }
                         float diffRotY = currentExhibitList[i].transform.eulerAngles.y - ex.eulerAngles.y;
+                        //Debug.Log(currentExhibitList[i].transform.eulerAngles.y); // eulerAngles: 0 ~ 360
 
-                        //對稱性質的展品
                         diffRotY = Mathf.Abs(diffRotY);
+                        //Debug.Log("before: " + diffRotY);
                         //handle 360
-                        if (diffRotY > 180) diffRotY -= 360;
-                        //Debug.Log(diffRotY);
+                        if (Mathf.Abs(diffRotY - 360) < 5) diffRotY = 0;
+
+                        if (taskNo == 3 || taskNo == 4 || taskNo == 5 || taskNo == 6) // symmetry ex
+                        {
+                            if (Mathf.Abs(diffRotY - 180) < 5) diffRotY = 0;  
+                        }
+                        //Debug.Log("after: " + diffRotY);
                         //change rotatino to degree
+                        if (diffPos.magnitude > 0.1f)
+                        {
+                            pass = false;
+                            taskMsg.text += "Pos: X ";
+                        }
+                        else
+                        {
+                            taskMsg.text += "Pos: V ";
+                        }
+
+                        if (diffRotY > 5)
+                        {
+                            pass = false;
+                            taskMsg.text += "Rot: X ";
+                        }
+                        else 
+                        {
+                            taskMsg.text += "Rot: V\n";
+                        }
+                        /*
                         if (diffPos.magnitude > 0.1f || diffRotY > 5)
                         {
                             pass = false;
                             break;
                         }
+                        */
                     }
                 }
             }
 
             if (pass)
             {
-                successPanel.SetActive(true);
                 startModify = false;
                 modifyTimeCounter = Time.time - modifyTimeCounter;
                 Debug.Log("complete time: " + modifyTimeCounter);
@@ -135,15 +189,18 @@ public class SystemTask : MonoBehaviour
                 mtr.taskNo = taskNo;
                 mtr.modifyTimeCounter = modifyTimeCounter;
                 recordList.Add(mtr);
-                //successful isSelected status change to false
-                if (Controller.instance.hasSelecetedExhibition)
-                {
-                    Controller.instance.boundingBox.GetComponent<DrawBoundingBox>().DeleteBoundingBox();
-                    Controller.instance.selectedExhibition.GetComponent<ModifyExhibitForTask>().isSelected = false;
-                    Controller.instance.hasSelecetedExhibition = false;
-                }
+
                 testIdx++;
-                
+                if (testIdx == 10)
+                {
+                    WriteRecordJson();
+                    finishPanel.SetActive(true);
+                    return; // open finish panel
+                }
+                else
+                {
+                    successPanel.SetActive(true);
+                }
             }
         }
 
@@ -180,32 +237,38 @@ public class SystemTask : MonoBehaviour
             /*Camera*/
             mCamera.transform.position = new Vector3(0, 15, (sceneIdx - 1) * 50);
         }
-        RawImage img = taskImg.GetComponent<RawImage>();
         
-        Texture texture = Resources.Load<Texture>("ModifySceneMaterial/modifyTask" + sceneIdx.ToString());
-        img.texture = texture;
         taskPanel.SetActive(true);
 
-
-        
         currentScene = GameObject.Find("[EnvironmentsOfEachScene]/" + sceneName);
         currentExhibitList.Clear();
+        foreach (GameObject mark in idObject)
+        {
+            Destroy(mark);
+        }
+        idObject.Clear();
         foreach (Transform child in currentScene.transform)
         {
             if (child.name.Contains("119"))
             {
                 currentExhibitList.Add(child.gameObject);
+                // add idObejct 
+                Vector3 pos = new Vector3(child.position.x - 0.5f, child.position.y + 5, child.position.z + 0.5f);
+                GameObject mark = Instantiate(markPrefab, pos, Quaternion.identity);
+                mark.transform.SetParent(child);
+                mark.transform.Find("Text").GetComponent<TextMesh>().text = child.name;
+                mark.transform.Find("Text").rotation = Quaternion.Euler(90, 0, 0);
+                mark.transform.Find("Text").GetComponent<TextMesh>().fontSize = 20;
+                idObject.Add(mark);
             }
         }
 
         /*edit UI*/
         editNOText.text = taskNOText.text;
         editModeText.text = taskModeText.text;
-        img = editImg.GetComponent<RawImage>();
+        RawImage img = editImg.GetComponent<RawImage>();
+        Texture texture = Resources.Load<Texture>("ModifySceneMaterial/modifyTask" + sceneIdx.ToString());
         img.texture = texture;
-
-        /*measure*/
-        observeTimeCounter = Time.time;
 
         /*overlay exhibit*/
         sceneName = sceneIdx.ToString() + "b";
@@ -233,7 +296,6 @@ public class SystemTask : MonoBehaviour
                     pos.y = child.position.y;
                     pos.z = child.position.z;
                 }
-
 
                 overlay.transform.position = pos;
                 //remove overlay modify script
@@ -276,7 +338,14 @@ public class SystemTask : MonoBehaviour
 
     public void TaskPanelNextOnClick()
     {
-        observeTimeCounter = Time.time - observeTimeCounter;
+        // remove all selection 
+        //successful isSelected status change to false
+        if (Controller.instance.hasSelecetedExhibition)
+        {
+            Controller.instance.boundingBox.GetComponent<DrawBoundingBox>().DeleteBoundingBox();
+            Controller.instance.selectedExhibition.GetComponent<ModifyExhibitForTask>().isSelected = false;
+            Controller.instance.hasSelecetedExhibition = false;
+        }
         taskPanel.SetActive(false);
         startModify = true;
     }
@@ -286,11 +355,6 @@ public class SystemTask : MonoBehaviour
     public void SuccessPanelNextOnClick()
     {
         successPanel.SetActive(false);
-        if (testIdx == 10)
-        {
-            WriteRecordJson(); 
-            return; // open finish panel
-        }
         OpenTaskPanel(taskOrder[testIdx]);
     }
     #endregion
@@ -388,20 +452,39 @@ public class SystemTask : MonoBehaviour
 
     void GenerateTaskOrder()
     {
-        int ran = Random.Range(0, 2);
+        // 0 -> 1 2 4 3 5 6 8 7 9 10, 1 -> 2 1 3 4 6 5 7 8 10 9
+        int mode = 0;
+        if (userTestListNo == 0) mode = 0;
+        else mode = 1;
         for (int i = 1; i < 6; i++)
         {
-            if(ran == 1)
+            if(mode == 0)
             {
                 taskOrder.Add(2 * i - 1);
                 taskOrder.Add(2 * i);
+                mode = 1;
             }
             else
             {
                 taskOrder.Add(2 * i);
                 taskOrder.Add(2 * i - 1);
+                mode = 0;
             }
         }
     }
     #endregion
+
+    public void BeginnerMode1Btn()
+    {
+        Controller.instance.mode1 = true;
+        Controller.instance.mode2 = false;
+        beginnerModeText.text = "Mode 1";
+    }
+
+    public void BeginnerMode2Btn()
+    {
+        Controller.instance.mode1 = false;
+        Controller.instance.mode2 = true;
+        beginnerModeText.text = "Mode 2";
+    }
 }

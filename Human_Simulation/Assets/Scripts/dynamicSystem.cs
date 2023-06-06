@@ -194,6 +194,9 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
     public Dictionary<string, bool> isTargetPointUse = new Dictionary<string, bool>();
     public Dictionary<string, GameObject> targetPointBall = new Dictionary<string, GameObject>();
 
+    /*dashboard & info pos panel*/
+    public GameObject dashboard, infoPos;
+
     /* update information */
     void updatePeople()
     {
@@ -4199,4 +4202,18 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
         return type;
     }
+
+    #region dashboard & info pos switch
+    public void ChangeToInfoPosPanel()
+    {
+        dashboard.SetActive(false);
+        infoPos.SetActive(true);
+    }
+
+    public void ChangeToDashBoardPanel()
+    {
+        dashboard.SetActive(true);
+        infoPos.SetActive(false);
+    }
+    #endregion
 }

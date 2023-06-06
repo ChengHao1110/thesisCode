@@ -9,7 +9,7 @@ public class HeadMotionSystem : MonoBehaviour
     public bool isHeadMotionOn = true;
     public int sceneCount = 1, startSceneIdx = 1, cameraIdx = 1;
     public List<List<GameObject>> sceneCameraList = new List<List<GameObject>>();
-    
+    public float timeCounter = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -37,8 +37,14 @@ public class HeadMotionSystem : MonoBehaviour
                 {
                     GameObject vis = child.gameObject;
                     //add animation clip 
+                    /*
                     Animator animator = vis.GetComponent<Animator>();
                     animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimationClips/ManPose");
+                    */
+
+                    Animator animator = vis.GetComponent<Animator>();
+                    animator.speed = 0.3f;
+
                     if (!isHeadMotionOn) continue;
                     visitorHeadMotionClass vHMC =  vis.AddComponent<visitorHeadMotionClass>();
                     AddRig(vis);
@@ -108,6 +114,17 @@ public class HeadMotionSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timeCounter += Time.deltaTime;
+        if(timeCounter >= 10.0f)
+        {
+            //change Camera
+            int oldCameraIdx = cameraIdx;
+            cameraIdx++;
+            if (cameraIdx > sceneCameraList[startSceneIdx - 1].Count) cameraIdx = 1;
+            sceneCameraList[startSceneIdx - 1][oldCameraIdx - 1].SetActive(false);
+            sceneCameraList[startSceneIdx - 1][cameraIdx - 1].SetActive(true);
+            timeCounter = 0.0f;
+        }
         if (isHeadMotionOn) {
             foreach (GameObject vis in visitorList)
             {
@@ -115,6 +132,7 @@ public class HeadMotionSystem : MonoBehaviour
                 vHMC.ViewPointMoving();
             }
         }
+
         if (Input.GetKeyDown("right"))
         {
             int oldSceneIdx = startSceneIdx;
