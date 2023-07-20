@@ -289,6 +289,55 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     else person.Value.stopStateContinuedTime = 0f;
 
                     /* gather state machine */
+                    //calculate gather
+                    int humanCount = 0;
+                    Vector3 sumPosition = Vector3.zero;
+                    foreach (KeyValuePair<string, human_gather> g in peopleGathers)
+                    {
+                        if (g.Key == person.Value.gatherIndex && g.Value.humans.Count() != 1)
+                        {
+                            //calculate group center
+                            foreach (string otherPerson in g.Value.humans)
+                            {
+                                humanCount++;
+                                sumPosition += people[otherPerson].currentPosition;
+                            }
+                            break;
+                        }
+                    }
+                    Vector3 groupCenter = sumPosition / humanCount;
+                    float distanceToGroup = Vector3.Distance(person.Value.currentPosition, groupCenter);
+                    if (distanceToGroup > 2.0f)
+                    {
+                        Debug.Log(person.Value.name + " too far change group");
+                        human_gather newGather = new human_gather();
+                        newGather.humans.Add(person.Value.name);
+                        string newKey = "group" + gatherCounter.ToString();
+
+                        newGather.markColor = generateColorByIndex(gatherCounter + 1);
+                        person.Value.groupColorIndex = gatherCounter;
+
+                        gatherCounter++;
+                        peopleGathers.Add(newKey, newGather);
+
+                        peopleGathers[person.Value.gatherIndex].humans.Remove(person.Value.name);
+                        if (peopleGathers[person.Value.gatherIndex].humans.Count == 0) peopleGathers.Remove(person.Value.gatherIndex);
+                        person.Value.gatherIndex = newKey; // update gatherIndex
+                    };
+                    //update color
+                    if (peopleGathers[person.Value.gatherIndex].humans.Count == 1) // alone
+                    {
+                        //person.gatherMarker.GetComponent<MeshRenderer>().material.color = Color.white;
+                        person.Value.gatherMarker.GetComponent<MeshRenderer>().material.color = peopleGathers[person.Value.gatherIndex].markColor;
+                        person.Value.gatherMarker.SetActive(false);
+                    }
+                    else
+                    {
+                        person.Value.gatherMarker.GetComponent<MeshRenderer>().material.color = peopleGathers[person.Value.gatherIndex].markColor;
+
+                        person.Value.gatherMarker.SetActive(true);
+                    }
+
                     if (deltaTimeCounter - person.Value.lastTimeStamp_recomputeGathers > currentSceneSettings.customUI.UI_Global.UpdateRate["gathers"])
                     {
                         changeGathersWithProbability(person.Value);
@@ -476,9 +525,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         }                                     
                     }
 
-                   
-                    
-                    
                     if (person.Value.agent.enabled)
                     {
                         if (person.Value.obstacleToAgent)
@@ -531,15 +577,15 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                         if (dist < 0.6f){
                             float overlay = (0.6f - dist) / 2.0f;
                             
-                            if (person.Value.status == "at")
+                            if (person.Value.status == "at" || person.Value.walkStopState == "stop")
                             {
-                                person.Value.model.transform.position -= 0.15f * overlay * otherToMe.normalized;
-                                other.Value.model.transform.position += 1.85f * overlay * otherToMe.normalized;
+                                person.Value.model.transform.position -= 0.1f * overlay * otherToMe.normalized;
+                                other.Value.model.transform.position += 1.9f * overlay * otherToMe.normalized;
                             }
-                            else if (other.Value.status == "at")
+                            else if (other.Value.status == "at" || other.Value.walkStopState == "stop")
                             {
-                                person.Value.model.transform.position -= 1.85f * overlay * otherToMe.normalized;
-                                other.Value.model.transform.position += 0.15f * overlay * otherToMe.normalized;
+                                person.Value.model.transform.position -= 1.9f * overlay * otherToMe.normalized;
+                                other.Value.model.transform.position += 0.1f * overlay * otherToMe.normalized;
                             }
                             else
                             {
@@ -648,7 +694,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         //{
             if (person.wanderStayTime <= 0 && exhibitions[person.nextTarget_name].bestViewDirection_vector3.Count > 1)
             {
-                Debug.Log(person.name + " Wander Change View Point");
+                //Debug.Log(person.name + " Wander Change View Point");
                 Vector3 anotherBestPosSelected = selectAnotherBestViewPos(person.nextTarget_pos, exhibitions[person.nextTarget_name], person);
                 float gotoDistance = calculateDistance(person.currentPosition, anotherBestPosSelected);
                 float gotoTakeTime = gotoDistance / person.agent.speed;
@@ -821,7 +867,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
         else if (objName.StartsWith("exit")) // is a exit
         {
-            Debug.Log(person.name + " choose exit for destination");
+            //Debug.Log(person.name + " choose exit for destination");
             person.targetPointName = "";
             person.lookAt_pos = exits[objName].leavePosition;
             return exits[objName].leavePosition;// centerPosition;
@@ -872,7 +918,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 person.targetPointName = targetPointName;
                 indexChosen = index; 
             }
-            Debug.Log(person.name + " choose " + person.nextTarget_name + " " + indexChosen);
+            //Debug.Log(person.name + " choose " + person.nextTarget_name + " " + indexChosen);
             return exhibitions[objName].bestViewDirection_vector3[indexChosen];
         }
     }
@@ -920,8 +966,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             {
                 human_gather newGather = new human_gather();
                 newGather.humans.Add(person.Key);
-                newGather.markColor = generateRandomColor();
+                //newGather.markColor = generateRandomColor();
                 string newKey = "group" + gatherCounter.ToString();
+
+                person.Value.groupColorIndex = gatherCounter;
+                newGather.markColor = generateColorByIndex(gatherCounter + 1);
+
                 gatherCounter++;
                 person.Value.gatherIndex = newKey;
                 allGathers.Add(newKey, newGather);
@@ -946,8 +996,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 {
                     human_gather newGather = new human_gather();
                     newGather.humans.Add(person.Key);
-                    newGather.markColor = generateRandomColor();
+                    //newGather.markColor = generateRandomColor();
                     string newKey = "group" + gatherCounter.ToString();
+                    
+                    newGather.markColor = generateColorByIndex(gatherCounter + 1);
+                    person.Value.groupColorIndex = gatherCounter;
+
                     gatherCounter++;
                     person.Value.gatherIndex = newKey;
                     allGathers.Add(newKey, newGather);
@@ -979,6 +1033,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         num /= 100f;
         gatheringEvent tmpEvent = new gatheringEvent();
         tmpEvent.time = deltaTimeCounter;
+
         if (peopleGathers[person.gatherIndex].humans.Count != 1) // gather
         {
             tmpEvent.preState = "gather";
@@ -990,7 +1045,6 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 if (findNearGatherIndex != "")
                 {
                     peopleGathers[findNearGatherIndex].humans.Add(person.name);
-
                     peopleGathers[person.gatherIndex].humans.Remove(person.name);
                     if (peopleGathers[person.gatherIndex].humans.Count == 0) peopleGathers.Remove(person.gatherIndex);
                     person.gatherIndex = findNearGatherIndex; // update gatherIndex   
@@ -1002,9 +1056,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 //Debug.Log("leave group -> alone");
                 human_gather newGather = new human_gather();
                 newGather.humans.Add(person.name);
-                newGather.markColor = generateRandomColor();
-
+                //newGather.markColor = generateRandomColor();
                 string newKey = "group" + gatherCounter.ToString();
+
+                newGather.markColor = generateColorByIndex(gatherCounter + 1);
+                person.groupColorIndex = gatherCounter;
+
                 gatherCounter++;
                 peopleGathers.Add(newKey, newGather);
 
@@ -1044,12 +1101,16 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
 
         if (peopleGathers[person.gatherIndex].humans.Count == 1) // alone
-        {            
-            person.gatherMarker.GetComponent<MeshRenderer>().material.color = Color.white;
+        {
+            //person.gatherMarker.GetComponent<MeshRenderer>().material.color = Color.white;
+            person.gatherMarker.GetComponent<MeshRenderer>().material.color = peopleGathers[person.gatherIndex].markColor;
+            person.gatherMarker.SetActive(false);
         }
         else
         {
             person.gatherMarker.GetComponent<MeshRenderer>().material.color = peopleGathers[person.gatherIndex].markColor;
+
+            person.gatherMarker.SetActive(true);
         }
 
         person.gatherEvent.Add(tmpEvent);
@@ -1062,10 +1123,12 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             if (peopleGathers[person.gatherIndex].humans.Count == 1) // alone
             {
                 person.gatherMarker.GetComponent<MeshRenderer>().material.color = Color.white;
+                person.gatherMarker.SetActive(false);
             }
             else
             {
                 person.gatherMarker.GetComponent<MeshRenderer>().material.color = peopleGathers[person.gatherIndex].markColor;
+                person.gatherMarker.SetActive(true);
             }
         }
     }
@@ -1077,8 +1140,20 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         float minDistance = 10000;
         foreach (KeyValuePair<string, human_gather> g in peopleGathers)
         {
-            if(g.Key != currentGatherIndex && g.Value.humans.Count() != 1)
+            if(g.Key != currentGatherIndex /*&& g.Value.humans.Count() != 1 */)
             {
+                //calculate group center
+                int humanCount = 0;
+                Vector3 sumPosition = Vector3.zero;
+                foreach(string otherPerson in g.Value.humans)
+                {
+                    humanCount++;
+                    sumPosition += people[otherPerson].currentPosition;
+                }
+                Vector3 groupCenter = sumPosition / humanCount;
+                float distanceToGroup = Vector3.Distance(currentPos, groupCenter);
+                if (distanceToGroup > 2.0f) continue;
+
                 foreach (string otherPerson in g.Value.humans)
                 {
                     if (people[otherPerson].model.activeSelf) // should be in the scene and not in exit
@@ -1228,6 +1303,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             {
                 if (indexList.Contains(int.Parse(person.Key.Replace("id_", "")))) /* if appear last */
                 {
+                    Debug.Log(currentSceneSettings.customUI.UI_Global.startAddAgentMin + " " + currentSceneSettings.customUI.UI_Global.startAddAgentMax);
                     person.Value.startSimulateTime = random.Next(currentSceneSettings.customUI.UI_Global.startAddAgentMin,
                         currentSceneSettings.customUI.UI_Global.startAddAgentMax); // late appearence
                     person.Value.preTarget_pos = exits[person.Value.exitName].enterPosition;
@@ -1479,6 +1555,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                     (float)currentSceneSettings.humanTypes[newPerson.humanType].walkSpeed.std,
                     walkSpeedMin,
                     walkSpeedMax);
+                //Debug.Log(newPerson.walkSpeed);
                 newPerson.gatherDesire = generateByNormalDistribution((float)currentSceneSettings.customUI.UI_Human.gatherProbability.mean,
                     (float)currentSceneSettings.customUI.UI_Human.gatherProbability.std,
                     (float)currentSceneSettings.oriJson.UI_Human.gatherProbability.min,
@@ -1531,7 +1608,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             newPerson.model.AddComponent<NavMeshObstacle>();
             NavMeshObstacle navObstacle = newPerson.model.GetComponent<NavMeshObstacle>();
             navObstacle.shape = NavMeshObstacleShape.Capsule;
-            navObstacle.radius = 0.3f;
+            navObstacle.radius = 0.1f;
             navObstacle.height = 2f;
             navObstacle.carving = true;
             navObstacle.carvingMoveThreshold = 0.1f;
@@ -1963,8 +2040,8 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                 _direct_onNavMesh = finalPoint;
                 path = new NavMeshPath();
                 NavMesh.CalculatePath(exits["exit1"].model.transform.position, finalPoint, walkableMask, path);
-                Debug.Log(sign_test.name + " path status: " + path.status);
-                print(_direct_onNavMesh);
+                //Debug.Log(sign_test.name + " path status: " + path.status);
+                //print(_direct_onNavMesh);
                 if (path.status != NavMeshPathStatus.PathComplete)
                 {
                     //Debug.Log(exName + " " + direction + " " + walkableMask);
@@ -2078,6 +2155,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 
     Color generateRandomColor()
     {
+        
         int keep = new System.Random().Next(0, 2);
         float red = UnityEngine.Random.Range(0f, 1f);
         float green = UnityEngine.Random.Range(0f, 1f);
@@ -2086,6 +2164,83 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         Color c = new Color(red, green, blue);
         float fixedComp = c[keep] + 0.5f;
         c[keep] = fixedComp - Mathf.Floor(fixedComp);
+        return c;
+    }
+
+    Color generateColorByIndex(int idx)
+    {
+        //use distinct color -> obvious
+        Color c = new Color();
+        if (idx <= 20)
+        {
+            switch (idx)
+            {
+                case 1: //Red
+                    c = new Color(230 / 255f, 25 / 255f, 75 / 255f, 1f);
+                    break;
+                case 2: //Green
+                    c = new Color(60 / 255f, 180 / 255f, 75 / 255f, 1);
+                    break;
+                case 3: //Yellow
+                    c = new Color(1f, 1f, 25 / 255f, 1);
+                    break;
+                case 4: //Blue
+                    c = new Color(0, 130 / 255f, 200 / 255f, 1);
+                    break;
+                case 5: //Orange
+                    c = new Color(245 / 255f, 130 / 255f, 48 / 255f, 1);
+                    break;
+                case 6: //Purple
+                    c = new Color(145 / 255f, 30 / 255f, 180 / 255f, 1);
+                    break;
+                case 7: //Cyan
+                    c = new Color(70 / 255f, 240 / 255f, 240 / 255f, 1);
+                    break;
+                case 8: //Magenta
+                    c = new Color(240 / 255f, 50 / 255f, 230 / 255f, 1);
+                    break;
+                case 9: //Lime
+                    c = new Color(210 / 255f, 245 / 255f, 60 / 255f, 1);
+                    break;
+                case 10: //Pink
+                    c = new Color(250 / 255f, 190 / 255f, 190 / 255f, 1);
+                    break;
+                case 11: //Teal
+                    c = new Color(0, 128 / 255f, 128 / 255f, 1);
+                    break;
+                case 12: //Lavender
+                    c = new Color(230 / 255f, 190 / 255f, 255 / 255f, 1);
+                    break;
+                case 13: //Brown
+                    c = new Color(170 / 255f, 110 / 255f, 40 / 255f, 1);
+                    break;
+                case 14: //Beige
+                    c = new Color(255 / 255f, 250 / 255f, 200 / 255f, 1);
+                    break;
+                case 15: //Maroon
+                    c = new Color(128 / 255f, 0, 0, 1);
+                    break;
+                case 16: //Mint
+                    c = new Color(170 / 255f, 255 / 255f, 195 / 255f, 1);
+                    break;
+                case 17: //Olive
+                    c = new Color(128 / 255f, 128 / 255f, 0, 1);
+                    break;
+                case 18: //Coral
+                    c = new Color(1, 215 / 255f, 180 / 255f, 1);
+                    break;
+                case 19: //Navy
+                    c = new Color(0, 0, 128 / 255f, 1);
+                    break;
+                case 20: //Grey
+                    c = new Color(128 / 255f, 128 / 255f, 128 / 255f, 1);
+                    break;
+            }
+        }
+        else
+        {
+            c = generateRandomColor();
+        }
         return c;
     }
 
@@ -2468,7 +2623,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         }
 
         //Debug.Log("<Capacity> " + (float)capacity_cur + " / " + (float)capacity_max + " = "+ capacityPercent + "% > " + outputAttraction.ToString("F2")); // debug.check
-        Debug.Log("outputAttraction:" + outputAttraction);
+        //Debug.Log("outputAttraction:" + outputAttraction);
         return outputAttraction;
     }
 

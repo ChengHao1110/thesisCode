@@ -11,6 +11,7 @@ public class ModifyTaskRecord
 {
     public int taskNo;
     public double modifyTimeCounter;
+    public double observeTimeCounter;
 }
 
 public class SystemTask : MonoBehaviour
@@ -149,7 +150,7 @@ public class SystemTask : MonoBehaviour
                         }
                         //Debug.Log("after: " + diffRotY);
                         //change rotatino to degree
-                        if (diffPos.magnitude > 0.1f)
+                        if (diffPos.magnitude > 0.2f)
                         {
                             pass = false;
                             taskMsg.text += "Pos: X ";
@@ -188,6 +189,7 @@ public class SystemTask : MonoBehaviour
                 ModifyTaskRecord mtr = new ModifyTaskRecord();
                 mtr.taskNo = taskNo;
                 mtr.modifyTimeCounter = modifyTimeCounter;
+                mtr.observeTimeCounter = observeTimeCounter;
                 recordList.Add(mtr);
 
                 testIdx++;
@@ -347,6 +349,7 @@ public class SystemTask : MonoBehaviour
             Controller.instance.hasSelecetedExhibition = false;
         }
         taskPanel.SetActive(false);
+        observeTimeCounter = Time.time;
         startModify = true;
     }
     #endregion

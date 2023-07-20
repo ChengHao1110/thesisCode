@@ -100,6 +100,8 @@ public class Controller : PersistentSingleton<Controller>
                     if (!firstEdit) 
                     { 
                         firstEdit = true;
+                        systemTask.observeTimeCounter = Time.time - systemTask.observeTimeCounter;
+                        Debug.Log("observation time: " + systemTask.observeTimeCounter);
                         systemTask.modifyTimeCounter = Time.time;
                         Debug.Log("start time: " + systemTask.modifyTimeCounter);
                     }

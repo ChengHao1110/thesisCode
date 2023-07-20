@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
 {
     /* As a visualizer, mostly just read and show informations
      * don't change things in this script */
 
-    public string mainHumanName = "";
+    public string mainHumanName = "", oldMainHumanName = "";
     public human_single mainHuman; // as a pointer
     public Dictionary<string, GameObject> markers = new Dictionary<string, GameObject>();
 
@@ -23,7 +24,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
     /**/
 
     public GameObject showInfoPanel;
-    public string mainExhibitName = "";
+    public string mainExhibitName = "", oldMainExhibitName = "";
 
     /*show information position*/
     Color32 selectedColor = new Color32(120, 194, 196, 200);
@@ -31,6 +32,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
     bool visLower = true, visRight = false, visUpper = false, exRight = true, exUpper = false;
     public Button visLowerBtn, visRightBtn, visUpperBtn, exRightBtn, exUpperBtn;
     public GameObject visInfoAtLowerPanel;
+    public string mainHumanText = "", mainExhibitText = "";
 
     /*select object*/
 
@@ -41,6 +43,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
         if (!dynamicSystem.instance.Run) return;
         if (Input.GetMouseButtonDown(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
             if (dynamicSystem.instance.quickSimulationMode) return;
             var ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
             RaycastHit hit;
@@ -54,36 +57,46 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
                     changeMainHuman(hit.collider.transform.name);
 
                     //show visitor info on right top
+                    if(mainHumanName != "") oldMainHumanName = mainHumanName;
                     mainHumanName = hit.collider.transform.name;
-                    mainExhibitName = "";
-                    
-                    if(visRight) ShowVisitorInfoOnRightTopPanel();
+                    //mainExhibitName = "";
+                    //oldMainExhibitName = "";
+                    if (visRight) ShowVisitorInfoOnRightTopPanel();
                 }
                 //exhibit
                 else if (hit.transform.gameObject.tag == "Exhibition" && !hit.transform.gameObject.name.Contains("x"))
                 {
                     //show exhibit info
+                    if (mainExhibitName != "") oldMainExhibitName = mainExhibitName;
                     mainExhibitName = hit.transform.gameObject.name;
-                    mainHumanName = "";
+                    //mainHumanName = "";
+                    //oldMainHumanName = "";
                     if (exRight) ShowExhibitInfoOnRightTopPanel();
                 }
             }
         }
+        if (showInfoPanel.activeSelf)
+        {
+            TextMeshProUGUI infoText = showInfoPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            /*
+            if (mainHumanName != "" && mainExhibitName != "") infoText.text = mainHumanText + "--------------------\n" + mainExhibitText;
+            else if (mainHumanName != "" && mainExhibitName == "") infoText.text = mainHumanText;
+            else if (mainHumanName == "" && mainExhibitName != "") infoText.text = mainExhibitText;
+            */
+            if (visRight && exRight) {
+                if(mainExhibitText == "") infoText.text = mainHumanText;
+                else infoText.text = mainHumanText + "--------------------\n" + mainExhibitText; 
+            }
+            else if (visRight && !exRight) infoText.text = mainHumanText;
+            else if (!visRight && exRight) infoText.text = mainExhibitText;
+        }
         if (visUpper)
         {
-            dynamicSystem.instance.setActiveAllInformationBoard_human(true);
-        }
-        else
-        {
-            dynamicSystem.instance.setActiveAllInformationBoard_human(false);
+            showVisInfoOnTop(true);
         }
         if (exUpper)
         {
-            dynamicSystem.instance.setActiveAllInformationBoard_exhibit(true);
-        }
-        else
-        {
-            dynamicSystem.instance.setActiveAllInformationBoard_exhibit(false);
+            showExInfoOnTop(true);
         }
     }
 
@@ -160,7 +173,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
             nextUpdateTime = dynamicSystem.instance.currentSceneSettings.customUI.UI_Global.UpdateRate["influenceMap"] - nextUpdateTime;
             if (nextUpdateTime > dynamicSystem.instance.updateVisBoard) nextUpdateTime = dynamicSystem.instance.updateVisBoard;
             string nextUpdateText = "Map next update in: " + nextUpdateTime.ToString("F2") + "s";
-            string showInfoText = baseInformationText + walkStatusText + freeTimeText + nextTargetText + "\n" + desireListText + nextUpdateText;
+            string showInfoText = baseInformationText + walkStatusText + freeTimeText + nextTargetText + "\n" + desireListText/* + nextUpdateText*/;
             informationText.text = showInfoText;
         }
     }
@@ -194,10 +207,10 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
     public void ShowVisitorInfoOnRightTopPanel()
     {
         if (!dynamicSystem.instance.afterGenerate) return;
-        showInfoPanel.SetActive(true);
-        string showText = "";
         // get visitor info 
         if (mainHumanName == "") return;
+        showInfoPanel.SetActive(true);
+        string showText = "";
         human_single visitor = dynamicSystem.instance.people[mainHumanName];
         // id
         showText += "name: " + visitor.name + "\n";
@@ -228,10 +241,10 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
         
         showText += nextUpdateText;
         */
-
+        mainHumanText = showText;
         // Get TMP
-        TextMeshProUGUI infoText = showInfoPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        infoText.text = showText;
+        //TextMeshProUGUI infoText = showInfoPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        //infoText.text = showText;
     }
     public void CloseVisitorInfoOnRightTopPanel()
     {
@@ -241,18 +254,20 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
     public void ShowExhibitInfoOnRightTopPanel()
     {
         if (!dynamicSystem.instance.afterGenerate) return;
-        string showText = "";
         // get visitor info 
         if (mainExhibitName == "") return;
+        showInfoPanel.SetActive(true);
+        string showText = "";
         //check exit or exhibit
         string name = "p" + mainExhibitName.Replace(UIController.instance.currentScene + "_", "");
         exhibition_single exhibit = dynamicSystem.instance.exhibitions[name];
-        string changeText = "\n";
-        changeText += "capacity: \n" + exhibit.capacity_cur + " / " + exhibit.capacity_max + "\n";
+        string changeText = "capacity: \n" + exhibit.capacity_cur + " / " + exhibit.capacity_max + "\n";
         showText += exhibit.fixedText + changeText;
+
+        mainExhibitText = showText;
         // Get TMP
-        TextMeshProUGUI infoText = showInfoPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        infoText.text = showText;
+        //TextMeshProUGUI infoText = showInfoPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        //infoText.text = showText;
     }
 
     public void initializeVis()
@@ -283,7 +298,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
         visUpper = false;
         visRight = false;
         visInfoAtLowerPanel.SetActive(true);
-        showInfoPanel.SetActive(false);
+        if (!exRight) showInfoPanel.SetActive(false);
         visLowerBtn.GetComponent<Image>().color = selectedColor;
         //change other button
         visRightBtn.GetComponent<Image>().color = unSelectedColor;
@@ -307,7 +322,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
         visLower = false;
         visRight = false;
         visInfoAtLowerPanel.SetActive(false);
-        showInfoPanel.SetActive(false);
+        if(!exRight) showInfoPanel.SetActive(false);
         visUpperBtn.GetComponent<Image>().color = selectedColor;
         //change other button
         visRightBtn.GetComponent<Image>().color = unSelectedColor;
@@ -323,15 +338,37 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
         showInfoPanel.SetActive(true);
         //change other button
         exUpperBtn.GetComponent<Image>().color = unSelectedColor;
+        if (mainExhibitName != "") showExInfoOnTop(false);
     }
 
     public void ExUpperButtton()
     {
         exUpper = true;
         exRight = false;
-        showInfoPanel.SetActive(false);
+
+        if(!visRight) showInfoPanel.SetActive(false);
         exUpperBtn.GetComponent<Image>().color = selectedColor;
         //change other button
         exRightBtn.GetComponent<Image>().color = unSelectedColor;
+    }
+
+    public void showVisInfoOnTop(bool active)
+    {
+        if (mainHumanName == "") return;
+        if(oldMainHumanName != "" && active) dynamicSystem.instance.people[mainHumanName].informationBoard.SetActive(false);
+        dynamicSystem.instance.people[mainHumanName].informationBoard.SetActive(active);
+    }
+
+    public void showExInfoOnTop(bool active)
+    {
+        if (mainExhibitName == "") return;
+        if (oldMainExhibitName != "" && active) 
+        {
+            string oldNname = "p" + oldMainExhibitName.Replace(UIController.instance.currentScene + "_", "");
+            Debug.Log(oldMainExhibitName);
+            dynamicSystem.instance.exhibitions[oldNname].informationBoard.SetActive(false); 
+        }
+        string name = "p" + mainExhibitName.Replace(UIController.instance.currentScene + "_", "");
+        dynamicSystem.instance.exhibitions[name].informationBoard.SetActive(active);
     }
 }

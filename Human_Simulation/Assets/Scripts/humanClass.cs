@@ -117,7 +117,10 @@ public class human_single// List<human_single> humanCrowd;
     public List<ViewPointAttribute> viewPoints = new List<ViewPointAttribute>();
     public int viewPointIdx;
 
-    //handle stuck
+    //group color index
+    public int groupColorIndex = -1;
+
+    //handle stuck (not used)
     public Vector3 tempDestination;
     public List<string> nearByStuckedVisitors = new List<string>();
 
@@ -406,7 +409,7 @@ public class human_single// List<human_single> humanCrowd;
         }
     }
 
-    string getMostAttractive()
+    string getMostAttractive  ()
     {
         //Debug.Log(name + " influenceMap.Count: " + this.influenceMap.Count);
         if (this.influenceMap.Count > 0)
@@ -435,7 +438,7 @@ public class human_single// List<human_single> humanCrowd;
                 }
                 if (count == total)
                 {
-                    Debug.Log(name + " choose " + selectTarget + " is full");
+                    //Debug.Log(name + " choose " + selectTarget + " is full");
                     i++;
                     continue;
                 }
@@ -588,6 +591,7 @@ public class human_single// List<human_single> humanCrowd;
     {
         if (this.model.activeSelf)
         {
+            
             if(obstacle.enabled && isMove)
             {
                 obstacle.enabled = false;
@@ -605,6 +609,8 @@ public class human_single// List<human_single> humanCrowd;
                 agent.isStopped = !isMove;
             }
             obstacle.enabled = !isMove;
+            
+            /*
             if (obstacle.enabled)
             {
                 obstacle.carving = true;
@@ -613,6 +619,7 @@ public class human_single// List<human_single> humanCrowd;
             {
                 obstacle.carving = false;
             }
+            */
             // agent.updateRotation = isMove;
             // agent.velocity = Vector3.zero;
 

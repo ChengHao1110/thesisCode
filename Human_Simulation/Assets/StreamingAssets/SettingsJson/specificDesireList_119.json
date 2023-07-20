@@ -1,17 +1,9 @@
 {
     "scene": "119",
     "specificDesireList_child":[
-        ["p1", "p2", "exit1"],
-        ["p1", "p3", "p4", "p5", "exit1"],
-        ["p1", "p2", "p3", "p4", "exit2"]
+	
     ],
     "specificDesireList_adult": [
-        ["p1", "p2", "p3", "exit2"],
-        ["p2", "p4", "exit1"],
-        ["p1", "p4", "p5", "exit1"],
-        ["p1", "p4", "exit2"],
-        ["p3", "p4", "exit1"],
-        ["p2", "p4", "p5", "exit2"],
-        ["p4", "exit1"]
+	
     ]
 }

@@ -41,9 +41,15 @@ public class HeadMotionSystem : MonoBehaviour
                     Animator animator = vis.GetComponent<Animator>();
                     animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimationClips/ManPose");
                     */
-
                     Animator animator = vis.GetComponent<Animator>();
-                    animator.speed = 0.3f;
+                    if (isHeadMotionOn)
+                    {
+                        animator.speed = 0.3f;
+                    }
+                    else
+                    {
+                        animator.speed = 0f;
+                    }
 
                     if (!isHeadMotionOn) continue;
                     visitorHeadMotionClass vHMC =  vis.AddComponent<visitorHeadMotionClass>();

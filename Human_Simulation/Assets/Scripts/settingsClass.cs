@@ -84,6 +84,8 @@ public class UISetting_Global
         set.agentCount = this.agentCount;
         set.adultPercentage = this.adultPercentage;
         set.addAgentCount = this.addAgentCount;
+        set.startAddAgentMax = this.startAddAgentMax;
+        set.startAddAgentMin = this.startAddAgentMin;
         foreach (KeyValuePair<string, int> dict in this.UpdateRate)
         {
             if (this.UpdateRate.ContainsKey(dict.Key))

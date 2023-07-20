@@ -878,7 +878,7 @@ public partial class UIController : PersistentSingleton<UIController>
         /** Human **/
         if (tmpSaveUISettings.UI_Human.walkSpeedMin != -1 && tmpSaveUISettings.UI_Human.walkSpeedMax != -1)
         {
-            if (tmpSaveUISettings.UI_Human.walkSpeedMin >= tmpSaveUISettings.UI_Human.walkSpeedMax)
+            if (tmpSaveUISettings.UI_Human.walkSpeedMin > tmpSaveUISettings.UI_Human.walkSpeedMax)
             {
                 errorMessage += "- walkSpeed Min should be <= to Max\n";
             }
@@ -1031,6 +1031,7 @@ public partial class UIController : PersistentSingleton<UIController>
             UISettings uiSettings = new UISettings();
             uiSettings = JsonMapper.ToObject<UISettings>(tmpJsonDataStr);
             loadSettingToUI(uiSettings);
+            Debug.Log(uiSettings.UI_Global.startAddAgentMin);
             tmpSaveUISettings = uiSettings;
             allSceneSettings[currentScene].customUI = tmpSaveUISettings.copy();
             dynamicSystem.instance.currentSceneSettings = allSceneSettings[currentScene];
@@ -1630,6 +1631,7 @@ public partial class UIController : PersistentSingleton<UIController>  // sepera
 
     public void changeExhibitInfluence_capactiy()
     {
+        Debug.Log(exhibitCapacityInput.text);
         int value = int.Parse(exhibitCapacityInput.text);
         tmpSaveUISettings.UI_InfluenceMap.exhibitInflence["capactiy"] = value / 100f;
         AddUIOrderToList("Exhibit Capacity");

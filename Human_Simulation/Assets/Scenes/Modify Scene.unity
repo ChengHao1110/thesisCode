@@ -3327,7 +3327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c1544d80e4bca84197066c4a735a55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beginnerMode: 1
+  beginnerMode: 0
   beginnerPanel: {fileID: 955908762}
   beginnerModeText: {fileID: 209213993}
   observeTimeCounter: 0
@@ -11406,7 +11406,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &955908763
 RectTransform:
   m_ObjectHideFlags: 0

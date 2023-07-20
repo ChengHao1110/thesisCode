@@ -38,12 +38,16 @@ public class ModifyExhibitForTask : MonoBehaviour
                 //clockwise
                 if (Input.GetKey(KeyCode.E))
                 {
-                    transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up, 1.7f * Controller.instance.rotateSpeedTime * rotateSpeed * Time.deltaTime);
+                    transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up, 2 * Controller.instance.rotateSpeedTime * rotateSpeed * Time.deltaTime);
+                    if( Mathf.Abs(transform.rotation.eulerAngles.y - 180) < 0.1f)
+                    {
+                        Debug.Log(Time.time);
+                    }
                 }
                 //counterclockwise
                 if (Input.GetKey(KeyCode.Q))
                 {
-                    transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up, 1.7f * Controller.instance.rotateSpeedTime * -rotateSpeed * Time.deltaTime);
+                    transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up,  2 * Controller.instance.rotateSpeedTime * -rotateSpeed * Time.deltaTime);
                 }
             }
 
@@ -92,22 +96,11 @@ public class ModifyExhibitForTask : MonoBehaviour
                     transform.rotation = copyGO.transform.rotation;
                     Destroy(copyGO);
                 }
-                /*
-                if (copyGO != null)
-                {
-                    float var = 0;
-                    if (Input.GetAxisRaw("Mouse ScrollWheel") > 0) var = 10;
-                    else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0) var = -10;
-                    copyGO.transform.RotateAround(copyGO.transform.Find("BoundingBoxCube").position,
-                            Vector3.up,
-                            var * Controller.instance.rotateSpeedTime * -rotateSpeed * Time.deltaTime);
-                    GameObject boundingBox = copyGO.transform.Find("BoundingBoxCube").gameObject;
-                    boundingBox.GetComponent<DrawBoundingBox>().DrawBox(Color.cyan);
-                }
-                */
+
                 if (Input.GetAxisRaw("Mouse ScrollWheel") > 0) 
                 {
-                    float var = 10;
+                    float var = 12;
+                    //Debug.Log(Time.frameCount);
                     if (copyGO == null)
                     {
                         copyGO = Instantiate(gameObject);
@@ -120,7 +113,8 @@ public class ModifyExhibitForTask : MonoBehaviour
                 }
                 else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
                 {
-                    float var = -10;
+                    float var = -12;
+                    //Debug.Log(Time.frameCount);
                     if (copyGO == null)
                     {
                         copyGO = Instantiate(gameObject);
@@ -130,6 +124,10 @@ public class ModifyExhibitForTask : MonoBehaviour
                     copyGO.transform.RotateAround(copyGO.transform.Find("BoundingBoxCube").position,
                             Vector3.up,
                             var * Controller.instance.rotateSpeedTime * -rotateSpeed * Time.deltaTime);
+                    if (Mathf.Abs(transform.rotation.eulerAngles.y - 180) < 0.1f)
+                    {
+                        Debug.Log(Time.time);
+                    }
                 }
                 if (copyGO != null)
                 {
