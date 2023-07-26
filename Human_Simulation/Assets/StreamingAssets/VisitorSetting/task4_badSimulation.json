@@ -1,0 +1,144 @@
+
+[
+    {
+        "name" : "id_1",
+        "age"  : 1,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 100.0,
+        "modelName"      : "casual06_f Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+            "exit2"
+        ],
+        "walkSpeed"            : 65.8058013916016,
+        "gatherDesire"         : 0.565999984741211,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -1803203710
+    },
+    {
+        "name" : "id_2",
+        "age"  : 3,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 100.0,
+        "modelName"      : "casual03_f Variant",
+        "desireExhibitionList" : [
+            "p2",
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 74.839599609375,
+        "gatherDesire"         : 0.118000008165836,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 2064357311
+    },
+    {
+        "name" : "id_3",
+        "age"  : 4,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 100.0,
+        "modelName"      : "granny01 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p4",
+            "p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 76.965202331543,
+        "gatherDesire"         : 0.852999985218048,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1514021048
+    },
+    {
+        "name" : "id_4",
+        "age"  : 3,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 100.0,
+        "modelName"      : "casual20_f Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 93.4385986328125,
+        "gatherDesire"         : 0.495999991893768,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1221645017
+    },
+    {
+        "name" : "id_5",
+        "age"  : 2,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 100.0,
+        "modelName"      : "sportive07_m Variant",
+        "desireExhibitionList" : [
+            "p3",
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 72.1826019287109,
+        "gatherDesire"         : 0.832000017166138,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1806018534
+    },
+    {
+        "name" : "id_6",
+        "age"  : 3,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 100.0,
+        "modelName"      : "sportive05_f Variant",
+        "desireExhibitionList" : [
+            "p2",
+            "p4",
+            "p5",
+            "exit2"
+        ],
+        "walkSpeed"            : 60.4918022155762,
+        "gatherDesire"         : 0.685000002384186,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -305499923
+    },
+    {
+        "name" : "id_7",
+        "age"  : 0,
+        "gender" : 0,
+        "humanType" : "child",
+        "freeTime_total" : 100.0,
+        "modelName"      : "CH04_10 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "exit1"
+        ],
+        "walkSpeed"            : 83.7951965332031,
+        "gatherDesire"         : 0.60099995136261,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -1517654842
+    },
+    {
+        "name" : "id_8",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 100.0,
+        "modelName"      : "CH04_01 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p3",
+            "p4",
+            "p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 61.2165985107422,
+        "gatherDesire"         : 0.474999994039536,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1013903824
+    }
+]

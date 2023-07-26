@@ -1,0 +1,144 @@
+
+[
+    {
+        "name" : "id_1",
+        "age"  : 2,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 114.0,
+        "modelName"      : "sportive11_m Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+            "exit2"
+        ],
+        "walkSpeed"            : 60.0,
+        "gatherDesire"         : 0.0690000057220459,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 800286269
+    },
+    {
+        "name" : "id_2",
+        "age"  : 1,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 184.0,
+        "modelName"      : "Girl_11 Variant",
+        "desireExhibitionList" : [
+            "p2",
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 60.0,
+        "gatherDesire"         : 0.118000008165836,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -1447443419
+    },
+    {
+        "name" : "id_3",
+        "age"  : 2,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 138.0,
+        "modelName"      : "casual14_m Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p4",
+            "p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 60.0,
+        "gatherDesire"         : 0.160000011324883,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -473094933
+    },
+    {
+        "name" : "id_4",
+        "age"  : 3,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 170.0,
+        "modelName"      : "casual02_f Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 60.0,
+        "gatherDesire"         : 0.615000009536743,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 848488250
+    },
+    {
+        "name" : "id_5",
+        "age"  : 1,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 109.0,
+        "modelName"      : "casual06_f Variant",
+        "desireExhibitionList" : [
+            "p3",
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 60.0,
+        "gatherDesire"         : 0.608000040054321,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -43838231
+    },
+    {
+        "name" : "id_6",
+        "age"  : 1,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 188.0,
+        "modelName"      : "sportive01_m Variant",
+        "desireExhibitionList" : [
+            "p2",
+            "p4",
+            "p5",
+            "exit2"
+        ],
+        "walkSpeed"            : 60.0,
+        "gatherDesire"         : 0.0760000050067902,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 344606763
+    },
+    {
+        "name" : "id_7",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 122.0,
+        "modelName"      : "CH04_01 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "exit1"
+        ],
+        "walkSpeed"            : 60.0,
+        "gatherDesire"         : 0.467999994754791,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1548051187
+    },
+    {
+        "name" : "id_8",
+        "age"  : 0,
+        "gender" : 0,
+        "humanType" : "child",
+        "freeTime_total" : 142.0,
+        "modelName"      : "child girl 02 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p3",
+            "p4",
+            "p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 60.0,
+        "gatherDesire"         : 0.712999999523163,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1746308300
+    }
+]

@@ -1,0 +1,95 @@
+
+[
+    {
+        "name" : "id_1",
+        "age"  : 0,
+        "gender" : 0,
+        "humanType" : "child",
+        "freeTime_total" : 160.0,
+        "modelName"      : "CH04_06 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "exit1"
+        ],
+        "walkSpeed"            : 77.6373977661133,
+        "gatherDesire"         : 0.446999996900558,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -2041066754
+    },
+    {
+        "name" : "id_2",
+        "age"  : 0,
+        "gender" : 0,
+        "humanType" : "child",
+        "freeTime_total" : 167.0,
+        "modelName"      : "CH04_08 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p3",
+            "p4",
+            "p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 72.1637954711914,
+        "gatherDesire"         : 0.237000003457069,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -290067725
+    },
+    {
+        "name" : "id_3",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 142.0,
+        "modelName"      : "child02_m Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 108.426399230957,
+        "gatherDesire"         : 0.635999977588654,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 66913314
+    },
+    {
+        "name" : "id_4",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 117.0,
+        "modelName"      : "CH04_04 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p4",
+            "p2",
+            "exit1"
+        ],
+        "walkSpeed"            : 74.2164001464844,
+        "gatherDesire"         : 0.0130000058561563,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -130788786
+    },
+    {
+        "name" : "id_5",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 181.0,
+        "modelName"      : "CH04_02 Variant",
+        "desireExhibitionList" : [
+            "p5",
+            "p2",
+            "p1",
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 89.952995300293,
+        "gatherDesire"         : 0.726999998092651,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -1074162625
+    }
+]

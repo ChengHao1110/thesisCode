@@ -1,0 +1,20 @@
+
+[
+    {
+        "name" : "id_1",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 196.0,
+        "modelName"      : "child02_m Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "exit1"
+        ],
+        "walkSpeed"            : 92.0055999755859,
+        "gatherDesire"         : 0.321000009775162,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -1583254635
+    }
+]

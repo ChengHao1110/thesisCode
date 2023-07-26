@@ -1,0 +1,20 @@
+
+[
+    {
+        "name" : "id_1",
+        "age"  : 2,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 490.0,
+        "desireExhibitionList" : [
+            "p1",
+            "p3",
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 91.3130035400391,
+        "gatherDesire"         : 0.635999977588654,
+        "startSimulateTime"    : 0,
+        "randomSeed"           : -1903179435
+    }
+]

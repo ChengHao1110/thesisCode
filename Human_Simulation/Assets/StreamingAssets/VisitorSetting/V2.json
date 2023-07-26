@@ -1,0 +1,90 @@
+
+[
+    {
+        "name" : "id_1",
+        "age"  : 4,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 159.0,
+        "modelName"      : "granny01 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+            "exit2"
+        ],
+        "walkSpeed"            : 80.6849975585938,
+        "gatherDesire"         : 0.279000014066696,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1730513710
+    },
+    {
+        "name" : "id_2",
+        "age"  : 3,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 129.0,
+        "modelName"      : "sportive07_m Variant",
+        "desireExhibitionList" : [
+            "p2",
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 79.0908050537109,
+        "gatherDesire"         : 0.64300000667572,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1804490809
+    },
+    {
+        "name" : "id_3",
+        "age"  : 2,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 124.0,
+        "modelName"      : "business02_m Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p4",
+            "p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 64.7430038452148,
+        "gatherDesire"         : 0.692000031471252,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -1935045645
+    },
+    {
+        "name" : "id_4",
+        "age"  : 4,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 145.0,
+        "modelName"      : "casual27_m_highpoly Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 91.8443984985352,
+        "gatherDesire"         : 0.894999980926514,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1388861585
+    },
+    {
+        "name" : "id_5",
+        "age"  : 1,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 112.0,
+        "modelName"      : "Girl_66 Variant",
+        "desireExhibitionList" : [
+            "p3",
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 91.3130035400391,
+        "gatherDesire"         : 0.482000023126602,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 956310780
+    }
+]

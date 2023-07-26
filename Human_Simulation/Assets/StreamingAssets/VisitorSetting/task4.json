@@ -1,0 +1,179 @@
+
+[
+    {
+        "name" : "id_1",
+        "age"  : 1,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 112.0,
+        "modelName"      : "sportive03_f Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+            "exit2"
+        ],
+        "walkSpeed"            : 73.2453994750977,
+        "gatherDesire"         : 0.531000018119812,
+        "startSimulateTime"    : 49.0,
+        "randomSeed"           : 1448636356
+    },
+    {
+        "name" : "id_2",
+        "age"  : 3,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 147.0,
+        "modelName"      : "casual24_f Variant",
+        "desireExhibitionList" : [
+            "p2",
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 83.3420028686523,
+        "gatherDesire"         : 0.74099999666214,
+        "startSimulateTime"    : 57.0,
+        "randomSeed"           : 1971309501
+    },
+    {
+        "name" : "id_3",
+        "age"  : 3,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 131.0,
+        "modelName"      : "business03_f Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p4",
+            "p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 87.5932006835938,
+        "gatherDesire"         : 0.153000012040138,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -1014814356
+    },
+    {
+        "name" : "id_4",
+        "age"  : 2,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 107.0,
+        "modelName"      : "casual12_f Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 89.7188034057617,
+        "gatherDesire"         : 0.377000004053116,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1238970246
+    },
+    {
+        "name" : "id_5",
+        "age"  : 3,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 162.0,
+        "modelName"      : "Man_44 Variant",
+        "desireExhibitionList" : [
+            "p3",
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 63.6802024841309,
+        "gatherDesire"         : 0.321000009775162,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 125448181
+    },
+    {
+        "name" : "id_6",
+        "age"  : 2,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 146.0,
+        "modelName"      : "business06_m_highpoly Variant",
+        "desireExhibitionList" : [
+            "p2",
+            "p4",
+            "p5",
+            "exit2"
+        ],
+        "walkSpeed"            : 84.4048004150391,
+        "gatherDesire"         : 0.202000007033348,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -527436986
+    },
+    {
+        "name" : "id_7",
+        "age"  : 4,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 193.0,
+        "modelName"      : "casual29_m Variant",
+        "desireExhibitionList" : [
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 85.9990005493164,
+        "gatherDesire"         : 0.244000002741814,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 365667443
+    },
+    {
+        "name" : "id_8",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 153.0,
+        "modelName"      : "CH04_03 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "exit1"
+        ],
+        "walkSpeed"            : 62.5849990844727,
+        "gatherDesire"         : 0.894999980926514,
+        "startSimulateTime"    : 19.0,
+        "randomSeed"           : -1920112219
+    },
+    {
+        "name" : "id_9",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 190.0,
+        "modelName"      : "child01_m_highpoly Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p3",
+            "p4",
+            "p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 98.1633987426758,
+        "gatherDesire"         : 0.615000009536743,
+        "startSimulateTime"    : 48.0,
+        "randomSeed"           : -1211183516
+    },
+    {
+        "name" : "id_10",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 107.0,
+        "modelName"      : "CH04_02 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 87.9003982543945,
+        "gatherDesire"         : 0.60099995136261,
+        "startSimulateTime"    : 33.0,
+        "randomSeed"           : -705430771
+    }
+]

@@ -1,0 +1,103 @@
+
+[
+    {
+        "name" : "id_1",
+        "age"  : 1,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 120.0,
+        "modelName"      : "sportive03_f Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+			"p4",
+			"p5",
+            "exit2"
+        ],
+        "walkSpeed"            : 73.2453994750977,
+        "gatherDesire"         : 0.531000018119812,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1448636356
+    },
+    {
+        "name" : "id_2",
+        "age"  : 3,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 120.0,
+        "modelName"      : "casual24_f Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+			"p4",
+			"p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 83.3420028686523,
+        "gatherDesire"         : 0.74099999666214,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1971309501
+    },
+    {
+        "name" : "id_3",
+        "age"  : 3,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 120.0,
+        "modelName"      : "business03_f Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+			"p4",
+			"p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 87.5932006835938,
+        "gatherDesire"         : 0.153000012040138,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -1014814356
+    },
+    {
+        "name" : "id_4",
+        "age"  : 2,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 120.0,
+        "modelName"      : "casual12_f Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+			"p4",
+			"p5",
+            "exit2"
+        ],
+        "walkSpeed"            : 89.7188034057617,
+        "gatherDesire"         : 0.377000004053116,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1238970246
+    },
+    {
+        "name" : "id_5",
+        "age"  : 3,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 120.0,
+        "modelName"      : "Man_44 Variant",
+        "desireExhibitionList" : [
+            "p1",
+            "p2",
+            "p3",
+			"p4",
+			"p5",
+            "exit1"
+        ],
+        "walkSpeed"            : 63.6802024841309,
+        "gatherDesire"         : 0.321000009775162,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 125448181
+    }
+]

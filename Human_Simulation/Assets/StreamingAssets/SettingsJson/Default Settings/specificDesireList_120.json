@@ -1,0 +1,18 @@
+{
+    "scene": "120",
+    "specificDesireList_child":[
+        ["p1", "p2", "p4", "exit1"],
+        ["p1", "p2", "p3", "p4", "p5", "exit1"],
+        ["p1", "p5", "p6", "p7", "exit2"]
+    ],
+    "specificDesireList_adult": [
+        ["p1", "p2", "p3", "p4", "exit2"],
+        ["p1", "p2", "p3", "p4", "exit2"],
+        ["p3", "p4", "exit1"],
+        ["p2", "p4", "exit1"],
+        ["p1", "p8", "p4", "p5", "exit1"],
+        ["p1", "p9", "exit2"],        
+        ["p2", "p4", "p10", "exit2"],
+        ["p4", "p6", "p7", "p8", "p9", "p10", "exit1"]
+    ]
+}

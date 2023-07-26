@@ -1,0 +1,160 @@
+
+[
+    {
+        "name" : "id_1",
+        "age"  : 3,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 244.0,
+        "desireExhibitionList" : [
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 76.965202331543,
+        "gatherDesire"         : 0.83899998664856,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1530076621
+    },
+    {
+        "name" : "id_2",
+        "age"  : 1,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 234.0,
+        "desireExhibitionList" : [
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 70.5884017944336,
+        "gatherDesire"         : 0.650000035762787,
+        "startSimulateTime"    : 53.0,
+        "randomSeed"           : -967671579
+    },
+    {
+        "name" : "id_3",
+        "age"  : 1,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 192.0,
+        "desireExhibitionList" : [
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 68.9942016601563,
+        "gatherDesire"         : 0.545000016689301,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -1939642816
+    },
+    {
+        "name" : "id_4",
+        "age"  : 2,
+        "gender" : 1,
+        "humanType" : "adult",
+        "freeTime_total" : 248.0,
+        "desireExhibitionList" : [
+            "p2",
+            "p3",
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 80.6849975585938,
+        "gatherDesire"         : 0.523999989032745,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : -682483682
+    },
+    {
+        "name" : "id_5",
+        "age"  : 2,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 214.0,
+        "desireExhibitionList" : [
+            "p4",
+            "exit1"
+        ],
+        "walkSpeed"            : 89.1874008178711,
+        "gatherDesire"         : 0.790000021457672,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 1473131677
+    },
+    {
+        "name" : "id_6",
+        "age"  : 4,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 212.0,
+        "desireExhibitionList" : [
+            "p4",
+            "p2",
+            "exit1"
+        ],
+        "walkSpeed"            : 88.1246032714844,
+        "gatherDesire"         : 0.321000009775162,
+        "startSimulateTime"    : 0.0,
+        "randomSeed"           : 768947418
+    },
+    {
+        "name" : "id_7",
+        "age"  : 4,
+        "gender" : 0,
+        "humanType" : "adult",
+        "freeTime_total" : 239.0,
+        "desireExhibitionList" : [
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 66.8685989379883,
+        "gatherDesire"         : 0.13900001347065,
+        "startSimulateTime"    : 26.0,
+        "randomSeed"           : -1896633653
+    },
+    {
+        "name" : "id_8",
+        "age"  : 0,
+        "gender" : 0,
+        "humanType" : "child",
+        "freeTime_total" : 294.0,
+        "desireExhibitionList" : [
+            "p4",
+            "exit2"
+        ],
+        "walkSpeed"            : 81.7425994873047,
+        "gatherDesire"         : 0.657000005245209,
+        "startSimulateTime"    : 36.0,
+        "randomSeed"           : 359980169
+    },
+    {
+        "name" : "id_9",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 222.0,
+        "desireExhibitionList" : [
+            "p1",
+            "p4",
+            "p2",
+            "exit1"
+        ],
+        "walkSpeed"            : 89.268798828125,
+        "gatherDesire"         : 0.251000016927719,
+        "startSimulateTime"    : 32.0,
+        "randomSeed"           : 339814222
+    },
+    {
+        "name" : "id_10",
+        "age"  : 0,
+        "gender" : 1,
+        "humanType" : "child",
+        "freeTime_total" : 224.0,
+        "desireExhibitionList" : [
+            "p2",
+            "p4",
+            "p3",
+            "exit2"
+        ],
+        "walkSpeed"            : 63.9533996582031,
+        "gatherDesire"         : 0.377000004053116,
+        "startSimulateTime"    : 52.0,
+        "randomSeed"           : -1720278922
+    }
+]

@@ -39,7 +39,7 @@ public class ModifyExhibitForTask : MonoBehaviour
                 if (Input.GetKey(KeyCode.E))
                 {
                     transform.RotateAround(transform.Find("BoundingBoxCube").transform.position, Vector3.up, 2 * Controller.instance.rotateSpeedTime * rotateSpeed * Time.deltaTime);
-                    if( Mathf.Abs(transform.rotation.eulerAngles.y - 180) < 0.1f)
+                    if( Mathf.Abs(transform.rotation.eulerAngles.y - 180) < 3f)
                     {
                         Debug.Log(Time.time);
                     }
@@ -99,7 +99,7 @@ public class ModifyExhibitForTask : MonoBehaviour
 
                 if (Input.GetAxisRaw("Mouse ScrollWheel") > 0) 
                 {
-                    float var = 12;
+                    float var = 12 * 1.6f;
                     //Debug.Log(Time.frameCount);
                     if (copyGO == null)
                     {
@@ -113,7 +113,7 @@ public class ModifyExhibitForTask : MonoBehaviour
                 }
                 else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
                 {
-                    float var = -12;
+                    float var = -12 * 1.6f;
                     //Debug.Log(Time.frameCount);
                     if (copyGO == null)
                     {
@@ -124,7 +124,7 @@ public class ModifyExhibitForTask : MonoBehaviour
                     copyGO.transform.RotateAround(copyGO.transform.Find("BoundingBoxCube").position,
                             Vector3.up,
                             var * Controller.instance.rotateSpeedTime * -rotateSpeed * Time.deltaTime);
-                    if (Mathf.Abs(transform.rotation.eulerAngles.y - 180) < 0.1f)
+                    if (Mathf.Abs(copyGO.transform.rotation.eulerAngles.y - 180) < 3f)
                     {
                         Debug.Log(Time.time);
                     }
@@ -148,6 +148,7 @@ public class ModifyExhibitForTask : MonoBehaviour
             posX = Input.mousePosition.x - dist.x;
             posY = Input.mousePosition.y - dist.y;
             posZ = Input.mousePosition.z - dist.z;
+            
         }
     }
 
