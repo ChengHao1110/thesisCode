@@ -3327,7 +3327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c1544d80e4bca84197066c4a735a55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beginnerMode: 0
+  beginnerMode: 1
   beginnerPanel: {fileID: 955908762}
   beginnerModeText: {fileID: 209213993}
   observeTimeCounter: 0
