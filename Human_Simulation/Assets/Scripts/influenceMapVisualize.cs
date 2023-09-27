@@ -40,7 +40,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
     string baseInformationText = "";
     void Update()
     {
-        if (!dynamicSystem.instance.Run) return;
+        //if (!dynamicSystem.instance.Run) return;
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.IsPointerOverGameObject()) return;
@@ -108,6 +108,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
         }
         if (mainHumanName != "")
         {
+            /*
             foreach (KeyValuePair<string, GameObject> marker in markers)
             {
                 TextMesh text = marker.Value.transform.Find("Text").GetComponent<TextMesh>();
@@ -162,7 +163,7 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
                     }
                 }
             }
-
+            */
             string walkStatusText = "walk status: " + mainHuman.walkStopState + "\n";
             string desireListText = "desire List : " + mainHuman.desireExhibitionList.Count + "\n(" + string.Join(", ", mainHuman.desireExhibitionList) + ")\n";
             string freeTimeText = "free time: " + mainHuman.freeTime_totalLeft.ToString("F2") + " / " + mainHuman.freeTime_total.ToString("F2") + "\n";

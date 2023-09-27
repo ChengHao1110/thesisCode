@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['dashboard.py'],
+a = Analysis(['newDashboard.py'],
              pathex=['D:\\ChengHao\\thesisCode\\Human_Simulation\\PythonCode'],
              binaries=[],
              datas=[
@@ -16,6 +16,7 @@ a = Analysis(['dashboard.py'],
                   ('C:/Users/chhung/anaconda3/envs/myenv/Lib/site-packages/dash', 'dash'),
 				  ('C:/Users/chhung/anaconda3/envs/myenv/Lib/site-packages/colorlover', 'colorlover'),
 				  ('D:/ChengHao/thesisCode/Human_Simulation/PythonCode/data', 'data'),
+				  ('D:/ChengHao/thesisCode/Human_Simulation/PythonCode/pages', 'pages')
                   ],
              hiddenimports=[],
              hookspath=[],

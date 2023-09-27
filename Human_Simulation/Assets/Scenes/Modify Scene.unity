@@ -3327,12 +3327,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c1544d80e4bca84197066c4a735a55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beginnerMode: 1
+  beginnerMode: 0
   beginnerPanel: {fileID: 955908762}
   beginnerModeText: {fileID: 209213993}
   observeTimeCounter: 0
   modifyTimeCounter: 0
-  userTestListNo: 0
+  userTestListNo: 1
   testIdx: 0
   markPrefab: {fileID: 2844328625095673273, guid: 468c0541d52cd4f48b00d7e9a8e6fe0c, type: 3}
   taskMsg: {fileID: 659551764}
