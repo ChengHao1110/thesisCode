@@ -169,12 +169,12 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
             string freeTimeText = "free time: " + mainHuman.freeTime_totalLeft.ToString("F2") + " / " + mainHuman.freeTime_total.ToString("F2") + "\n";
             string nextTargetText = "next target: " + mainHuman.nextTarget_name;
             nextTargetText += " (stay: " + mainHuman.freeTime_stayInNextExhibit.ToString("F0") + "s)\n";
-            if (mainHuman.nextTarget_name.StartsWith("p")) nextTargetText += " (index: " + mainHuman.nextTarget_direction + ", stay: "+ mainHuman.wanderStayTime.ToString("F2") + ")";
+            //if (mainHuman.nextTarget_name.StartsWith("p")) nextTargetText += " (index: " + mainHuman.nextTarget_direction + ", stay: "+ mainHuman.wanderStayTime.ToString("F2") + ")";
             float nextUpdateTime = dynamicSystem.instance.deltaTimeCounter - mainHuman.lastTimeStamp_recomputeMap;
             nextUpdateTime = dynamicSystem.instance.currentSceneSettings.customUI.UI_Global.UpdateRate["influenceMap"] - nextUpdateTime;
             if (nextUpdateTime > dynamicSystem.instance.updateVisBoard) nextUpdateTime = dynamicSystem.instance.updateVisBoard;
             string nextUpdateText = "Map next update in: " + nextUpdateTime.ToString("F2") + "s";
-            string showInfoText = baseInformationText + walkStatusText + freeTimeText + nextTargetText + "\n" + desireListText/* + nextUpdateText*/;
+            string showInfoText = baseInformationText + walkStatusText + freeTimeText + nextTargetText + desireListText/* + nextUpdateText*/;
             informationText.text = showInfoText;
         }
     }
@@ -191,7 +191,8 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
             else genderStr = "male";
             string age_genderText = "features: " + genderStr + " " + mainHuman.humanType + "\n";
             string speedText = "speed : " + mainHuman.walkSpeed.ToString("F2") + "\n";
-            baseInformationText = age_genderText + speedText;
+            //baseInformationText = age_genderText + speedText;
+            baseInformationText = age_genderText;
             influenceMapUpdate();
         }
         else
@@ -228,9 +229,12 @@ public class influenceMapVisualize : PersistentSingleton<influenceMapVisualize>
         showText += "free time: " + mainHuman.freeTime_totalLeft.ToString("F2") + " / " + mainHuman.freeTime_total.ToString("F2") + "\n";
         // next target
         string nextTargetText = "next target: " + mainHuman.nextTarget_name;
-        nextTargetText += " (stay: " + mainHuman.freeTime_stayInNextExhibit.ToString("F0") + "s)\n";
+        nextTargetText += " (stay: " + mainHuman.freeTime_stayInNextExhibit.ToString("F0") + "s)";
+        showText += nextTargetText + "\n";
+        /*
         if (mainHuman.nextTarget_name.StartsWith("p")) nextTargetText += " (index: " + mainHuman.nextTarget_direction + ", stay: " + mainHuman.wanderStayTime.ToString("F2") + ")";
         showText += nextTargetText + "\n";
+        */
         // desire list 
         showText += "desire List : " + mainHuman.desireExhibitionList.Count + "\n(" + string.Join(", ", mainHuman.desireExhibitionList) + ")\n";
         // next update in : (sec)

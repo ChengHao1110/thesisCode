@@ -657,9 +657,23 @@ public class HeatMap_Float : MonoBehaviour
         heatmapCameraOriginPos += offset;
         heatmapCamera.transform.position = heatmapCameraOriginPos;
 
-        colorbar.SetActive(true);
-        TakeScreenShot();
-        colorbar.SetActive(false);
+        if (dynamicSystem.instance.heatmapFilename.Contains("stay"))
+        {
+            colorbar.SetActive(true);
+            colorbar.transform.Rotate(0, 180, 0);
+            colorbar.transform.position = new Vector3(-23.5f, 0, 0);
+            TakeScreenShot();
+            colorbar.transform.Rotate(0, -180, 0);
+            colorbar.transform.position = Vector3.zero;
+            colorbar.SetActive(false);
+        }
+        else
+        {
+            colorbar.SetActive(true);
+            TakeScreenShot();
+            colorbar.SetActive(false);
+        }
+
 
         //do it once for original text
         if (dynamicSystem.instance.heatmapFilename.Contains("stay") && dynamicSystem.instance.firstGenerateHeatmap) dynamicSystem.instance.firstGenerateHeatmap = false;

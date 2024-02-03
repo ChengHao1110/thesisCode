@@ -15,7 +15,7 @@ path = ''
 
 #%% set figure template
 def SetFigureTemplate(fig):
-    fig.update_layout(template='plotly_dark',
+    fig.update_layout(template='plotly_white',
                       plot_bgcolor= 'rgba(0, 0, 0, 0)',
                       paper_bgcolor= 'rgba(0, 0, 0, 0)',
                       margin={
@@ -68,6 +68,9 @@ def GetFigure_HeapMap():
     moveHeatMap = PngToPlotlyFigure(path + "moveHeatMap_" + str(moveIndex) + ".png", 1200, 800)
     stayHeatMap = PngToPlotlyFigure(path +"stayHeatMap_" + str(stayIndex) + ".png", 1200, 800)
     layout = PngToPlotlyFigure(path + "layout_screenshot.png", 600, 600)
+    moveHeatMap.write_image("moveheatmap.png", scale = 3)
+    stayHeatMap.write_image("stayHeatMap.png", scale = 3)
+    layout.write_image("layout.png", scale = 3)
 
 
     return moveHeatMap, stayHeatMap, layout
@@ -92,9 +95,10 @@ def GetFigure_VistorVisitingTimeInEachExhibit():
                                     'id': df.loc[j, 'id'], 'humantype': df.loc[j, 'humantype']}, index = [0])
             new_df = pd.concat([new_df, add_df], ignore_index = True)
 
-    fig = px.box(new_df, x="exhibition", y="time", color = "humantype", points = "all")
-    fig.update_layout(yaxis_title = "time (sec)")
+    fig = px.box(new_df, x="exhibition", y="time", color = "humantype", points = "all", title = "Visitors\' viewing time in each exhibit")
+    fig.update_layout(yaxis_title = "Time (sec)", xaxis_title = "Exhibit")
     fig = SetFigureTemplate(fig)
+    fig.write_image("visitingTime.png", scale = 3)
     return fig
 
 #%% exhibition realtime visitor count
@@ -107,8 +111,9 @@ def GetFigure_ExhibitionRealtimeVisitorCount():
     [columnNames.append('p' + str(j + 1)) for j in range(len(df.columns))]
     df.columns = columnNames
     fig = px.line(df, title = "Real-time visitor number in the exhibit")
-    fig.update_layout(xaxis_title = "time (sec)", yaxis_title = "number of visitor", legend = dict(title = "exhibit"))
+    fig.update_layout(xaxis_title = "Time (sec)", yaxis_title = "Number of visitors", legend = dict(title = "Exhibit"))
     fig = SetFigureTemplate(fig)
+    fig.write_image("RealtimeVisitor.png", scale = 3)
     return fig
 
 #%% chord diagram
@@ -124,14 +129,15 @@ def GetFigure_ChordDiagram():
     df.columns = columnNames
     
     fig = cd.make_filled_chord(df)
+    fig.write_image("ChordDiagram.png", scale = 3)
     return fig
 
 #%% visitor status time 
 def GetFigure_VisitorStatusTime():
     file = path + "status_time.txt"
     df = pd.read_csv(file, sep = ' ', header = None)
-    df.columns = ["status", "time", "id", "humantype"]
-    fig = px.box(df, x = "status", y = "time", color = "humantype", points = "all")
+    df.columns = ["States", "time", "id", "humantype"]
+    fig = px.box(df, x = "States", y = "time", color = "humantype", points = "all")
     maxTime = df["time"].max()
     ylabelArray = []
     ylabelText = []
@@ -143,8 +149,9 @@ def GetFigure_VisitorStatusTime():
     ylabelArray.append(num)
     ylabelText.append(str(num))
     #fig.update_layout(yaxis = dict(tickmode = "linear", tick0 = 0, dtick = 20))
-    fig.update_layout(yaxis = dict(tickmode = "array", tickvals = ylabelArray, ticktext = ylabelText), yaxis_title = "time (sec)")
+    fig.update_layout(yaxis = dict(tickmode = "array", tickvals = ylabelArray, ticktext = ylabelText), yaxis_title = "Time (sec)")
     fig = SetFigureTemplate(fig)
+    fig.write_image("visitorStatus.png", scale = 3)
     return fig
 
 #%% visitor satisfiction pareto_chart
@@ -178,12 +185,12 @@ def GetFigure_VisitorSatisfiction():
                              go.Scatter(x=df.index, y=df['ratio'], yaxis='y2', name='cumulative ratio',
                                         hovertemplate='%{y:.1%}', marker={'color': '#000000'})])
 
-            fig.update_layout(template='plotly_dark', showlegend=True, hovermode='x', bargap=.3,
+            fig.update_layout(template='plotly_white', showlegend=True, hovermode='x', bargap=.3,
                       plot_bgcolor= 'rgba(0, 0, 0, 0)',
                       paper_bgcolor= 'rgba(0, 0, 0, 0)',
-                      xaxis_title="satisfiction percentage",
-                      title= {'text': 'visitors\' satisfiction', 'x': .5}, 
-                      yaxis= {'title': 'visitor count'},
+                      xaxis_title="Satisfaction percentage",
+                      title= {'text': 'Visitors\' satisfaction', 'x': .5}, 
+                      yaxis= {'title': 'Visitor count'},
                       yaxis2={'showgrid': False,
                               'rangemode': "tozero", 
                               'overlaying': 'y',
@@ -193,6 +200,7 @@ def GetFigure_VisitorSatisfiction():
                               'tickmode': 'array',
                               'ticktext': [str(i) + '%' for i in range(0, 101, 20)]},
                       legend= {'orientation': "h", 'yanchor': "bottom", 'y': 1.02, 'xanchor': "right", 'x': 1})
+            fig.write_image("visitorSatisfaction.png", scale = 3)
             return fig
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"

@@ -138,6 +138,14 @@ public class CreateColorBar : MonoBehaviour
         markText.transform.position = pos;
         markText.transform.rotation = Quaternion.Euler(90, 180, 0);
         markText.transform.localScale = new Vector3(1, 1, 1);
-        markText.GetComponent<TextMeshProUGUI>().text = "-" + value.ToString("f2");
+        if (dynamicSystem.instance.heatmapFilename.Contains("move"))
+        {
+            markText.GetComponent<TextMeshProUGUI>().text = "-" + value.ToString("f0");
+        }
+        else
+        {
+            markText.GetComponent<TextMeshProUGUI>().text = "-" + value.ToString("f2");
+        }
+        
     }
 }

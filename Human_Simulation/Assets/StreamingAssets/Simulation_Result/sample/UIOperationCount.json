@@ -1,0 +1,51 @@
+
+{
+    "globalUIOperationCount" : {
+        "agentCountOpCount" : 1,
+        "adultPercentOpCount" : 1,
+        "addAgentCountOpCount" : 1,
+        "startAddAgentOpCount" : 1,
+        "updateRateGatherSliderOpCount" : 1,
+        "updateRateStatusSliderOpCount" : 1,
+        "updateRateMapSliderOpCount"    : 1
+    },
+    "humanFeatureUIOperationCount" : {
+        "walkSpeedOpCount" : 1,
+        "freeTimeOpCount"  : 1,
+        "gatherProbabilityMeanOpCount" : 1,
+        "gatherProbabilityStdSliderOpCount" : 1,
+        "joinProbabilitySliderOpCount"      : 1,
+        "keepAloneProbabilitySliderOpCount" : 1,
+        "keepGatherSameGroupProbabilitySliderOpCount" : 1,
+        "keepGatherDifGroupProbabilitySliderOpCount"  : 1,
+        "leaveProbabilitySliderOpCount"               : 1
+    },
+    "exhibitionsUIOperationCount"  : {
+        "capacityTimesSliderOpCount" : 1,
+        "popularThresholdSliderOpCount" : 1,
+        "crowdedThresholdSliderOpCount" : 1,
+        "crowdedTimeLimitSliderOpCount" : 1
+    },
+    "humanWalkStageUIOperationCount" : {
+        "StageRadiusGoToSliderOpCount" : 0,
+        "StageRadiusCloseSliderOpCount" : 0,
+        "StageRadiusAtSliderOpCount"    : 0,
+        "StageSpeedGoToSliderOpCount"   : 0,
+        "StageSpeedCloseSliderOpCount"  : 0,
+        "StageSpeedAtSliderOpCount"     : 0
+    },
+    "influenceMapWeightUIOperationCount" : {
+        "weightHumanSliderOpCount" : 1,
+        "weightExhibitSliderOpCount" : 1,
+        "humanFollowDesireInputOpCount" : 1,
+        "humanTakeTimeInputOpCount"     : 1,
+        "humanGatherDesireInputOpCount" : 1,
+        "humanTypeAttractInputOpCount"  : 1,
+        "humanBehaviorAttractInputOpCount" : 1,
+        "exhibitCapacityInputOpCount"      : 0,
+        "exhibitTakeTimeInputOpCount"      : 0,
+        "exhibitPopularLvInputOpCount"     : 0,
+        "exhibitHumanPreferInputOpCount"   : 0,
+        "exhibitCloseBestInputOpCount"     : 0
+    }
+}

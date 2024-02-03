@@ -54,6 +54,19 @@ public class HeatMapVisual_Float : MonoBehaviour {
 
                 float gridValue = grid.GetValue(x, y);
                 float gridValueNormalized = 1.0f - gridValue / grid.HEAT_MAP_MAX_VALUE;
+                /*
+                if(dynamicSystem.instance.heatmapFilename.Contains("stay")){
+                    if(gridValue < 0.02f)
+                    {
+                        gridValueNormalized = 1.0f;
+                    }
+                    else
+                    {
+                        gridValueNormalized = gridValue / grid.HEAT_MAP_MAX_VALUE;
+                    }
+                    
+                }
+                */
                 if (gridValueNormalized < 0.02f) gridValueNormalized = 0.02f;
                 Vector2 gridValueUV = new Vector2(gridValueNormalized, 0f);
                 MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, grid.GetWorldPosition(x, y) + quadSize * .5f, 0f, quadSize, gridValueUV, gridValueUV);

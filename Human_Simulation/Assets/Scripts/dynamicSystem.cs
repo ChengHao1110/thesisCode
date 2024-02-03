@@ -1628,7 +1628,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             else genderStr = "male";
             string fixedText = newPerson.name + "\n";
             fixedText += "features: " + genderStr + " " + newPerson.humanType + "\n";
-            fixedText += "walkSpeed: " + newPerson.walkSpeed + "\n";
+            //fixedText += "walkSpeed: " + newPerson.walkSpeed + "\n";
             newPerson.fixedText = fixedText;
             newPerson.gatherIndex = "";
 
@@ -2741,7 +2741,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
 {
     void Start()
     {
-        Time.fixedDeltaTime = 0.03333333f;
+        //Time.fixedDeltaTime = 0.03333333f;
         path = new NavMeshPath();
         matrixSize = 500;
         sceneSize = 22;
@@ -3743,6 +3743,7 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
         int radius = size / 2;
         int gaussian_distance = (radius / scene_half_size) / 2;
         int gaussian_total_distance = gaussian_distance * gaussian_rate;
+        //int gaussian_total_distance = gaussian_distance;
 
         //initial gaussian value
         int sigma = gaussian_rate;
@@ -3887,8 +3888,13 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
                                 if (level < gaussian_rate)
                                 {
                                     //space_usage[j, k]++;
-                                    space_usage[j, k] += gaussianValue[level];
-                                    time_usage[j, k] += ( (trueDistance / interpolateTimes) / trajectoryRecordTime) * gaussianValue[level];
+                                    space_usage[j, k] += gaussianValue[level] * trajectoryRecordTime;
+                                    //time_usage[j, k] += ( (trueDistance / interpolateTimes) / trajectoryRecordTime) * gaussianValue[level]; 
+                                    //time_usage[j, k] += person.Value.velocity_Trajectory[i];
+                                    //Debug.LogError(person.Value.name + " td: " + trueDistance);
+                                    time_usage[j, k] += (trueDistance / trajectoryRecordTime) * gaussianValue[level]; //speed
+
+
                                     count[j, k]++;
                                     //time_usage[j, k] += distance / 0.5f;
                                 }
@@ -3902,7 +3908,9 @@ public partial class dynamicSystem : PersistentSingleton<dynamicSystem>
             {
                 for (int k = 0; k < size; k++)
                 {
-                    if(count[j, k] != 0) time_usage[j, k] = (time_usage[j, k] / count[j, k]) / (1.0f / 0.0166667f) ;
+                    //if(count[j, k] != 0) time_usage[j, k] = (time_usage[j, k] / count[j, k]) / (1.0f / 0.0166667f) ;
+                    if(count[j, k] != 0) time_usage[j, k] = (time_usage[j, k] / count[j, k]) * 2.25f;
+                    //if (count[j, k] != 0) time_usage[j, k] = (time_usage[j, k] / space_usage[j, k]);
                 }
             }
             

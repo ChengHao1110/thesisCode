@@ -650,10 +650,16 @@ public class human_single// List<human_single> humanCrowd;
     {
         /* update text on model */
         string changeText = "";
+        changeText += "walk status: " + this.walkStopState + "\n";
         changeText += "free time: \n" + this.freeTime_totalLeft.ToString("F2") + " / " + this.freeTime_total.ToString("F2") + "\n";
-        changeText += "desireList: " + (this.desireExhibitionList.Count - 1) + "\n"; // minus the exit
-        changeText += "next target: " + this.nextTarget_name + "(" + this.nextTarget_direction + ")\n";
-        changeText += "stay: " + this.freeTime_stayInNextExhibit.ToString("F0");
+        //changeText += "next target: " + this.nextTarget_name + "(" + this.nextTarget_direction + ")\n";
+        changeText += "next target: " + this.nextTarget_name + "(stay: " + this.freeTime_stayInNextExhibit.ToString("F0") + "s)\n";
+        //changeText += "stay: " + this.freeTime_stayInNextExhibit.ToString("F0") + "(" + this.wanderStayTime.ToString("F2") + ")\n";
+        //changeText += "stay: " + this.freeTime_stayInNextExhibit.ToString("F0") + "\n";
+        //changeText += "desireList: " + (this.desireExhibitionList.Count - 1) + "\n"; // minus the exit
+        changeText += "desire List : " + this.desireExhibitionList.Count + "\n(" + string.Join(", ", this.desireExhibitionList) + ")\n";
+
+
 
         this.informationText.text = this.fixedText + changeText;
 
